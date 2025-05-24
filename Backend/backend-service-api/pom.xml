@@ -24,14 +24,12 @@
         <dependency>
             <groupId>com.app.backend</groupId>
             <artifactId>backend-domain</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
         <groupId>com.app.backend</groupId>
         <artifactId>backend-config</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

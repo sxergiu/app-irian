@@ -25,9 +25,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/actuator/**").permitAll() // ✅ ALLOW THESE
+                        .requestMatchers("api/auth/**", "/actuator/**").permitAll() // ✅ ALLOW THESE
                         .anyRequest().authenticated()
                 )
+                .cors(cors -> {})
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

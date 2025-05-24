@@ -1,0 +1,71 @@
+<div id="login-form" class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+  <div class="row w-100">
+    <div class="col-md-6 col-lg-4 mx-auto">
+      <div class="card shadow">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <h2 class="card-title">Sign In</h2>
+            <p class="text-muted">Welcome back! Please sign in to your account.</p>
+          </div>
+
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Email Field -->
+            <div class="mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label class="form-label label">Email</mat-label>
+                <input class="label" matInput type="email" formControlName="email" placeholder="Enter your email">
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error class="label" *ngIf="loginForm.get('email')?.hasError('required')">
+                  Email is required
+                </mat-error>
+                <mat-error class="label" *ngIf="loginForm.get('email')?.hasError('email')">
+                  Please enter a valid email
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Password Field -->
+            <div class="mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label class="form-label label">Password</mat-label>
+                <input class="label" matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Enter your password">
+                <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
+                  <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error class="label" *ngIf="loginForm.get('password')?.hasError('required')">
+                  Password is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+
+            <!-- Submit Button -->
+            <button mat-raised-button color="primary" type="submit" class="label w-100 mb-3" [disabled]="loading || loginForm.invalid">
+              <mat-spinner *ngIf="loading" diameter="20" class="me-2"></mat-spinner>
+              {{ loading ? 'Signing In...' : 'Sign In' }}
+            </button>
+
+            <!-- Error Message -->
+            <div *ngIf="error" class="alert alert-danger" role="alert">
+              {{ error }}
+            </div>
+
+            <!-- Demo Credentials -->
+            <div class="alert alert-info" role="alert">
+              <small>
+                <strong>Pro Tip: </strong> Never share your password with anyone.
+              </small>
+            </div>
+
+
+            <!-- Register Link -->
+            <div class="text-center">
+              <span class="text-muted">Don't have an account? </span>
+              <a routerLink="/register" class="text-light-emphasis text-dark-emphasis">Sign up here</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
