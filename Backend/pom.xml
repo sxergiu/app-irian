@@ -8,11 +8,11 @@
 		<version>3.5.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.app</groupId>
+
+	<groupId>com.app.backend</groupId>
 	<artifactId>Backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Backend</name>
-	<description>Backend</description>
+
 	<url/>
 	<licenses>
 		<license/>
@@ -29,21 +29,58 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
+	<modules>
+		<module>backend-domain</module>
+		<module>backend-web</module>
+		<module>backend-web-lib</module>
+		<module>backend-service</module>
+		<module>backend-service-api</module>
+		<module>backend-config</module>
+	</modules>
+
+	<packaging>pom</packaging>
+
+	<dependencyManagement>
+
 	<dependencies>
+
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>com.app.backend</groupId>
+			<artifactId>backend-web</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>com.app.backend</groupId>
+			<artifactId>backend-web-lib</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.app.backend</groupId>
+			<artifactId>backend-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>24.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+	</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+
 	</dependencies>
 
 	<build>
