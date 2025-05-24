@@ -1,10 +1,12 @@
 package com.app.backend.web.lib.controllers;
 
 import com.app.backend.domain.AppUser;
+import com.app.backend.domain.UserRole;
 import com.app.backend.service.api.IAuthService;
 import com.app.backend.web.lib.DTO.AuthRequest;
 import com.app.backend.web.lib.DTO.AuthResponse;
 import com.app.backend.web.lib.DTO.RegisterRequest;
+import com.app.backend.web.lib.DTO.RegisterResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("api/auth")
 public class AuthController {
 
     private final IAuthService authService;
@@ -26,24 +30,30 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
 
         String email = request.getEmail();
         String password = request.getPassword();
+        String name = request.getName();
         String role = request.getRole();
 
-        AppUser user = authService.registerUser(email,password,role);
+        AppUser user = authService.registerUser(email, password, name, role);
 
-        return ResponseEntity.ok("User registered successfully: " + user.toString() );
+        return ResponseEntity.ok(new RegisterResponse(user.getName(), user.getRole()));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        String jwt = authService.generateToken(request.getEmail());
-        return ResponseEntity.ok(jwt);
+        Map<String,UserRole> userInfo = authService.generateToken(request.getEmail());
+
+        String token = userInfo.keySet().iterator().next();
+        UserRole role = userInfo.values().iterator().next();
+
+        AuthResponse response = new AuthResponse(token, role);
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,0 +1,12 @@
+<div *ngIf="authService.isAdmin()">
+  <h2>Welcome Admin! You see admin stuff.</h2>
+  <!-- Admin-specific content -->
+</div>
+
+<div *ngIf="authService.isUser()">
+  <h2>Welcome User! You see user stuff.</h2>
+  <!-- User-specific content -->
+
+</div>
+
+<button class="btn-primary" (click)="logout()"> LOGOUT</button>

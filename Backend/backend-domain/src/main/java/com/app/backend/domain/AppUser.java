@@ -15,6 +15,7 @@ public class AppUser {
     @Column(unique = true, nullable = false)
     private String email;
 
+    private String name;
     private String password;
 
     public Long getId() {
@@ -49,10 +50,19 @@ public class AppUser {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "AppUser{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
                 ", role=" + role +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

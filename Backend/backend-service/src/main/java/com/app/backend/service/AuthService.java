@@ -5,6 +5,7 @@ import com.app.backend.domain.AppUser;
 import com.app.backend.domain.UserJPARepository;
 import com.app.backend.domain.UserRole;
 import com.app.backend.service.api.IAuthService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AuthService implements IAuthService {
@@ -29,8 +32,18 @@ public class AuthService implements IAuthService {
         this.jwtUtil = jwtUtil;
     }
 
+    @PostConstruct
+    void init() {
+        AppUser adminUser = new AppUser();
+        adminUser.setName("Adminul");
+        adminUser.setEmail("admin@gmail.com");
+        adminUser.setPassword(encoder.encode("admin"));
+        adminUser.setRole(UserRole.ADMIN);
+        userRepository.save(adminUser);
+    }
+
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -39,22 +52,35 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public AppUser registerUser(String email, String password, String role) {
+    public AppUser registerUser(String email, String password, String name, String role) {
 
         AppUser user = new AppUser();
         user.setEmail(email);
         user.setPassword(encoder.encode(password));
-        user.setRole(UserRole.valueOf(role)); // Or default to USER
+        user.setName(name);
+        user.setRole(UserRole.USER);
+        //user.setRole(UserRole.valueOf(role)); // Or default to USER
 
         userRepository.save(user);
         return user;
     }
 
-    @Override
-    public String generateToken(String email) {
-        UserDetails userDetails = loadUserByUsername(email);
-        return jwtUtil.generateToken(userDetails);
+    private boolean isAdmin(String email) {
+        AppUser user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return user.getRole() == UserRole.ADMIN;
     }
 
+    @Override
+    public Map<String,UserRole> generateToken(String email) {
+
+        UserDetails userDetails = loadUserByUsername(email);
+        UserRole role =  isAdmin(email) ? UserRole.ADMIN : UserRole.USER;
+
+        Map<String,UserRole> loggedUserInfo = new HashMap<>();
+        loggedUserInfo.put(jwtUtil.generateToken(userDetails), role);
+
+        return loggedUserInfo;
+    }
 
 }
