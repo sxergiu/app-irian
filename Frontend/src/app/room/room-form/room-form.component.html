@@ -1,0 +1,60 @@
+<div id="room-form">
+  <div class="container py-5 ">
+    <h3> Add Room </h3>
+
+    <div class="row">
+      <div class="col-12 col-md-12  ">
+        <form
+          #roomForm="ngForm"
+          (ngSubmit)="onSubmit(roomForm)"
+          class="mb-xl-5 pb-xl-5"
+        >
+
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input name="name" type="text" class="form-control" id="name" #nameControl="ngModel"
+                   [ngModel]="room().name" (ngModelChange)="nameChanged($event)" required minlength="5" maxlength="45">
+
+            @if (roomForm.submitted && nameControl.errors) {
+              <div class="text-red">
+                {{ nameControl.errors['required'] ? 'Name is required' : '' }}
+                {{ nameControl.errors['minlength'] ? 'Name is too short' : '' }}
+                {{ nameControl.errors['maxlength'] ? 'Name is too long' : '' }}
+              </div>
+            }
+          </div>
+
+
+          <div class="mb-3">
+            <label for="capacity" class="form-label">Capacity</label>
+            <input name="capacity" type="number" class="form-control" id="capacity"
+                   [ngModel]="room().capacity"
+                   (ngModelChange)="capacityChanged($event)" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="amenities" class="form-label">Amenities</label>
+            <input name="amenities" type="text" class="form-control" id="amenities" [ngModel]="amenities"
+                   (ngModelChange)="amenitiesChanged($event)" required>
+          </div>
+
+          <div id="map">
+            <h5>Select Location</h5>
+            <app-maps
+              (placeSelected)="onPlaceSelected($event)"
+            ></app-maps>
+          </div>
+
+          <div class="d-flex justify-content-center mt-3 ">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+

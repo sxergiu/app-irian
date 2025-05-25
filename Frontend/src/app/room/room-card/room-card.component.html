@@ -1,0 +1,16 @@
+
+  <div class="card-body">
+    <h5 class="card-title">{{ room().name }}</h5>
+    <p class="card-text">
+      <strong>Location:</strong> {{ room().address }}<br>
+      <strong>Capacity:</strong> {{ room().capacity }}
+    </p>
+
+    <div class="mb-2">
+      <strong>Amenities:</strong><br>
+      @for (amenity of room().amenities; track amenity) {
+        <span class="badge bg-secondary me-1"> {{ amenity }} </span>
+      }
+    </div>
+  </div>
+

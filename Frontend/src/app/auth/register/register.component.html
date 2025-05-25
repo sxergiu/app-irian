@@ -85,7 +85,7 @@
 
             <!-- Submit Button -->
             <button mat-raised-button color="primary" type="submit" class="label w-100 mb-3" [disabled]="loading || registerForm.invalid">
-              <mat-spinner *ngIf="loading" diameter="20" class="me-2"></mat-spinner>
+              <mat-spinner *ngIf="loading" diameter="20" class="me-2 float-lg-start"></mat-spinner>
               {{ loading ? 'Creating Account...' : 'Create Account' }}
             </button>
 

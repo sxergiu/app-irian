@@ -1,7 +1,7 @@
 package com.app.backend.web.lib.controllers;
 
-import com.app.backend.domain.AppUser;
-import com.app.backend.domain.UserRole;
+import com.app.backend.domain.user.AppUser;
+import com.app.backend.domain.user.UserRole;
 import com.app.backend.service.api.IAuthService;
 import com.app.backend.web.lib.DTO.AuthRequest;
 import com.app.backend.web.lib.DTO.AuthResponse;

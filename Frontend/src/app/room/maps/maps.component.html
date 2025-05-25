@@ -1,0 +1,9 @@
+<google-map
+  height="400px"
+  width="100%"
+  [center]="{ lat: defaultLat, lng: defaultLng }"
+  [zoom]="12"
+  (mapClick)="handlePlaceSelection($event)"
+>
+  <map-marker [position]="{ lat: defaultLat, lng: defaultLng }"></map-marker>
+</google-map>
