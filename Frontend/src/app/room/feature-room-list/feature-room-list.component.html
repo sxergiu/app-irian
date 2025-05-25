@@ -5,14 +5,16 @@
   <div class="d-flex flex-row flex-wrap">
     @for (room of rooms(); track room.name) {
 
-      <div class="card m-2" style="width: 300px">
-
+      <div class="card m-2 d-flex flex-column" style="width: 300px; height: 350px;">
+        <div class="flex-grow-1">
           <app-room-card [room]="room"></app-room-card>
-          <div class=" card-footer p-3">
-            <button class="btn btn-main mt-3 ms-3 me-5" (click)="editClicked(room)">Edit</button>
-            <button class="btn btn-outline-danger mt-3 ms-5" (click)="deleteClicked(room)">Delete</button>
-          </div>
+        </div>
+        <div class="card-footer p-3 d-flex justify-content-between">
+          <button class="btn btn-main" (click)="editClicked(room)">Edit</button>
+          <button class="btn btn-outline-danger" (click)="deleteClicked(room)">Delete</button>
+        </div>
       </div>
+
     }
   </div>
 </div>

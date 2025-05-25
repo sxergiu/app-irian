@@ -37,7 +37,6 @@ export class DashboardComponent {
   addNewRoom(): void {
     this.room.set({
       name: '',
-      city: '',
       amenities: [],
       capacity: 0,
       lat: 0,
@@ -48,7 +47,7 @@ export class DashboardComponent {
 
   onRoomChanged($event: RoomModel): void {
     this.roomService.saveOrUpdateRoom($event);
-    console.log("room saved: " + $event.address);
+    console.log($event.address);
     this.room.set(null);
   }
 

@@ -1,14 +1,12 @@
 import {
   Component,
-  EventEmitter,
-  Output,
-  Input,
-  SimpleChanges,
-  OnChanges,
   ViewChild,
   AfterViewInit,
   NgZone,
   ElementRef,
+  input,
+  output,
+  effect,
 } from '@angular/core';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { PinModel } from './domain/pin.model';
@@ -22,74 +20,123 @@ import { NgIf } from '@angular/common';
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.scss'],
 })
-export class MapsComponent implements AfterViewInit, OnChanges {
+export class MapsComponent implements AfterViewInit {
   @ViewChild('googleMap', { static: false }) googleMap!: GoogleMap;
 
-  @Input() center: { lat: number; lng: number } = { lat: 40.73061, lng: -73.935242 };
-  @Input() markerPosition: { lat: number; lng: number } | null = null;
-  @Input() autocompleteInputRef: ElementRef<HTMLInputElement> | null = null;
+  // Input signals
+  center = input<{ lat: number; lng: number }>({ lat: 40.73061, lng: -73.935242 });
+  markerPosition = input<{ lat: number; lng: number } | null>(null);
+  autocompleteInputRef = input<ElementRef<HTMLInputElement> | null>(null);
 
-  @Output() placeSelected = new EventEmitter<PinModel>();
-  @Output() mapReady = new EventEmitter<boolean>();
+  // Output signals
+  placeSelected = output<PinModel>();
+  mapReady = output<boolean>();
 
   zoom = 12;
   isMapReady = false;
   marker!: google.maps.marker.AdvancedMarkerElement | null;
   autocomplete: google.maps.places.Autocomplete | null = null;
 
-  constructor(private loader: LoaderService, private ngZone: NgZone) {}
+  // Map options - will be initialized after Google Maps loads
+  mapOptions: google.maps.MapOptions = {};
 
-  ngAfterViewInit() {
-    this.loader.load().then(() => {
-      this.isMapReady = true;
-      this.mapReady.emit(true);
+  // Marker options - will be initialized after Google Maps loads
+  markerOptions: google.maps.marker.AdvancedMarkerElementOptions = {};
 
-      // Initialize autocomplete if input reference is provided
-      if (this.autocompleteInputRef?.nativeElement) {
+  constructor(private loader: LoaderService, private ngZone: NgZone) {
+    // Effect to handle center changes
+    effect(() => {
+      const newCenter = this.center();
+      if (this.isMapReady && this.googleMap?.googleMap) {
+        this.googleMap.googleMap.setCenter(newCenter);
+      }
+    });
+
+    // Effect to handle marker position changes
+    effect(() => {
+      const newPosition = this.markerPosition();
+      if (this.isMapReady) {
+        if (newPosition) {
+          this.addMarker(newPosition.lat, newPosition.lng);
+        } else if (this.marker) {
+          this.marker.map = null;
+          this.marker = null;
+        }
+      }
+    });
+
+    // Effect to handle autocomplete input reference changes
+    effect(() => {
+      const inputRef = this.autocompleteInputRef();
+      console.log('Autocomplete input ref changed:', inputRef);
+      if (inputRef && this.isMapReady && !this.autocomplete) {
+        console.log('Initializing autocomplete...');
         this.initializeAutocomplete();
       }
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // Handle center changes
-    if (changes['center'] && this.isMapReady && this.googleMap?.googleMap) {
-      const newCenter = changes['center'].currentValue;
-      this.googleMap.googleMap.setCenter(newCenter);
-    }
+  ngAfterViewInit() {
+    this.loader.load().then(() => {
+      console.log('Maps component ready');
 
-    // Handle marker position changes
-    if (changes['markerPosition'] && this.isMapReady) {
-      const newPosition = changes['markerPosition'].currentValue;
-      if (newPosition) {
-        this.addMarker(newPosition.lat, newPosition.lng);
-      } else if (this.marker) {
-        this.marker.map = null;
-        this.marker = null;
+      // Initialize map and marker options after Google Maps is loaded
+      this.mapOptions = {
+        disableDefaultUI: false,
+        clickableIcons: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      this.markerOptions = {
+        gmpDraggable: false
+      };
+
+      this.isMapReady = true;
+      this.mapReady.emit(true);
+
+      // Initialize autocomplete if input reference is already provided
+      const inputRef = this.autocompleteInputRef();
+      console.log('Input ref available on init:', inputRef);
+      if (inputRef?.nativeElement) {
+        console.log('Initializing autocomplete on init...');
+        this.initializeAutocomplete();
       }
-    }
 
-    // Initialize autocomplete when input reference becomes available
-    if (changes['autocompleteInputRef'] &&
-      changes['autocompleteInputRef'].currentValue &&
-      this.isMapReady &&
-      !this.autocomplete) {
-      this.initializeAutocomplete();
-    }
+      // Apply initial center and marker if they exist
+      const currentCenter = this.center();
+      const currentMarker = this.markerPosition();
+
+      if (this.googleMap?.googleMap) {
+        this.googleMap.googleMap.setCenter(currentCenter);
+
+        if (currentMarker) {
+          this.addMarker(currentMarker.lat, currentMarker.lng);
+        }
+      }
+    });
   }
 
   private initializeAutocomplete() {
-    if (!this.autocompleteInputRef?.nativeElement || this.autocomplete) return;
+    const inputRef = this.autocompleteInputRef();
+    console.log('Initializing autocomplete with input:', inputRef);
+    if (!inputRef?.nativeElement || this.autocomplete) {
+      console.log('Skipping autocomplete init - no input or already exists');
+      return;
+    }
 
-    const input = this.autocompleteInputRef.nativeElement;
+    const input = inputRef.nativeElement;
+    console.log('Creating autocomplete for input element:', input);
 
     this.autocomplete = new google.maps.places.Autocomplete(input, {
       fields: ['geometry', 'formatted_address', 'address_components'],
     });
 
+    console.log('Autocomplete created, adding listener...');
     this.autocomplete.addListener('place_changed', () => {
+      console.log('Place changed event triggered');
       this.ngZone.run(() => {
         const place = this.autocomplete!.getPlace();
+        console.log('Selected place:', place);
 
         if (!place.geometry || !place.geometry.location) {
           console.warn('No geometry in selected place');
@@ -102,6 +149,7 @@ export class MapsComponent implements AfterViewInit, OnChanges {
         const city = this.extractCity(place.address_components);
 
         const pin: PinModel = { lat, lng, address, city };
+        console.log('Emitting pin:', pin);
         this.placeSelected.emit(pin);
       });
     });
@@ -197,5 +245,4 @@ export class MapsComponent implements AfterViewInit, OnChanges {
       });
     });
   }
-
 }

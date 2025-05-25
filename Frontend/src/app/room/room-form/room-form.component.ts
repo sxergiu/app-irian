@@ -35,6 +35,9 @@ export class RoomFormComponent implements AfterViewInit {
   @ViewChild('autocompleteInput', { static: false }) autocompleteInput!: ElementRef<HTMLInputElement>;
   @ViewChild(MapsComponent, { static: false }) mapsComponent!: MapsComponent;
 
+  // Signal to pass the autocomplete input to the maps component
+  autocompleteInputSignal = signal<ElementRef<HTMLInputElement> | null>(null);
+
   address: string = '';
   center = model({ lat: 46.77, lng: 23.59 });
   markerPosition = model<{ lat: number; lng: number } | null>(null);
@@ -52,7 +55,7 @@ export class RoomFormComponent implements AfterViewInit {
   }
 
   private isComponentReady(): boolean {
-    return (this.mapsComponent && this.autocompleteInput && this.mapReady());
+    return !!(this.mapsComponent && this.autocompleteInput && this.mapReady());
   }
 
   private updateMapWithRoomData(room: RoomModel) {
@@ -80,25 +83,16 @@ export class RoomFormComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     if (this.mapsComponent && this.autocompleteInput) {
-      // Pass reference to MapsComponent
-      this.mapsComponent.autocompleteInputRef = this.autocompleteInput;
+      // Set the autocomplete input signal so the maps component can access it
+      this.autocompleteInputSignal.set(this.autocompleteInput);
 
       setTimeout(() => {
-        this.mapsComponent.ngOnChanges({
-          autocompleteInputRef: {
-            currentValue: this.autocompleteInput,
-            previousValue: null,
-            firstChange: true,
-            isFirstChange: () => true
-          }
-        });
-
         // Initial setup with current room data
         const currentRoom = this.room();
         if (currentRoom?.address?.trim()) {
           this.updateMapWithRoomData(currentRoom);
         }
-      });
+      }, 100); // Slightly longer timeout to ensure everything is initialized
     }
   }
 
@@ -147,7 +141,6 @@ export class RoomFormComponent implements AfterViewInit {
       ...r,
       lat: pin.lat,
       lng: pin.lng,
-      city: pin.city || r.city,
       address: pin.address || ''
     }));
 
@@ -195,7 +188,6 @@ export class RoomFormComponent implements AfterViewInit {
               ...r,
               lat,
               lng,
-              city: city || r.city,
               address: address
             }));
 

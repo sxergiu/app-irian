@@ -52,6 +52,7 @@
             <app-maps
               [center]="center()"
               [markerPosition]="markerPosition()"
+              [autocompleteInputRef]="autocompleteInputSignal()"
               (placeSelected)="onPlaceSelected($event)"
               (mapReady)="onMapReady($event)"
             ></app-maps>

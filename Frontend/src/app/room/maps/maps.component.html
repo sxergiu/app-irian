@@ -5,14 +5,14 @@
       [mapId]="'13fbb21fe1c6be2acb70e788'"
       height="400px"
       width="100%"
-      [center]="center"
+      [center]="center()"
       [zoom]="zoom"
       (mapClick)="handlePlaceSelection($event)"
       (mapInitialized)="onMapReady()"
     >
       <map-advanced-marker
         *ngIf="markerPosition"
-        [position]="markerPosition"
+        [position]="markerPosition()!"
         title="Selected location"
       >
       </map-advanced-marker>
