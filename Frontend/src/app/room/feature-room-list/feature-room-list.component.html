@@ -1,6 +1,6 @@
 <div id="rooms" class="container my-5">
 
-  <h2>Room List</h2>
+  <h2 class="text-light">Room List</h2>
 
   <div class="d-flex flex-row flex-wrap">
     @for (room of rooms(); track room.name) {
@@ -9,7 +9,7 @@
 
           <app-room-card [room]="room"></app-room-card>
           <div class=" card-footer p-3">
-            <button class="btn btn-outline-light mt-3 ms-3 me-5" (click)="editClicked(room)">Edit</button>
+            <button class="btn btn-main mt-3 ms-3 me-5" (click)="editClicked(room)">Edit</button>
             <button class="btn btn-outline-danger mt-3 ms-5" (click)="deleteClicked(room)">Delete</button>
           </div>
       </div>

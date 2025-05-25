@@ -1,4 +1,4 @@
-<button class="d-flex justify-content-center btn-primary sticky-top" (click)="logout()"> LOGOUT</button>
+<button class="d-flex justify-content-center btn btn-main sticky-top" (click)="logout()"> LOGOUT</button>
 
 @if( authService.isAdmin() ) {
 
@@ -6,11 +6,13 @@
                          (roomSelected)="onRoomSelected($event)"
                          (roomDeleted)="onRoomDeleted($event)"></app-feature-room-list>
   <div class="d-flex justify-content-center my-3">
-    <button class="btn btn-primary " (click)="addNewRoom()"> Add new </button>
+    <button class="btn btn-main" (click)="addNewRoom()"> Add new </button>
   </div>
 
   @if (room(); as room) {
-    <app-room-form [room]="room" (roomChanged)="onRoomChanged($event)"></app-room-form>
+    <app-room-form [room]="room"
+                   (roomChanged)="onRoomChanged($event)"
+                   (cancel)="onCancel()"></app-room-form>
   }
 }
 @else if( authService.isUser() ) {

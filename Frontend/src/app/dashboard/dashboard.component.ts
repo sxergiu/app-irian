@@ -41,13 +41,14 @@ export class DashboardComponent {
       amenities: [],
       capacity: 0,
       lat: 0,
-      lng: 0
+      lng: 0,
+      address: ''
     });
   }
 
   onRoomChanged($event: RoomModel): void {
     this.roomService.saveOrUpdateRoom($event);
-    console.log("room saved: " + $event);
+    console.log("room saved: " + $event.address);
     this.room.set(null);
   }
 
@@ -57,6 +58,10 @@ export class DashboardComponent {
 
   onRoomDeleted($event: RoomModel): void {
     this.roomService.deleteRoom($event);
+  }
+
+  onCancel() {
+    this.room.set(null);
   }
 
   logout(): void {

@@ -2,6 +2,6 @@
 export interface PinModel {
   lat: number;
   lng: number;
-  city: string;
+  city?: string;
   address: string;
 }

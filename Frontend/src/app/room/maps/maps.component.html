@@ -1,9 +1,25 @@
-<google-map
-  height="400px"
-  width="100%"
-  [center]="{ lat: defaultLat, lng: defaultLng }"
-  [zoom]="12"
-  (mapClick)="handlePlaceSelection($event)"
->
-  <map-marker [position]="{ lat: defaultLat, lng: defaultLng }"></map-marker>
-</google-map>
+<div *ngIf="isMapReady; else loading">
+  <div style="height: 400px; width: 100%;">
+    <google-map
+      #googleMap
+      [mapId]="'13fbb21fe1c6be2acb70e788'"
+      height="400px"
+      width="100%"
+      [center]="center"
+      [zoom]="zoom"
+      (mapClick)="handlePlaceSelection($event)"
+      (mapInitialized)="onMapReady()"
+    >
+      <map-advanced-marker
+        *ngIf="markerPosition"
+        [position]="markerPosition"
+        title="Selected location"
+      >
+      </map-advanced-marker>
+    </google-map>
+  </div>
+</div>
+
+<ng-template #loading>
+  <h2>Loading Google Maps...</h2>
+</ng-template>

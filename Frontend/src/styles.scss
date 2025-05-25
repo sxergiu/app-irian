@@ -16,3 +16,44 @@ body {
 .mat-raised-button {
   font-weight: 500;
 }
+
+.text-red {
+  color: red;
+}
+
+.btn-main {
+  background-color: white;
+  color: #2e4a7a;
+  border: 1px solid #2e4a7a;
+}
+
+.btn-main:hover {
+  background-color: #7fb9db;
+  color: white;
+}
+
+.ng-submitted {
+  .ng-invalid {
+    border: 1px solid red;
+  }
+}
+
+.mat-typography {
+  background: linear-gradient(44deg, #7fb9db, #3a5583, #2e4a7a, #7fb9db);
+  background-size: 400% 400%;        /* smaller background size for less movement */
+  animation: gradientShift 40s ease infinite;  /* slower animation */
+  box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3); /* lighter shadow */
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 80% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+

@@ -4,7 +4,7 @@ export interface RoomModel{
   capacity: number;
   amenities: string[];
   city?: string;
-  address?: string;
+  address: string;
   lat?: number;
   lng?: number;
 }
