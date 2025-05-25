@@ -1,6 +1,5 @@
 import {
   Component,
-  CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   model,
   NgZone,
@@ -21,16 +20,15 @@ import { LoaderService } from '../maps/loader.service';
   standalone: true,
   imports: [MapsComponent, FormsModule],
   templateUrl: './room-form.component.html',
-  styleUrls: ['./room-form.component.scss'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrls: ['./room-form.component.scss']
 })
 export class RoomFormComponent implements AfterViewInit {
+
   roomChanged = output<RoomModel>();
   room = model.required<RoomModel>();
   cancel = output<void>();
 
   manualAddress = model('');
-  private selectedPin: PinModel | undefined;
 
   @ViewChild('autocompleteInput', { static: false }) autocompleteInput!: ElementRef<HTMLInputElement>;
   @ViewChild(MapsComponent, { static: false }) mapsComponent!: MapsComponent;
@@ -55,7 +53,7 @@ export class RoomFormComponent implements AfterViewInit {
   }
 
   private isComponentReady(): boolean {
-    return !!(this.mapsComponent && this.autocompleteInput && this.mapReady());
+    return (this.mapsComponent && this.autocompleteInput && this.mapReady());
   }
 
   private updateMapWithRoomData(room: RoomModel) {
@@ -116,10 +114,6 @@ export class RoomFormComponent implements AfterViewInit {
 
   nameChanged(value: string) {
     this.room.update(r => ({ ...r, name: value }));
-  }
-
-  cityChanged(value: string) {
-    this.room.update(r => ({ ...r, city: value }));
   }
 
   capacityChanged(value: number) {
@@ -195,7 +189,7 @@ export class RoomFormComponent implements AfterViewInit {
             this.center.set({lat, lng});
             this.markerPosition.set({lat, lng});
           } else {
-            alert('Address not found, please try another one.');
+            alert('Something weird happened. Sorry');
             // Clear marker if address not found
             this.markerPosition.set(null);
           }
@@ -206,9 +200,4 @@ export class RoomFormComponent implements AfterViewInit {
     }
   }
 
-  // Method to handle manual address input changes
-  onAddressInputChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.manualAddress.set(target.value);
-  }
 }

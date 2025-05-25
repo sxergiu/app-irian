@@ -1,8 +1,21 @@
 #map {
   width: 1300px;
-  height: 100%; /* Or any other desired height */
+  height: 100%;
 }
 
 #room-form {
   background-color: lightgray;
+}
+
+.btn-outline-danger {
+  background-color: white !important;
+  color: #dc3545 !important;
+  border-color: #dc3545  !important;
+}
+
+.btn-outline-danger:hover,
+.btn-outline-danger:focus {
+  background-color: #dc3545  !important;
+  color: white !important;
+  border-color: #dc3545 !important;
 }
