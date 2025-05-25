@@ -1,5 +1,6 @@
 
 export interface RoomModel{
+  id: number;
   name: string;
   capacity: number;
   amenities: string[];
@@ -22,6 +23,7 @@ export interface BackendRoom {
 
 export function mapBackendRoomToFrontend(room: BackendRoom): RoomModel {
   return {
+    id: room.id,
     name: room.name,
     capacity: room.capacity,
     amenities: room.amenities,

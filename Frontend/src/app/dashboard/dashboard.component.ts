@@ -5,8 +5,7 @@ import {RoomModel} from '../room/domain/room.model';
 import { RoomFormComponent } from '../room/room-form/room-form.component';
 import { CommonModule } from '@angular/common';
 import { RoomService } from '../room/room.service';
-import {MOCK_ROOMS} from '../room/data/room.data';
-import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-list.component'; // Assumes this exists
+import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-list.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,6 +38,7 @@ export class DashboardComponent {
 
   addNewRoom(): void {
     this.room.set({
+      id: 0,
       name: '',
       amenities: [],
       capacity: 0,

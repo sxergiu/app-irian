@@ -8,6 +8,9 @@ import java.util.Set;
 @Entity
 public class Room {
 
+    @Version
+    private Long version;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

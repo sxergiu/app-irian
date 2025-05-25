@@ -5,10 +5,12 @@ import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomJPARepository;
 import com.app.backend.service.api.IRoomService;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -60,6 +62,7 @@ public class RoomService implements IRoomService {
         return roomRepository.save(room);
     }
 
+    @Transactional
     @Override
     public Room updateRoom(Long id, Room updatedRoom) {
         Room room = roomRepository.findById(id).orElseThrow(() -> new RuntimeException("Room not found"));
@@ -72,6 +75,7 @@ public class RoomService implements IRoomService {
         room.setLocation(updatedRoom.getLocation());
         room.setCapacity(updatedRoom.getCapacity());
         room.setAmenities(updatedRoom.getAmenities());
+        room.setCoordinates(updatedRoom.getCoordinates());
 
         return roomRepository.save(room);
     }
@@ -92,5 +96,10 @@ public class RoomService implements IRoomService {
             throw new RuntimeException("Room not found");
         }
         roomRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Room> findById(Long id) {
+        return roomRepository.findById(id);
     }
 }

@@ -25,10 +25,21 @@ public class RoomController {
 
     @PostMapping
     public ResponseEntity<RoomResponse> createRoom(@RequestBody RoomRequest dto) {
+
         Room room = roomMapper.toEntity(dto);
-        Room saved = roomService.createRoom(room);
-        return new ResponseEntity<>(roomMapper.toDTO(saved), HttpStatus.CREATED);
+        Room savedRoom = roomService.createRoom(room);
+        return new ResponseEntity<>(roomMapper.toDTO(savedRoom), HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RoomResponse> updateRoom(@PathVariable Long id, @RequestBody RoomRequest dto) {
+
+        Room updatedRoom = roomMapper.toEntity(dto);
+        updatedRoom.setId(id);
+        Room savedRoom = roomService.updateRoom(id, updatedRoom);
+        return ResponseEntity.ok(roomMapper.toDTO(savedRoom));
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<RoomResponse> getRoom(@PathVariable Long id) {
@@ -36,20 +47,13 @@ public class RoomController {
         return ResponseEntity.ok(roomMapper.toDTO(room));
     }
 
-    @GetMapping("getAll")
+    @GetMapping
     public ResponseEntity<Set<RoomResponse>> getAllRooms() {
         Set<RoomResponse> result =
                 new HashSet<>(roomService.getAllRooms().stream()
                 .map(roomMapper::toDTO)
                 .toList());
         return ResponseEntity.ok(result);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<RoomResponse> updateRoom(@PathVariable Long id, @RequestBody RoomRequest dto) {
-        Room updated = roomMapper.toEntity(dto);
-        Room saved = roomService.updateRoom(id, updated);
-        return ResponseEntity.ok(roomMapper.toDTO(saved));
     }
 
     @DeleteMapping("/{id}")

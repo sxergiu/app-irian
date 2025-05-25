@@ -2,6 +2,7 @@ import {RoomModel} from '../domain/room.model';
 
 export const MOCK_ROOMS: RoomModel[] = [
   {
+    id: 1,
     name: 'Conference Room A',
     address: 'New York',
     capacity: 50,
@@ -10,6 +11,7 @@ export const MOCK_ROOMS: RoomModel[] = [
     lng: -74.005974
   },
   {
+    id: 2,
     name: 'Training Hall',
     address: 'San Francisco',
     capacity: 100,
@@ -18,6 +20,7 @@ export const MOCK_ROOMS: RoomModel[] = [
     lng: -122.419418
   },
   {
+    id: 3,
     name: 'Workshop Space',
     address: 'Berlin',
     capacity: 30,
@@ -26,6 +29,7 @@ export const MOCK_ROOMS: RoomModel[] = [
     lng: 13.404954
   },
   {
+    id: 4,
     name: 'Meeting Pod',
     address: 'London',
     capacity: 6,
@@ -34,6 +38,7 @@ export const MOCK_ROOMS: RoomModel[] = [
     lng: -0.127758
   },
   {
+    id: 5,
     name: 'Spaceship',
     address: 'Arad',
     capacity: 5,
@@ -42,6 +47,7 @@ export const MOCK_ROOMS: RoomModel[] = [
     lng: 21.3167
   },
   {
+    id: 6,
     name: 'Workshop Space #2',
     address: 'Frankfurt',
     capacity: 40,
