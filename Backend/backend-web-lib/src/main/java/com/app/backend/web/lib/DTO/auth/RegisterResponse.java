@@ -1,6 +1,6 @@
-package com.app.backend.web.lib.DTO;
+package com.app.backend.web.lib.DTO.auth;
 
-import com.app.backend.domain.UserRole;
+import com.app.backend.domain.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

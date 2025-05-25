@@ -18,7 +18,9 @@ export class AuthService {
   constructor(private http: HttpClient) {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
-      this.currentUser.set(JSON.parse(storedUser));
+      const user: User = JSON.parse(storedUser);
+      this.currentUser.set(user);
+      this.currentUserRole = user.role === "ADMIN" ? Role.ADMIN : Role.USER;
     }
   }
 

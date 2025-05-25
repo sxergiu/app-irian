@@ -1,4 +1,4 @@
-package com.app.backend.domain;
+package com.app.backend.domain.user;
 
 import jakarta.persistence.*;
 

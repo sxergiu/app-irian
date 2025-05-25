@@ -4,7 +4,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,10 +27,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/auth/**", "/actuator/**").permitAll() // ✅ ALLOW THESE
+                        .requestMatchers("/api/auth/**", "/actuator/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/room/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/room/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/room/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .cors(cors -> {})
+                .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

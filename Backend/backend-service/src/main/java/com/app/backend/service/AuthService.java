@@ -1,9 +1,9 @@
 package com.app.backend.service;
 
 import com.app.backend.config.JwtUtil;
-import com.app.backend.domain.AppUser;
-import com.app.backend.domain.UserJPARepository;
-import com.app.backend.domain.UserRole;
+import com.app.backend.domain.user.AppUser;
+import com.app.backend.domain.user.UserJPARepository;
+import com.app.backend.domain.user.UserRole;
 import com.app.backend.service.api.IAuthService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

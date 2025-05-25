@@ -1,7 +1,7 @@
 package com.app.backend.service.api;
 
-import com.app.backend.domain.AppUser;
-import com.app.backend.domain.UserRole;
+import com.app.backend.domain.user.AppUser;
+import com.app.backend.domain.user.UserRole;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 

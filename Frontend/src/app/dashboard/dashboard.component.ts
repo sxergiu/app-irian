@@ -1,24 +1,70 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
-import {User} from '../auth/models/authModels';;
-import {NgIf} from '@angular/common';
+import {RoomModel} from '../room/domain/room.model';
+import { RoomFormComponent } from '../room/room-form/room-form.component';
+import { CommonModule } from '@angular/common';
+import { RoomService } from '../room/room.service';
+import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-list.component';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
+  standalone: true,
   imports: [
-    NgIf
+    CommonModule,
+    FeatureRoomListComponent,
+    RoomFormComponent
   ],
+  templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent{
+export class DashboardComponent {
 
-  currentUser: User | null = null;
   authService = inject(AuthService);
-  constructor(
-    private router: Router
-  ) {}
+  router = inject(Router);
+  roomService = inject(RoomService);
+
+  get rooms(){
+    return this.roomService.getRooms()
+  }
+
+  room = signal<RoomModel | null>(null);
+
+  constructor() {
+    if( !this.authService.isAuthenticated() ) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  addNewRoom(): void {
+    this.room.set({
+      id: 0,
+      name: '',
+      amenities: [],
+      capacity: 0,
+      lat: 0,
+      lng: 0,
+      address: ''
+    });
+  }
+
+  onRoomChanged($event: RoomModel): void {
+    this.roomService.saveOrUpdateRoom($event);
+    console.log($event.address);
+    this.room.set(null);
+  }
+
+  onRoomSelected($event: RoomModel): void {
+    this.room.set($event);
+  }
+
+  onRoomDeleted($event: RoomModel): void {
+    this.roomService.deleteRoom($event);
+  }
+
+  onCancel() {
+    this.room.set(null);
+  }
 
   logout(): void {
     this.authService.logout();

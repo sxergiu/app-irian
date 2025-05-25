@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../auth.service';
 import {Router, RouterLink} from '@angular/router';
-import {MatTable, MatTableModule} from '@angular/material/table';
+import { MatTableModule} from '@angular/material/table';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput} from '@angular/material/input';
 import {NgIf} from '@angular/common';
@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
     ).subscribe({
       error: () => {
         this.loading = false;
-        this.error = 'Invalid credentials';
+        this.error = 'Something went wrong. Please try again!';
       }
     });
   }
