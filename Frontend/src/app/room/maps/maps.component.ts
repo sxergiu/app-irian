@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, output, Output, signal} from '@angular/core';
 import {GoogleMap, MapMarker} from '@angular/google-maps';
 import {PinModel} from './domain/pin.model';
+import {LoaderService} from './loader.service';
 
 @Component({
   selector: 'app-maps',
@@ -23,6 +24,10 @@ export class MapsComponent {
   zoom = 12;
 
   center = signal({ lat: this.defaultLat, lng: this.defaultLng });
+
+  constructor(private mapsLoader: LoaderService) {
+    this.mapsLoader.load();
+  }
 
   handlePlaceSelection(event: google.maps.MapMouseEvent) {
     const latLng = event.latLng;
