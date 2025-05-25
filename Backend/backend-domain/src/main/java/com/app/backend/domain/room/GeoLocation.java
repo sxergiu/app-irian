@@ -10,6 +10,15 @@ public class GeoLocation {
     private Double latitude;
     private Double longitude;
 
+    public GeoLocation(Double latitude, Double longitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public GeoLocation() {
+
+    }
+
     public Double getLongitude() {
         return longitude;
     }

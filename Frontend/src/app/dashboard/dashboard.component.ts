@@ -25,7 +25,10 @@ export class DashboardComponent {
   router = inject(Router);
   roomService = inject(RoomService);
 
-  rooms = signal<RoomModel[]>(MOCK_ROOMS);
+  get rooms(){
+    return this.roomService.getRooms()
+  }
+
   room = signal<RoomModel | null>(null);
 
   constructor() {

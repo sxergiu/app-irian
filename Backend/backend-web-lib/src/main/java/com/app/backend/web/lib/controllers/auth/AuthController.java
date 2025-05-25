@@ -1,12 +1,12 @@
-package com.app.backend.web.lib.controllers;
+package com.app.backend.web.lib.controllers.auth;
 
 import com.app.backend.domain.user.AppUser;
 import com.app.backend.domain.user.UserRole;
 import com.app.backend.service.api.IAuthService;
-import com.app.backend.web.lib.DTO.AuthRequest;
-import com.app.backend.web.lib.DTO.AuthResponse;
-import com.app.backend.web.lib.DTO.RegisterRequest;
-import com.app.backend.web.lib.DTO.RegisterResponse;
+import com.app.backend.web.lib.DTO.auth.AuthRequest;
+import com.app.backend.web.lib.DTO.auth.AuthResponse;
+import com.app.backend.web.lib.DTO.auth.RegisterRequest;
+import com.app.backend.web.lib.DTO.auth.RegisterResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

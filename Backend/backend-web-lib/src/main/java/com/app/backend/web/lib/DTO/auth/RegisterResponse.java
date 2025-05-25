@@ -1,4 +1,4 @@
-package com.app.backend.web.lib.DTO;
+package com.app.backend.web.lib.DTO.auth;
 
 import com.app.backend.domain.user.UserRole;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AuthResponse {
-    private String token;
+public class RegisterResponse {
+    private String name;
     private UserRole role;
 }

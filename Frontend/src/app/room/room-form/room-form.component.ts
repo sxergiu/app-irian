@@ -171,12 +171,6 @@ export class RoomFormComponent implements AfterViewInit {
             const lat = place.geometry.location.lat();
             const lng = place.geometry.location.lng();
 
-            // Extract city if possible
-            const city =
-              place.address_components?.find((comp) =>
-                comp.types.includes('locality')
-              )?.long_name || '';
-
             // Update the room model with new location info
             this.room.update(r => ({
               ...r,
