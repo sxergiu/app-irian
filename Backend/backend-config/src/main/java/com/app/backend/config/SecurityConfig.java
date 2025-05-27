@@ -32,6 +32,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/room/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/room/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/group/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/group/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .cors(Customizer.withDefaults())
