@@ -1,26 +1,24 @@
 
-<app-menu></app-menu>
+  @if( authService.isAdmin() ) {
 
-@if( authService.isAdmin() ) {
+    <app-feature-room-list [rooms]="rooms()"
+                           (roomSelected)="onRoomSelected($event)"
+                           (roomDeleted)="onRoomDeleted($event)"></app-feature-room-list>
+    <div class="d-flex justify-content-center my-3">
+      <button class="btn btn-main" (click)="addNewRoom()"> Add new </button>
+    </div>
 
-  <app-feature-room-list [rooms]="rooms()"
-                         (roomSelected)="onRoomSelected($event)"
-                         (roomDeleted)="onRoomDeleted($event)"></app-feature-room-list>
-  <div class="d-flex justify-content-center my-3">
-    <button class="btn btn-main" (click)="addNewRoom()"> Add new </button>
-  </div>
-
-  @if (room(); as room) {
-    <app-room-form [room]="room"
-                   (roomChanged)="onRoomChanged($event)"
-                   (cancel)="onCancel()"></app-room-form>
+    @if (room(); as room) {
+      <app-room-form [room]="room"
+                     (roomChanged)="onRoomChanged($event)"
+                     (cancel)="onCancel()"></app-room-form>
+    }
   }
-}
-@else if( authService.isUser() ) {
+  @else if( authService.isUser() ) {
 
-  <h2>Welcome User! You see user stuff.</h2>
-  <!-- User-specific content -->
-} @else {
-  <h2> How did you get here? </h2>
-}
-<app-footer></app-footer>
+    <h2>Welcome User! You see user stuff.</h2>
+    <!-- User-specific content -->
+  } @else {
+    <h2> How did you get here? </h2>
+  }
+
