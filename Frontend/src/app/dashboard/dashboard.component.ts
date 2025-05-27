@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { RoomService } from '../room/room.service';
 import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-list.component';
 import {FooterComponent} from '../footer/footer.component';
+import {MenuComponent} from '../menu/menu.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,8 @@ import {FooterComponent} from '../footer/footer.component';
     CommonModule,
     FeatureRoomListComponent,
     RoomFormComponent,
-    FooterComponent
+    FooterComponent,
+    MenuComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
@@ -66,11 +68,6 @@ export class DashboardComponent {
 
   onCancel() {
     this.room.set(null);
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
   }
 
 }

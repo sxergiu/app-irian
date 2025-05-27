@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
+import {Component, inject} from '@angular/core';
+import {Router, RouterLink} from '@angular/router';
+import {AuthService} from '../auth/auth.service';
 
 @Component({
   selector: 'app-menu',
@@ -11,4 +12,17 @@ import {RouterLink} from '@angular/router';
 })
 export class MenuComponent {
 
+  authService = inject(AuthService);
+  router = inject(Router);
+
+  constructor() {
+    if( !this.authService.isAuthenticated() ) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

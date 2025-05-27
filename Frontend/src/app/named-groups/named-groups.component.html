@@ -1,0 +1,21 @@
+<div class="upload-container">
+  <h2>Upload Groups CSV</h2>
+
+  <input type="file" (change)="onFileSelected($event)" accept=".csv" />
+
+  <button (click)="uploadFile()" [disabled]="!selectedFile">Upload</button>
+
+  <p *ngIf="uploadResponse">{{ uploadResponse }}</p>
+
+  <hr />
+
+  <h3>All Groups</h3>
+  <ul *ngIf="groups.length; else noGroups">
+    <li *ngFor="let group of groups">
+      <strong>{{ group.name }}</strong> – {{ group.numberOfPeople }} people
+    </li>
+  </ul>
+  <ng-template #noGroups>
+    <p>No groups available.</p>
+  </ng-template>
+</div>

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid space-between">
-    <a class="navbar-brand" href="/">My Pizza</a>
+    <a class="navbar-brand" href="/">Conference Room Booking</a>
     <div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
               aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,13 +9,10 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['login']">Pizzas</a>
+            <a class="nav-link" [routerLink]="['/groups']"> Import Groups </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['login']">Stores</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="['login']">Customers</a>
+            <button class="btn btn-main" (click)="logout()"> Log Out</button>
           </li>
         </ul>
       </div>
