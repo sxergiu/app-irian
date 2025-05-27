@@ -32,6 +32,7 @@ export class RoomService {
 
       this.http.post(this.apiUrl, dto)
         .subscribe(() => this.fetchRooms());
+
     } else {
 
       this.http.put(`${this.apiUrl}/${room.id}`, dto)

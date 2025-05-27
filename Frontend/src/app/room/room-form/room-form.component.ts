@@ -10,10 +10,10 @@ import {
   effect
 } from '@angular/core';
 import { RoomModel } from '../domain/room.model';
-import { MapsComponent } from '../maps/maps.component';
-import { PinModel } from '../maps/domain/pin.model';
+import { MapsComponent } from '../../maps/maps.component';
+import { PinModel } from '../../maps/domain/pin.model';
 import { FormsModule, NgForm } from '@angular/forms';
-import { LoaderService } from '../maps/loader.service';
+import { LoaderService } from '../../maps/loader.service';
 
 @Component({
   selector: 'app-room-form',

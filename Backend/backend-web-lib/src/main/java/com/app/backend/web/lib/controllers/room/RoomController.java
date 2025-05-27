@@ -26,9 +26,14 @@ public class RoomController {
     @PostMapping
     public ResponseEntity<RoomResponse> createRoom(@RequestBody RoomRequest dto) {
 
-        Room room = roomMapper.toEntity(dto);
-        Room savedRoom = roomService.createRoom(room);
-        return new ResponseEntity<>(roomMapper.toDTO(savedRoom), HttpStatus.CREATED);
+        try {
+            Room room = roomMapper.toEntity(dto);
+            Room savedRoom = roomService.createRoom(room);
+            return new ResponseEntity<>(roomMapper.toDTO(savedRoom), HttpStatus.CREATED);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")

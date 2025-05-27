@@ -43,7 +43,43 @@ public class RoomService implements IRoomService {
                 room3.setAmenities(Set.of("Whiteboard", "Sound System"));
                 room3.setCoordinates(new GeoLocation(52.5200, 13.4050));
 
-                roomRepository.saveAll(List.of(room1, room2, room3));
+                Room room4 = new Room();
+                room4.setName("Skyline Boardroom");
+                room4.setLocation("Chicago");
+                room4.setCapacity(15);
+                room4.setAmenities(Set.of("Projector", "Conference Phone", "Wi-Fi"));
+                room4.setCoordinates(new GeoLocation(41.8781, -87.6298));
+
+                Room room5 = new Room();
+                room5.setName("Innovation Hub");
+                room5.setLocation("London");
+                room5.setCapacity(10);
+                room5.setAmenities(Set.of("Smart TV", "Whiteboard", "Coffee Machine"));
+                room5.setCoordinates(new GeoLocation(51.5074, -0.1278));
+
+                Room room6 = new Room();
+                room6.setName("Tech Talk Space");
+                room6.setLocation("Tokyo");
+                room6.setCapacity(20);
+                room6.setAmenities(Set.of("Microphone", "Projector", "Wi-Fi", "Sound System"));
+                room6.setCoordinates(new GeoLocation(35.6895, 139.6917));
+
+                Room room7 = new Room();
+                room7.setName("Mountain View Lab");
+                room7.setLocation("Zurich");
+                room7.setCapacity(6);
+                room7.setAmenities(Set.of("Whiteboard", "High-Speed Wi-Fi"));
+                room7.setCoordinates(new GeoLocation(47.3769, 8.5417));
+
+                Room room8 = new Room();
+                room8.setName("Lakeside Meeting Spot");
+                room8.setLocation("Toronto");
+                room8.setCapacity(18);
+                room8.setAmenities(Set.of("TV", "Coffee Machine", "Wi-Fi", "Projector"));
+                room8.setCoordinates(new GeoLocation(43.6532, -79.3832));
+
+
+                roomRepository.saveAll(List.of(room1, room2, room3, room4, room5, room6, room7, room8));
 
                 System.out.println("Seeded sample rooms");
             }

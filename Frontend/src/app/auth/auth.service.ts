@@ -69,8 +69,8 @@ export class AuthService {
     this.currentUserRole = role;
   }
 
-  getRole(): Role | null {
-    return this.currentUserRole;
+  getRole(): string | null {
+    return this.currentUserRole ?? null;
   }
 
   isAdmin(): boolean {

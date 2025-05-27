@@ -1,5 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
-html, body { height: 100%; }
+html, body {
+
+  background: linear-gradient(44deg, #7fb9db, #3a5583, #2e4a7a, #7fb9db);
+  background-size: 400% 400%;        /* smaller background size for less movement */
+  animation: gradientShift 40s ease infinite;  /* slower animation */
+  box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3); /* lighter shadow */
+  background-attachment: fixed;
+  height: 100%;
+}
 
 body {
   font-family: 'Montserrat', 'Roboto', sans-serif !important;
@@ -39,10 +47,7 @@ body {
 }
 
 .mat-typography {
-  background: linear-gradient(44deg, #7fb9db, #3a5583, #2e4a7a, #7fb9db);
-  background-size: 400% 400%;        /* smaller background size for less movement */
-  animation: gradientShift 40s ease infinite;  /* slower animation */
-  box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3); /* lighter shadow */
+  display: contents;
 }
 
 @keyframes gradientShift {
