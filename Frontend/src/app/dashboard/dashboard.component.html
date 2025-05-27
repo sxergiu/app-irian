@@ -1,5 +1,5 @@
 <button class="d-flex justify-content-center btn btn-main sticky-top" (click)="logout()"> LOGOUT</button>
-
+<div class="main">
 @if( authService.isAdmin() ) {
 
   <app-feature-room-list [rooms]="rooms()"
@@ -22,3 +22,5 @@
 } @else {
   <h2> How did you get here? </h2>
 }
+</div>
+<app-footer></app-footer>

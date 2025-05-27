@@ -6,6 +6,7 @@ import { RoomFormComponent } from '../room/room-form/room-form.component';
 import { CommonModule } from '@angular/common';
 import { RoomService } from '../room/room.service';
 import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-list.component';
+import {FooterComponent} from '../footer/footer.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,8 @@ import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-l
   imports: [
     CommonModule,
     FeatureRoomListComponent,
-    RoomFormComponent
+    RoomFormComponent,
+    FooterComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']

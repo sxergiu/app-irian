@@ -43,6 +43,10 @@ body {
   background-size: 400% 400%;        /* smaller background size for less movement */
   animation: gradientShift 40s ease infinite;  /* slower animation */
   box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3); /* lighter shadow */
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes gradientShift {
