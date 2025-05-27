@@ -16,8 +16,6 @@ import {MenuComponent} from '../menu/menu.component';
     CommonModule,
     FeatureRoomListComponent,
     RoomFormComponent,
-    FooterComponent,
-    MenuComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']

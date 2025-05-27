@@ -1,65 +1,91 @@
-import { Component } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {NgForOf, NgIf} from '@angular/common';
-
-interface GroupDto {
-  name: string;
-  numberOfPeople: number;
-}
+import { Component, inject, signal, computed } from '@angular/core';
+import { GroupService } from './groups.service';
+import { CommonModule } from '@angular/common';
+import {GroupDto} from './domain/group.models';
 
 @Component({
   selector: 'app-named-groups',
   templateUrl: './named-groups.component.html',
-  imports: [
-    NgIf,
-    NgForOf
-  ],
+  standalone: true,
+  imports: [CommonModule],
   styleUrls: ['./named-groups.component.scss']
 })
+export class NamedGroupsComponent {
+  private readonly groupService = inject(GroupService);
 
-export class NamedGroupsComponent  {
-  selectedFile: File | null = null;
-  uploadResponse: string = '';
-  groups: GroupDto[] = [];
 
-  constructor(private http: HttpClient) {
+  selectedFile = signal<File | null>(null);
+  groups = signal<GroupDto[]>([]);
+  uploadResponse = signal<string>('');
+  isLoading = signal<boolean>(false);
+  isUploading = signal<boolean>(false);
+
+  hasSelectedFile = computed(() => this.selectedFile() !== null);
+  hasGroups = computed(() => this.groups().length > 0);
+  canUpload = computed(() => this.hasSelectedFile() && !this.isUploading());
+
+  constructor() {
     this.fetchGroups();
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      this.selectedFile = input.files[0];
+    const file = input.files?.[0] || null;
+    this.selectedFile.set(file);
+
+    if (file) {
+      this.uploadResponse.set('');
+    }
+  }
+
+  private clearFileInput(): void {
+    // Clear the file input element
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
     }
   }
 
   uploadFile(): void {
-    if (!this.selectedFile) return;
+    const file = this.selectedFile();
+    if (!file) return;
 
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
+    this.isUploading.set(true);
+    this.uploadResponse.set('');
 
-    this.http.post('http://localhost:8080/api/group/upload', formData, { responseType: 'text' })
-      .subscribe({
-        next: response => {
-          this.uploadResponse = `✅ Success: ${response}`;
-          this.fetchGroups(); // Fetch after successful upload
-        },
-        error: (error: HttpErrorResponse) => {
-          this.uploadResponse = `❌ Error: ${error.error}`;
-        }
-      });
+    this.groupService.uploadGroupFile(file).subscribe({
+      next: (response) => {
+        this.uploadResponse.set(`Success: ${response}`);
+        this.selectedFile.set(null);
+        this.clearFileInput();
+        this.fetchGroups();
+        this.isUploading.set(false);
+      },
+      error: (error) => {
+        this.uploadResponse.set(`Please upload a valid .csv file!`);
+        this.selectedFile.set(null);
+        this.clearFileInput();
+        this.isUploading.set(false);
+      }
+    });
   }
 
   fetchGroups(): void {
-    this.http.get<GroupDto[]>('http://localhost:8080/api/group')
-      .subscribe({
-        next: data => {
-          this.groups = data;
-        },
-        error: error => {
-          this.uploadResponse = `❌ Failed to fetch groups`;
-        }
-      });
+    this.isLoading.set(true);
+
+    this.groupService.getGroups().subscribe({
+      next: (data) => {
+        this.groups.set(data);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        this.uploadResponse.set(`Server fetch error: ${error}`);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  clearResponse(): void {
+    this.uploadResponse.set('');
   }
 }

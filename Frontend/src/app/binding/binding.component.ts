@@ -9,7 +9,6 @@ import {RouterOutlet} from '@angular/router';
   imports: [
     MenuComponent,
     FooterComponent,
-    DashboardComponent,
     RouterOutlet
   ],
   templateUrl: './binding.component.html',

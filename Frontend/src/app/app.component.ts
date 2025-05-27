@@ -6,7 +6,7 @@ import {BindingComponent} from './binding/binding.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, BindingComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

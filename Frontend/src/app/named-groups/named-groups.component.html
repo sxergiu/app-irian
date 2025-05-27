@@ -1,21 +1,46 @@
-<div class="upload-container">
-  <h2>Upload Groups CSV</h2>
 
-  <input type="file" (change)="onFileSelected($event)" accept=".csv" />
+<div class="upload-container my-5">
 
-  <button (click)="uploadFile()" [disabled]="!selectedFile">Upload</button>
+  <h1 class="text-light p-3"> Import Named Group as CSV</h1>
 
-  <p *ngIf="uploadResponse">{{ uploadResponse }}</p>
+  <div class="row">
 
-  <hr />
+    <div class="col-12 col-md-8">
+    <input class="form-control" type="file" (change)="onFileSelected($event)" accept=".csv" />
+    </div>
 
-  <h3>All Groups</h3>
-  <ul *ngIf="groups.length; else noGroups">
-    <li *ngFor="let group of groups">
-      <strong>{{ group.name }}</strong> – {{ group.numberOfPeople }} people
-    </li>
-  </ul>
-  <ng-template #noGroups>
-    <p>No groups available.</p>
-  </ng-template>
+    <div class="col-12 col-md-4">
+    <button class="btn btn-main btn-outline-light" (click)="uploadFile()" [disabled]="!canUpload()">Upload</button>
+    </div>
+
+  </div>
+
+  @if( uploadResponse() ) {
+    <p class="text-light"> {{ uploadResponse() }} </p>
+  }
+</div>
+
+<div class="container my-5">
+
+  <h3 class="text-light py-4 justify-content-lg-start">Currently Imported Groups</h3>
+
+  @if ( hasGroups() ) {
+
+    <div class="row g-4 d-flex flex-row flex-wrap">
+
+      @for (group of groups(); track group.name) {
+        <div class="col-12 col-md-1 col-lg-4">
+          <div class="card bg-light text-dark h-100">
+            <div class="card-body border-5" style="height: 100px">
+              <h5 class="card-title">{{ group.name }}</h5>
+              <p class="card-text">{{ group.numberOfPeople }} people</p>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div>
+  } @else {
+    <p class="text-light">No groups imported yet.</p>
+  }
 </div>
