@@ -75,10 +75,6 @@ export class RoomFormComponent implements AfterViewInit {
     }
   }
 
-  onCancel() {
-    this.cancel.emit();
-  }
-
   ngAfterViewInit() {
     if (this.mapsComponent && this.autocompleteInput) {
       // Set the autocomplete input signal so the maps component can access it
@@ -121,7 +117,7 @@ export class RoomFormComponent implements AfterViewInit {
   }
 
   amenitiesChanged(value: string) {
-    const amenities = value.split(',').map(a => a.trim());
+    const amenities = value.split(' ').map(a => a.trim());
     this.room.update(r => ({ ...r, amenities }));
   }
 
@@ -194,4 +190,7 @@ export class RoomFormComponent implements AfterViewInit {
     }
   }
 
+  onCancel() {
+    this.cancel.emit();
+  }
 }

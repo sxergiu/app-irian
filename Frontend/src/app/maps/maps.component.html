@@ -1,4 +1,8 @@
-<div *ngIf="isMapReady; else loading">
+
+
+
+
+@if( isMapReady() ) {
   <div style="height: 400px; width: 100%;">
     <google-map
       #googleMap
@@ -6,7 +10,7 @@
       height="400px"
       width="100%"
       [center]="center()"
-      [zoom]="zoom"
+      [zoom]="zoom()"
       (mapClick)="handlePlaceSelection($event)"
       (mapInitialized)="onMapReady()"
     >
@@ -18,8 +22,7 @@
       </map-advanced-marker>
     </google-map>
   </div>
-</div>
-
+}
 <ng-template #loading>
   <h2>Loading Google Maps...</h2>
 </ng-template>

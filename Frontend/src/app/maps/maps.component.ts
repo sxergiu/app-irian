@@ -7,6 +7,9 @@ import {
   input,
   output,
   effect,
+  signal,
+  computed,
+  untracked,
 } from '@angular/core';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { PinModel } from './domain/pin.model';
@@ -32,46 +35,76 @@ export class MapsComponent implements AfterViewInit {
   placeSelected = output<PinModel>();
   mapReady = output<boolean>();
 
-  zoom = 12;
-  isMapReady = false;
-  marker!: google.maps.marker.AdvancedMarkerElement | null;
-  autocomplete: google.maps.places.Autocomplete | null = null;
+  // Internal signals
+  isMapReady = signal(false);
+  private marker = signal<google.maps.marker.AdvancedMarkerElement | null>(null);
+  private autocomplete = signal<google.maps.places.Autocomplete | null>(null);
 
-  // Map options - will be initialized after Google Maps loads
-  mapOptions: google.maps.MapOptions = {};
+  // Computed signals
+  zoom = signal(12);
 
-  // Marker options - will be initialized after Google Maps loads
-  markerOptions: google.maps.marker.AdvancedMarkerElementOptions = {};
+  mapOptions = computed(() => {
+    if (!this.isMapReady()) return {};
+
+    return {
+      disableDefaultUI: false,
+      clickableIcons: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    } as google.maps.MapOptions;
+  });
+
+  markerOptions = computed(() => {
+    if (!this.isMapReady()) return {};
+
+    return {
+      gmpDraggable: false
+    } as google.maps.marker.AdvancedMarkerElementOptions;
+  });
 
   constructor(private loader: LoaderService, private ngZone: NgZone) {
     // Effect to handle center changes
     effect(() => {
       const newCenter = this.center();
-      if (this.isMapReady && this.googleMap?.googleMap) {
-        this.googleMap.googleMap.setCenter(newCenter);
+      if (this.isMapReady() && this.googleMap?.googleMap) {
+        untracked(() => {
+          this.googleMap.googleMap?.setCenter(newCenter);
+        });
       }
     });
 
     // Effect to handle marker position changes
     effect(() => {
       const newPosition = this.markerPosition();
-      if (this.isMapReady) {
-        if (newPosition) {
-          this.addMarker(newPosition.lat, newPosition.lng);
-        } else if (this.marker) {
-          this.marker.map = null;
-          this.marker = null;
-        }
+      const mapReady = this.isMapReady();
+
+      if (mapReady) {
+        untracked(() => {
+          if (newPosition) {
+            this.addMarker(newPosition.lat, newPosition.lng);
+          } else {
+            const currentMarker = this.marker();
+            if (currentMarker) {
+              currentMarker.map = null;
+              this.marker.set(null);
+            }
+          }
+        });
       }
     });
 
     // Effect to handle autocomplete input reference changes
     effect(() => {
       const inputRef = this.autocompleteInputRef();
+      const mapReady = this.isMapReady();
+      const currentAutocomplete = this.autocomplete();
+
       console.log('Autocomplete input ref changed:', inputRef);
-      if (inputRef && this.isMapReady && !this.autocomplete) {
+
+      if (inputRef && mapReady && !currentAutocomplete) {
         console.log('Initializing autocomplete...');
-        this.initializeAutocomplete();
+        untracked(() => {
+          this.initializeAutocomplete();
+        });
       }
     });
   }
@@ -80,18 +113,7 @@ export class MapsComponent implements AfterViewInit {
     this.loader.load().then(() => {
       console.log('Maps component ready');
 
-      // Initialize map and marker options after Google Maps is loaded
-      this.mapOptions = {
-        disableDefaultUI: false,
-        clickableIcons: true,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-
-      this.markerOptions = {
-        gmpDraggable: false
-      };
-
-      this.isMapReady = true;
+      this.isMapReady.set(true);
       this.mapReady.emit(true);
 
       // Initialize autocomplete if input reference is already provided
@@ -104,13 +126,13 @@ export class MapsComponent implements AfterViewInit {
 
       // Apply initial center and marker if they exist
       const currentCenter = this.center();
-      const currentMarker = this.markerPosition();
+      const currentMarkerPos = this.markerPosition();
 
       if (this.googleMap?.googleMap) {
         this.googleMap.googleMap.setCenter(currentCenter);
 
-        if (currentMarker) {
-          this.addMarker(currentMarker.lat, currentMarker.lng);
+        if (currentMarkerPos) {
+          this.addMarker(currentMarkerPos.lat, currentMarkerPos.lng);
         }
       }
     });
@@ -119,7 +141,8 @@ export class MapsComponent implements AfterViewInit {
   private initializeAutocomplete() {
     const inputRef = this.autocompleteInputRef();
     console.log('Initializing autocomplete with input:', inputRef);
-    if (!inputRef?.nativeElement || this.autocomplete) {
+
+    if (!inputRef?.nativeElement || this.autocomplete()) {
       console.log('Skipping autocomplete init - no input or already exists');
       return;
     }
@@ -127,15 +150,20 @@ export class MapsComponent implements AfterViewInit {
     const input = inputRef.nativeElement;
     console.log('Creating autocomplete for input element:', input);
 
-    this.autocomplete = new google.maps.places.Autocomplete(input, {
+    const autocompleteInstance = new google.maps.places.Autocomplete(input, {
       fields: ['geometry', 'formatted_address', 'address_components'],
     });
 
+    this.autocomplete.set(autocompleteInstance);
+
     console.log('Autocomplete created, adding listener...');
-    this.autocomplete.addListener('place_changed', () => {
+    autocompleteInstance.addListener('place_changed', () => {
       console.log('Place changed event triggered');
       this.ngZone.run(() => {
-        const place = this.autocomplete!.getPlace();
+        const currentAutocomplete = this.autocomplete();
+        if (!currentAutocomplete) return;
+
+        const place = currentAutocomplete.getPlace();
         console.log('Selected place:', place);
 
         if (!place.geometry || !place.geometry.location) {
@@ -165,16 +193,19 @@ export class MapsComponent implements AfterViewInit {
 
   addMarker(lat: number, lng: number) {
     // Remove existing marker
-    if (this.marker) {
-      this.marker.map = null;
+    const currentMarker = this.marker();
+    if (currentMarker) {
+      currentMarker.map = null;
     }
 
     // Add new marker
-    this.marker = new google.maps.marker.AdvancedMarkerElement({
+    const newMarker = new google.maps.marker.AdvancedMarkerElement({
       position: { lat, lng },
       map: this.googleMap.googleMap!,
       title: 'Selected Location',
     });
+
+    this.marker.set(newMarker);
   }
 
   handlePlaceSelection(event: google.maps.MapMouseEvent) {
@@ -208,7 +239,7 @@ export class MapsComponent implements AfterViewInit {
   }
 
   onMapReady() {
-    this.isMapReady = true;
+    this.isMapReady.set(true);
     this.mapReady.emit(true);
   }
 
@@ -244,5 +275,14 @@ export class MapsComponent implements AfterViewInit {
         });
       });
     });
+  }
+
+  // Getter methods for template access to signal values
+  get mapReady$() {
+    return this.isMapReady();
+  }
+
+  get currentMarker() {
+    return this.marker();
   }
 }
