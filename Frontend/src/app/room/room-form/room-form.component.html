@@ -49,13 +49,13 @@
           <div id="map">
             <h5>Select Location</h5>
 
-            <app-maps
+            <app-maps-select-location
               [center]="center()"
               [markerPosition]="markerPosition()"
               [autocompleteInputRef]="autocompleteInputSignal()"
               (placeSelected)="onPlaceSelected($event)"
               (mapReady)="onMapReady($event)"
-            ></app-maps>
+            ></app-maps-select-location>
 
             <div class="mt-3">
               <label for="manualAddress" class="form-label">Enter address:</label>

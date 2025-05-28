@@ -12,18 +12,18 @@ import {
   untracked,
 } from '@angular/core';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
-import { PinModel } from './domain/pin.model';
-import { LoaderService } from './loader.service';
+import { PinModel } from '../domain/pin.model';
+import { LoaderService } from '../loader.service';
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-maps',
+  selector: 'app-maps-select-location',
   standalone: true,
   imports: [GoogleMap, MapAdvancedMarker, NgIf],
-  templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.scss'],
+  templateUrl: './maps-select-location.component.html',
+  styleUrls: ['./maps-select-location.component.scss'],
 })
-export class MapsComponent implements AfterViewInit {
+export class MapsSelectLocationComponent implements AfterViewInit {
   @ViewChild('googleMap', { static: false }) googleMap!: GoogleMap;
 
   // Input signals
