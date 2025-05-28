@@ -1,7 +1,10 @@
 package com.app.backend.web.lib.controllers.room;
 
 import com.app.backend.domain.room.Room;
+import com.app.backend.domain.room.RoomAvailabilityQuery;
 import com.app.backend.service.api.IRoomService;
+import com.app.backend.web.lib.DTO.room.RoomAvailabilityRequest;
+import com.app.backend.web.lib.DTO.room.RoomAvailabilityResponse;
 import com.app.backend.web.lib.DTO.room.RoomRequest;
 import com.app.backend.web.lib.DTO.room.RoomResponse;
 import org.springframework.http.HttpStatus;
@@ -9,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -66,4 +70,40 @@ public class RoomController {
         roomService.deleteRoom(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/available")
+    public ResponseEntity<List<RoomAvailabilityResponse>> getAvailableRooms(
+            @RequestBody RoomAvailabilityRequest request) {
+
+        try {
+
+            if( request.getMinCapacity() == null ) {
+                request.setMinCapacity(0);
+            }
+
+            if( request.getRequiredAmenities() == null ) {
+                request.setRequiredAmenities(new HashSet<>());
+            }
+
+            List<Room> rooms = roomService.findAvailableRooms(new RoomAvailabilityQuery(
+                    request.getMinCapacity(),
+                    request.getRequiredAmenities(),
+                    request.getDate(),
+                    request.getStartTime(),
+                    request.getEndTime()
+            ));
+
+            List<RoomAvailabilityResponse> response = rooms.stream()
+                    .map(this.roomMapper::toRoomAvailabilityResponse)
+                    .toList();
+
+            return ResponseEntity.ok(response);
+        }catch ( Exception e ) {
+
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }

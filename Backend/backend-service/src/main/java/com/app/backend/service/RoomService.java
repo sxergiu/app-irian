@@ -1,13 +1,17 @@
 package com.app.backend.service;
 
+import com.app.backend.domain.booking.BookingJPARepository;
 import com.app.backend.domain.room.GeoLocation;
 import com.app.backend.domain.room.Room;
+import com.app.backend.domain.room.RoomAvailabilityQuery;
 import com.app.backend.domain.room.RoomJPARepository;
 import com.app.backend.service.api.IRoomService;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +21,7 @@ import java.util.Set;
 public class RoomService implements IRoomService {
 
     private final RoomJPARepository roomRepository;
+    private final BookingJPARepository bookingRepository;
 
     @PostConstruct
     void init() {
@@ -86,8 +91,9 @@ public class RoomService implements IRoomService {
         }
     }
 
-    public RoomService(RoomJPARepository roomRepository) {
+    public RoomService(RoomJPARepository roomRepository, BookingJPARepository bookingRepository) {
         this.roomRepository = roomRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Override
@@ -137,5 +143,25 @@ public class RoomService implements IRoomService {
     @Override
     public Optional<Room> findById(Long id) {
         return roomRepository.findById(id);
+    }
+
+    @Override
+    public List<Room> findAvailableRooms(RoomAvailabilityQuery query) {
+
+        System.out.println("Filtering by: " + query.requiredAmenities());
+
+        List<Room> allMatchingRooms = roomRepository.findByCapacityGreaterThanEqualAndAmenitiesContainingAll(
+                query.minCapacity(), query.requiredAmenities()
+        );
+
+
+        return allMatchingRooms.stream()
+                .filter(room -> isRoomAvailable(room, query.date(), query.startTime(), query.endTime()))
+                .toList();
+    }
+
+
+    private boolean isRoomAvailable(Room room, LocalDate date, LocalTime start, LocalTime end) {
+        return bookingRepository.findOverlappingBookings(room.getId(), date, start, end).isEmpty();
     }
 }
