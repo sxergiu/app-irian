@@ -2,7 +2,5 @@ some fixes irian
 
 - id handling post/edit
 - jwt token expiration explicit handling
-- jwt no token redirect
-- selectable admin
 - add room reset map
-- refactor view child
+- refactor view child?
