@@ -1,0 +1,46 @@
+<!-- booking-detail.component.html -->
+<div class="container mt-4" *ngIf="booking() as booking">
+  <h2 class="py-3 text-white">Booking Details</h2>
+
+  <mat-card class="p-5 m-5">
+    <div class="row">
+      <div  class="col-12 col-md-8">
+      <mat-card-title class="card-title">{{ booking.room.name }}</mat-card-title>
+      <mat-card-subtitle class="card-subtitle">{{ booking.room.location }}</mat-card-subtitle>
+
+      <mat-card-content>
+
+        <p><strong>Date:</strong> {{ booking.date }}</p>
+        <p><strong>Time:</strong> {{ booking.startTime }} - {{ booking.endTime }}</p>
+        <p><strong>Group:</strong> {{ booking.group.name }} ({{ booking.group.size }} people)</p>
+        <p><strong>User:</strong> {{ booking.user.name }} ({{ booking.user.email }})</p>
+        <p><strong>Room Capacity:</strong> {{ booking.room.capacity }}</p>
+        <p><strong>Amenities:</strong> {{ booking.room.amenities.join(', ') }}</p>
+        <p><strong>Group:</strong> {{ booking.group.name }} ({{ booking.group.size }} people)</p>
+        <p><strong>User:</strong> {{ booking.user.name }} ({{ booking.user.email }})</p>
+        <p><strong>Room Capacity:</strong> {{ booking.room.capacity }}</p>
+        <p><strong>Amenities:</strong> {{ booking.room.amenities.join(', ') }}</p>
+
+      </mat-card-content>
+
+      <p *ngIf="!googleReady()">Waiting for Google Maps API...</p>
+      <p *ngIf="!markerPosition()">Waiting for marker position...</p>
+
+      </div>
+
+      <div class="mt-4 col-12 col-md-4" *ngIf="googleReady() && markerPosition()">
+        <google-map
+          #googleMap
+          [mapId]="'13fbb21fe1c6be2acb70e788'"
+          [center]="markerPosition()!"
+          [zoom]="15"
+          height="200px"
+          width="200px">
+          <map-advanced-marker [position]="markerPosition()!"></map-advanced-marker>
+        </google-map>
+      </div>
+    </div>
+  </mat-card>
+
+  <button class="btn btn-main mb-5 float-end" (click)="goBack()">Go Back</button>
+</div>

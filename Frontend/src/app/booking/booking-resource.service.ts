@@ -2,6 +2,8 @@ import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {RoomModel} from '../room/domain/room.model';
 import {BookingModel} from './domain/booking.model';
+import {BookingDetailsModel} from './domain/booking.details.model';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +51,9 @@ export class BookingResourceService {
 
   deleteBooking(booking: BookingModel) {
     this.http.delete<void>(`${this.apiUrl}/${booking.id}`).subscribe(_ => this.fetchBookings());
+  }
+
+  getById(id: number): Observable<BookingDetailsModel> {
+    return this.http.get<BookingDetailsModel>(`${this.apiUrl}/${id}`);
   }
 }

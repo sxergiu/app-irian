@@ -51,7 +51,9 @@
 
       <td mat-cell *matCellDef="let booking">
 
-        <button mat-icon-button color="primary" class="btn-main m-2" (click)="viewDetails(booking)" aria-label="View details">
+        <button  mat-icon-button color="primary" class="btn-main m-2" aria-label="View details"
+                 [routerLink]="['/bookings', booking.id]"
+                 (click)="viewDetails(booking)">
           <mat-icon>visibility</mat-icon>
         </button>
 

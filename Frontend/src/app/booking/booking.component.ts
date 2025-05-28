@@ -7,6 +7,7 @@ import {NgIf} from '@angular/common';
 import {BookingResourceService} from './booking-resource.service';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {RouterLink} from '@angular/router';
 
 
 @Component({
@@ -17,7 +18,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatButtonModule,
     NgIf,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    RouterLink
   ],
   templateUrl: 'booking.component.html',
   styleUrls: ['booking.component.scss']
