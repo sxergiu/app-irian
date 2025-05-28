@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {RoomModel} from '../room/domain/room.model';
 import {BookingModel} from './domain/booking.model';
 import {BookingDetailsModel} from './domain/booking.details.model';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +22,33 @@ export class BookingResourceService {
     this.http.get<BookingModel[]>(`${this.apiUrl}`).subscribe(bookings => {
       const fixedBookings = bookings.map(b => ({
         ...b,
-        date: this.formatDate(b.date),             // b.date is number[]
-        startTime: this.formatTime(b.startTime),   // b.startTime is number[]
-        endTime: this.formatTime(b.endTime)        // b.endTime is number[]
+        date: this.formatDate(b.date),
+        startTime: this.formatTime(b.startTime),
+        endTime: this.formatTime(b.endTime)
       }));
       this.bookings.set(fixedBookings);
     });
   }
+
+  getBookings() {
+    return this.bookings;
+  }
+
+  deleteBooking(booking: BookingModel) {
+    this.http.delete<void>(`${this.apiUrl}/${booking.id}`).subscribe(_ => this.fetchBookings());
+  }
+
+  getById(id: number): Observable<BookingDetailsModel> {
+    return this.http.get<BookingDetailsModel>(`${this.apiUrl}/${id}`).pipe(
+      map(b => ({
+        ...b,
+        date: this.formatDate(b.date),
+        startTime: this.formatTime(b.startTime),
+        endTime: this.formatTime(b.endTime)
+      }))
+    );
+  }
+
 
   private formatDate(raw: string): string {
     const [year, month, day] = raw;
@@ -42,18 +62,5 @@ export class BookingResourceService {
 
   private pad(n: string): string {
     return n.toString().padStart(2, '0');
-  }
-
-
-  getBookings() {
-    return this.bookings;
-  }
-
-  deleteBooking(booking: BookingModel) {
-    this.http.delete<void>(`${this.apiUrl}/${booking.id}`).subscribe(_ => this.fetchBookings());
-  }
-
-  getById(id: number): Observable<BookingDetailsModel> {
-    return this.http.get<BookingDetailsModel>(`${this.apiUrl}/${id}`);
   }
 }
