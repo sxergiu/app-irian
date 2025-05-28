@@ -68,4 +68,8 @@ public class AppUser {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    public boolean isAdmin() {
+        return role.equals(UserRole.ADMIN);
+    }
 }

@@ -1,5 +1,7 @@
 package com.app.backend.config;
 
+import com.app.backend.domain.user.AppUser;
+import com.app.backend.domain.user.UserJPARepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
@@ -24,16 +26,17 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Lazy
-    @Autowired
+    @Lazy @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserJPARepository appUserRepository;     // <— import your JPA repo
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -41,35 +44,33 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
-
-        String jwtToken = null;
-        String userEmail = null;
-
-        String path = request.getServletPath();
-        if (path.startsWith("/api/auth/")) {
-            filterChain.doFilter(request, response); // skip JWT check
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwtToken = authHeader.substring(7);
-            userEmail = jwtUtil.extractUsername(jwtToken);
+        String token = authHeader.substring(7);
+        String email = jwtUtil.extractUsername(token);
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // 1) validate token against your UserDetails
+            UserDetails uds = userDetailsService.loadUserByUsername(email);
+            if (jwtUtil.validateToken(token, uds)) {
+                // 2) load your AppUser entity
+                AppUser appUser = appUserRepository
+                        .findByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
 
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-                if (jwtUtil.validateToken(jwtToken, userDetails)) {
-                    // Extract role from JWT token
-                    String role = jwtUtil.extractRole(jwtToken);
+                // 3) build authorities from the AppUser.role
+                List<GrantedAuthority> auths = List.of(
+                        new SimpleGrantedAuthority("ROLE_" + appUser.getRole().name())
+                );
 
-                    // Create authorities from the role claim
-                    List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
-
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
+                // 4) set the AppUser as the principal
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(appUser, null, auths);
+                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
 
@@ -79,8 +80,6 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        System.out.println("path: " + path);
         return path.startsWith("/api/auth") || path.startsWith("/actuator");
     }
-
 }

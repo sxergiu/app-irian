@@ -60,6 +60,11 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.app.backend</groupId>
+            <artifactId>backend-domain</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

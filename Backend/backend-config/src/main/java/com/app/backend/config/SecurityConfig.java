@@ -28,12 +28,20 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/actuator/**").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/api/room/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/room/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/room/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("ADMIN")
+
                         .requestMatchers(HttpMethod.GET, "/api/group/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/group/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/booking/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/booking/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/booking/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/booking/**").hasAnyRole("USER", "ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .cors(Customizer.withDefaults())
