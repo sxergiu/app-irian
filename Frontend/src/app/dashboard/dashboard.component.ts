@@ -17,7 +17,6 @@ import {BookingComponent} from '../booking/booking.component';
     CommonModule,
     FeatureRoomListComponent,
     RoomFormComponent,
-    BookingComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
