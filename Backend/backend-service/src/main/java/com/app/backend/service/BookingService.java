@@ -48,7 +48,7 @@ public class BookingService implements IBookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         if (!user.isAdmin() && !booking.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - update booking");
         }
 
         Room room = fetchValidatedRoom(roomId, date, start, end);
@@ -69,7 +69,7 @@ public class BookingService implements IBookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         if (!user.isAdmin() && !booking.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - delete booking");
         }
 
         bookingRepository.delete(booking);
@@ -81,7 +81,7 @@ public class BookingService implements IBookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         if (!user.isAdmin() && !booking.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - view booking");
         }
 
         return booking;

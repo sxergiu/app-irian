@@ -3,6 +3,7 @@ package com.app.backend.web.lib.controllers.booking;
 import com.app.backend.domain.booking.Booking;
 import com.app.backend.domain.user.AppUser;
 import com.app.backend.service.api.IBookingService;
+import com.app.backend.web.lib.DTO.booking.BookingDetailsResponse;
 import com.app.backend.web.lib.DTO.booking.BookingRequest;
 import com.app.backend.web.lib.DTO.booking.BookingResponse;
 import lombok.RequiredArgsConstructor;
@@ -75,13 +76,18 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookingResponse> getBooking(
+    public ResponseEntity<BookingDetailsResponse> getBooking(
             @PathVariable Long id,
             @AuthenticationPrincipal AppUser user) {
 
-        System.out.println("Req by user: " + user);
-        Booking booking = bookingService.getBooking(id, user);
-        return ResponseEntity.ok(bookingMapper.toDto(booking));
+        try {
+            System.out.println("Req by user: " + user);
+            Booking booking = bookingService.getBooking(id, user);
+            return ResponseEntity.ok(bookingMapper.toDetailDto(booking));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping
@@ -89,6 +95,7 @@ public class BookingController {
             @AuthenticationPrincipal AppUser user) {
 
         System.out.println("Req by user: " + user);
+
         List<Booking> bookings = bookingService.getAllBookings(user);
         List<BookingResponse> dtos = bookings.stream()
                 .map(bookingMapper::toDto)

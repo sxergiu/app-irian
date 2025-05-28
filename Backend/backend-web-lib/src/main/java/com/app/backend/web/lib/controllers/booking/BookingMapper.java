@@ -1,7 +1,14 @@
 package com.app.backend.web.lib.controllers.booking;
 
 import com.app.backend.domain.booking.Booking;
+import com.app.backend.domain.group.NamedGroup;
+import com.app.backend.domain.room.Room;
+import com.app.backend.domain.user.AppUser;
+import com.app.backend.web.lib.DTO.booking.BookingDetailsResponse;
 import com.app.backend.web.lib.DTO.booking.BookingResponse;
+import com.app.backend.web.lib.DTO.group.NamedGroupResponse;
+import com.app.backend.web.lib.DTO.room.RoomResponse;
+import com.app.backend.web.lib.DTO.user.UserResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,5 +46,25 @@ public class BookingMapper {
 
         return dto;
     }
+
+    public BookingDetailsResponse toDetailDto(Booking booking) {
+
+        Room room = booking.getRoom();
+        NamedGroup group = booking.getNamedGroup();
+        AppUser user = booking.getUser();
+
+        RoomResponse roomDto = new RoomResponse(room.getId(), room.getName(), room.getLocation(),
+                room.getCapacity(), room.getAmenities(), room.getCoordinates());
+
+        NamedGroupResponse groupDto = new NamedGroupResponse(group.getId(), group.getName(), group.getNumberOfPeople());
+
+        UserResponse userDto = new UserResponse(user.getId(), user.getName(), user.getEmail());
+
+        return new BookingDetailsResponse(
+                booking.getId(), booking.getDate(), booking.getStartTime(), booking.getEndTime(),
+                groupDto, userDto, roomDto
+        );
+    }
+
 }
 
