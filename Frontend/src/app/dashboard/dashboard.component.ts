@@ -8,6 +8,7 @@ import { RoomService } from '../room/room.service';
 import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-list.component';
 import {FooterComponent} from '../footer/footer.component';
 import {MenuComponent} from '../menu/menu.component';
+import {BookingComponent} from '../booking/booking.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +17,7 @@ import {MenuComponent} from '../menu/menu.component';
     CommonModule,
     FeatureRoomListComponent,
     RoomFormComponent,
+    BookingComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
