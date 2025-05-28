@@ -1,6 +1,6 @@
 <!-- booking-list.component.html -->
 <div class="container mt-4">
-  <h2 class="text-light">Bookings</h2>
+  <h1 class="text-light py-5">Bookings</h1>
   <table mat-table [dataSource]="bookings()" class="mat-elevation-z8" multiTemplateDataRows>
 
     <!-- ID Column -->
@@ -48,9 +48,20 @@
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
+
       <td mat-cell *matCellDef="let booking">
-        <button class="btn btn-main my-4"  (click)="viewDetails(booking)">View</button>
+
+        <button mat-icon-button color="primary" class="btn-main m-2" (click)="viewDetails(booking)" aria-label="View details">
+          <mat-icon>visibility</mat-icon>
+        </button>
+
+        <!-- Delete Button -->
+        <button mat-icon-button color="warn" class="btn-red m-2" (click)="deleteBooking(booking)" aria-label="Delete booking">
+          <mat-icon>delete</mat-icon>
+        </button>
+
       </td>
+
     </ng-container>
 
     <!-- Header & Row Declarations -->
@@ -58,4 +69,10 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
   </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                 showFirstLastButtons
+                 aria-label="Select page of periodic elements">
+  </mat-paginator>
+
 </div>

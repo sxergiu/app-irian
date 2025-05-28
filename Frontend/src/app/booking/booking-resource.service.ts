@@ -47,4 +47,7 @@ export class BookingResourceService {
     return this.bookings;
   }
 
+  deleteBooking(booking: BookingModel) {
+    this.http.delete<void>(`${this.apiUrl}/${booking.id}`).subscribe(_ => this.fetchBookings());
+  }
 }
