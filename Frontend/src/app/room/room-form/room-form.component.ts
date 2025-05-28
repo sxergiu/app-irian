@@ -10,7 +10,7 @@ import {
   effect
 } from '@angular/core';
 import { RoomModel } from '../domain/room.model';
-import { MapsComponent } from '../../maps/maps.component';
+import { MapsSelectLocationComponent } from '../../maps/feature-select-maps-location/maps-select-location.component';
 import { PinModel } from '../../maps/domain/pin.model';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LoaderService } from '../../maps/loader.service';
@@ -18,10 +18,11 @@ import { LoaderService } from '../../maps/loader.service';
 @Component({
   selector: 'app-room-form',
   standalone: true,
-  imports: [MapsComponent, FormsModule],
+  imports: [MapsSelectLocationComponent, FormsModule],
   templateUrl: './room-form.component.html',
   styleUrls: ['./room-form.component.scss']
 })
+
 export class RoomFormComponent implements AfterViewInit {
 
   roomChanged = output<RoomModel>();
@@ -31,7 +32,7 @@ export class RoomFormComponent implements AfterViewInit {
   manualAddress = model('');
 
   @ViewChild('autocompleteInput', { static: false }) autocompleteInput!: ElementRef<HTMLInputElement>;
-  @ViewChild(MapsComponent, { static: false }) mapsComponent!: MapsComponent;
+  @ViewChild(MapsSelectLocationComponent, { static: false }) mapsComponent!: MapsSelectLocationComponent;
 
   // Signal to pass the autocomplete input to the maps component
   autocompleteInputSignal = signal<ElementRef<HTMLInputElement> | null>(null);
@@ -73,10 +74,6 @@ export class RoomFormComponent implements AfterViewInit {
       // If no coordinates but has address, geocode it
       this.mapsComponent?.geocodeAndSetPin(room.address);
     }
-  }
-
-  onCancel() {
-    this.cancel.emit();
   }
 
   ngAfterViewInit() {
@@ -121,7 +118,7 @@ export class RoomFormComponent implements AfterViewInit {
   }
 
   amenitiesChanged(value: string) {
-    const amenities = value.split(',').map(a => a.trim());
+    const amenities = value.split(' ').map(a => a.trim());
     this.room.update(r => ({ ...r, amenities }));
   }
 
@@ -194,4 +191,7 @@ export class RoomFormComponent implements AfterViewInit {
     }
   }
 
+  onCancel() {
+    this.cancel.emit();
+  }
 }

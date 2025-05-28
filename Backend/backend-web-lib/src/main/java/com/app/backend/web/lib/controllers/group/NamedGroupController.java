@@ -2,6 +2,7 @@ package com.app.backend.web.lib.controllers.group;
 
 import com.app.backend.domain.group.NamedGroup;
 import com.app.backend.service.api.INamedGroupService;
+import com.app.backend.web.lib.DTO.group.NamedGroupResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/group")
@@ -31,7 +33,13 @@ public class NamedGroupController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<NamedGroup>> getAllGroups() {
-        return ResponseEntity.ok(groupService.getAllGroups());
+    public ResponseEntity<Set<NamedGroupResponse>> getAllGroups() {
+
+        Set<NamedGroup>namedGroups = groupService.getAllGroups();
+
+        return ResponseEntity.ok(namedGroups.stream()
+                .map(group -> new NamedGroupResponse(group.getId(), group.getName(), group.getNumberOfPeople()))
+                .collect(Collectors.toSet())
+        );
     }
 }

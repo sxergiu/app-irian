@@ -1,0 +1,74 @@
+
+
+<div class="container mt-4" *ngIf="booking() as booking" style="width: 875px">
+  <h2 class="py-3 text-white">Booking Details</h2>
+
+  <mat-card class="p-5 m-5">
+
+        <mat-card-title >
+          <strong class="card-title"> {{ booking.room.name }} </strong>,  {{ booking.room.location }}
+        </mat-card-title>
+
+        <mat-card-subtitle>
+          <p class="mb-3 card-subtitle">
+            <strong> Date: </strong> {{ booking.date }},
+            <strong> Time: </strong> {{ booking.startTime }} - {{ booking.endTime }}
+          </p>
+        </mat-card-subtitle>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <mat-card-content>
+
+          <strong class="card-text"> Booked by: </strong>
+          <ul>
+            <li>
+              <p class="card-text"><strong>User: </strong> {{ booking.user.name }}</p>
+            </li>
+            <li>
+              <p class="card-text"><strong>Email: </strong> {{ booking.user.email }}</p>
+            </li>
+          </ul>
+
+            <strong class="card-text"> Booked for: </strong>
+            <ul>
+              <li>
+                <p class="card-text"> {{ booking.group.name }} ({{ booking.group.size }} people)</p>
+              </li>
+            </ul>
+
+            <strong class="card-text"> Room details: </strong>
+              <ul>
+                  <li>
+                    <p class="card-text"><strong>Capacity:</strong> {{ booking.room.capacity }}</p>
+                  </li>
+                  <li>
+                    <strong>Amenities:</strong><br>
+                    @for (amenity of booking.room.amenities; track amenity) {
+                      <span class="badge bg-secondary me-1"> {{ amenity }} </span>
+                    }
+                  </li>
+              </ul>
+        </mat-card-content>
+
+        <p *ngIf="!googleReady()">Waiting for Google Maps API...</p>
+        <p *ngIf="!markerPosition()">Waiting for marker position...</p>
+
+        </div>
+
+        <div class="mt-2 col-12 col-md-8 justify-content-center d-flex" *ngIf="googleReady() && markerPosition()">
+          <google-map
+            #googleMap
+            [mapId]="'13fbb21fe1c6be2acb70e788'"
+            [center]="markerPosition()!"
+            [zoom]="15"
+            height="100%"
+            width="350px">
+            <map-advanced-marker [position]="markerPosition()!"></map-advanced-marker>
+          </google-map>
+      </div>
+    </div>
+  </mat-card>
+
+  <button class="btn btn-main mb-5 float-end" (click)="goBack()">Go Back</button>
+</div>

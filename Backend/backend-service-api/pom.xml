@@ -23,13 +23,7 @@
 
         <dependency>
             <groupId>com.app.backend</groupId>
-            <artifactId>backend-domain</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-        <groupId>com.app.backend</groupId>
-        <artifactId>backend-config</artifactId>
+            <artifactId>backend-config</artifactId>
         </dependency>
 
     </dependencies>

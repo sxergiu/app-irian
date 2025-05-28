@@ -26,7 +26,7 @@ body {
 }
 
 .text-red {
-  color: red;
+  color: #bd1111;
 }
 
 .btn-main {
@@ -40,9 +40,20 @@ body {
   color: white;
 }
 
+.btn-red {
+  background-color: white;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.btn-red:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
 .ng-submitted {
   .ng-invalid {
-    border: 1px solid red;
+    border: 1px solid #dc3545;
   }
 }
 
