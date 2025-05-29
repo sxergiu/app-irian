@@ -1,4 +1,4 @@
-package com.app.backend.config;
+package com.app.backend.config.jwt;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

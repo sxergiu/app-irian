@@ -8,6 +8,7 @@ import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomJPARepository;
 import com.app.backend.domain.user.AppUser;
 import com.app.backend.service.api.IBookingService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

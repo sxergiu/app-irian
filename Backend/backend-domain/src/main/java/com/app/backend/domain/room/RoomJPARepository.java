@@ -24,4 +24,5 @@ public interface RoomJPARepository extends JpaRepository<Room, Long> {
             @Param("requiredAmenities") Set<String> amenities
     );
 
+    Optional<Room> findByName(String name);
 }
