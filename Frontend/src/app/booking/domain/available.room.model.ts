@@ -1,5 +1,4 @@
 
-
 export interface AvailableRoomModel {
 
   id: number;
@@ -7,5 +6,11 @@ export interface AvailableRoomModel {
   location: string;
   capacity: number;
   amenities: string[];
-  date: string;
+  availableSlots: Timeslot[];
+  bookedSlots: Timeslot[];
+}
+
+export interface Timeslot {
+  startTime: number;
+  endTime: number;
 }

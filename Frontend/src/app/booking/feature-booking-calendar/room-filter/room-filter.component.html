@@ -18,14 +18,14 @@
 
             <mat-form-field appearance="fill" class="me-3">
               <mat-label class="filter-text">Choose a date</mat-label>
-              <input class="filter-text" matInput [matDatepicker]="picker" [ngModel]="selectedDate()" (dateChange)="onDateChange($event.value)">
+              <input class="filter-text" matInput [matDatepicker]="picker" [ngModel]="filter().date" (dateChange)="onDateChange($event.value)">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="me-3" style="width: 240px">
               <mat-label class="filter-text">Minimum Capacity</mat-label>
-              <input class="filter-text" matInput type="number" [ngModel]="selectedCapacity()" (ngModelChange)="onCapacityChange($event)" />
+              <input class="filter-text" matInput type="number" [ngModel]="filter().minCapacity" (ngModelChange)="onCapacityChange($event)" />
             </mat-form-field>
 
         </div>

@@ -87,6 +87,8 @@ public class RoomService implements IRoomService {
     @Override
     public List<Room> findAvailableRooms(RoomAvailabilityQuery query) {
 
+        System.out.println("Filtering: " +query.date());
+
         return roomRepository.findWithAvailability(query.minCapacity())
                 .stream()
                 .filter(room -> room.getAmenities().containsAll(query.requiredAmenities()))
@@ -104,12 +106,7 @@ public class RoomService implements IRoomService {
                 .map(Booking::getTime)
                 .toList();
 
-        System.out.println("Availability: " + roomAvailability);
-        System.out.println("Booked Intervals: " + bookingIntervals);
-
         List<TimeInterval> freeSlots = subtractAll(roomAvailability, bookingIntervals);
-
-        System.out.println("FreeSlots: " + freeSlots);
 
         room.setAvailableSlots(freeSlots);
 

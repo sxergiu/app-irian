@@ -4,7 +4,7 @@ import {
   computed,
   effect,
   EventEmitter,
-  inject, input,
+  inject, input, model,
   output,
   Output,
   signal
@@ -38,19 +38,16 @@ import {RoomFilterModel} from '../../domain/room.filter.model';
 
 export class RoomFilterComponent {
 
-  amenities = input<string[]>();
+  filter = model<RoomFilterModel>({
+    date: "",
+    minCapacity: 0,
+    requiredAmenities: []
+  });
 
   filterChange = output<RoomFilterModel>();
 
-  selectedCapacity = signal<number>(0);
-  selectedDate = signal<string>("");
+  amenities = input<string[]>([]);
   selectedAmenities = signal<string[]>([]);
-
-  filter = computed<RoomFilterModel>(() => ({
-    date: this.selectedDate(),
-    minCapacity: this.selectedCapacity(),
-    requiredAmenities: this.selectedAmenities()
-  }));
 
   constructor() {
 
@@ -60,20 +57,22 @@ export class RoomFilterComponent {
 
   }
 
-  private getDateArray(date: Date): number[] {
-    return [
-      date.getFullYear(),
-      date.getMonth() + 1, // getMonth() returns 0-11, so add 1
-      date.getDate()
-    ];
+    onCapacityChange($event: number): void {
+    this.filter.update(filter => {
+      return {
+        ...filter,
+       minCapacity: $event
+      }
+    })
   }
 
-  onCapacityChange(capacity: number): void {
-    this.selectedCapacity.set(capacity);
-  }
-
-  onDateChange(date: string): void {
-    this.selectedDate.set(date);
+  onDateChange($event: string): void {
+    this.filter.update(filter => {
+      return {
+        ...filter,
+        date: $event
+      }
+    })
   }
 
   toggleAmenity(amenity: string): void {
@@ -81,22 +80,19 @@ export class RoomFilterComponent {
     const index = currentSelected.indexOf(amenity);
 
     if (index >= 0) {
-
       const newSelected = currentSelected.filter(a => a !== amenity);
       this.selectedAmenities.set(newSelected);
     } else {
 
       this.selectedAmenities.set([...currentSelected, amenity]);
     }
+
+    this.filter.update(filter => {
+      return {
+        ...filter,
+        requiredAmenities: this.selectedAmenities()
+      }
+    })
   }
 
-  isAmenitySelected(amenity: string): boolean {
-    return this.selectedAmenities().includes(amenity);
-  }
-
-  resetFilters(): void {
-    this.selectedCapacity.set(0);
-    this.selectedDate.set("");
-    this.selectedAmenities.set([]);
-  }
 }

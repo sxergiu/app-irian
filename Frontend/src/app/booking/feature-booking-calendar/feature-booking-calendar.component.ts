@@ -5,6 +5,7 @@ import {AvailabilityTableComponent} from './availability-table/availability-tabl
 import {timeSlots} from '../data/timeslots.data';
 import {RoomFilterModel} from '../domain/room.filter.model';
 import {featureBookingCalendarStore} from './+store/feature-booking-calendar.store';
+import {Timeslot} from '../domain/available.room.model';
 
 @Component({
   selector: 'app-feature-booking-calendar-page',
@@ -27,6 +28,26 @@ export class FeatureBookingCalendarComponent {
 
   onSlotSelected(data: { roomId: number, slot: string }) {
     console.log('User clicked:', data);
+  }
+
+  selectInterval(interval: any) {
+    console.log('Selected interval: ' + interval);
+  }
+
+  getIntervalOffset(interval: Timeslot): number {
+    const totalMinutes = 14 * 60; // from 07:00 to 21:00
+    return ((interval.startTime - 7 * 60) / totalMinutes) * 100;
+  }
+
+  getIntervalWidth(interval: Timeslot): number {
+    const totalMinutes = 14 * 60;
+    return ((interval.endTime - interval.startTime) / totalMinutes) * 100;
+  }
+
+  formatInterval(interval: Timeslot): string {
+    const format = (min: number) =>
+      `${Math.floor(min / 60).toString().padStart(2, '0')}:${(min % 60).toString().padStart(2, '0')}`;
+    return `${format(interval.startTime)} - ${format(interval.endTime)}`;
   }
 
 }
