@@ -1,6 +1,8 @@
 package com.app.backend.service;
 
+import com.app.backend.domain.booking.Booking;
 import com.app.backend.domain.booking.BookingJPARepository;
+import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomAvailabilityQuery;
 import com.app.backend.domain.room.RoomJPARepository;
@@ -10,10 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService implements IRoomService {
@@ -29,9 +29,17 @@ public class RoomService implements IRoomService {
 
     @Override
     public Room createRoom(Room room) {
+
         if (roomRepository.existsByName(room.getName())) {
             throw new RuntimeException("Room name must be unique");
         }
+
+        room.setAvailableSlots(List.of(new TimeInterval(
+                LocalTime.of(7, 0),
+                LocalTime.of(21, 0)
+        )));
+
+
         return roomRepository.save(room);
     }
 
@@ -79,24 +87,72 @@ public class RoomService implements IRoomService {
     @Override
     public List<Room> findAvailableRooms(RoomAvailabilityQuery query) {
 
-        System.out.println("Filtering by: " + query.requiredAmenities());
-
-        List<Room> allMatchingRooms = roomRepository.findByCapacityGreaterThanEqualAndAmenitiesContainingAll(
-                query.minCapacity(), query.requiredAmenities()
-        );
-
-
-        return allMatchingRooms.stream()
-                .filter(room -> isRoomAvailable(room, query.date(), query.startTime(), query.endTime()))
-                .toList();
+        return roomRepository.findWithAvailability(query.minCapacity())
+                .stream()
+                .filter(room -> room.getAmenities().containsAll(query.requiredAmenities()))
+                .map(room -> getRoomWithFreeSlots(room, query.date()))
+                .collect(Collectors.toList());
     }
 
+    private Room getRoomWithFreeSlots(Room room, LocalDate date) {
 
-    private boolean isRoomAvailable(Room room, LocalDate date, LocalTime start, LocalTime end) {
-        return bookingRepository.findOverlappingBookings(room.getId(), date, start, end).isEmpty();
+        List<TimeInterval> roomAvailability = new ArrayList<>(room.getAvailableSlots());
+
+        List<Booking> bookings = bookingRepository.findByRoomIdAndDate(room.getId(), date);
+
+        List<TimeInterval> bookingIntervals = bookings.stream()
+                .map(Booking::getTime)
+                .toList();
+
+        System.out.println("Availability: " + roomAvailability);
+        System.out.println("Booked Intervals: " + bookingIntervals);
+
+        List<TimeInterval> freeSlots = subtractAll(roomAvailability, bookingIntervals);
+
+        System.out.println("FreeSlots: " + freeSlots);
+
+        room.setAvailableSlots(freeSlots);
+
+        return room;
+    }
+
+    private boolean isRoomAvailable(Room room, LocalDate date) {
+        return bookingRepository.findOverlappingBookings(room.getId(), date).isEmpty();
     }
 
     public Set<String> findAllAvailableAmenities() {
         return roomRepository.findDistinctAmenities();
     }
+
+    private List<TimeInterval> subtractInterval(List<TimeInterval> slots, TimeInterval toSubtract) {
+
+        List<TimeInterval> updated = new ArrayList<>();
+
+        for (TimeInterval slot : slots) {
+            if (toSubtract.getEndTime().isBefore(slot.getStartTime()) ||
+                    toSubtract.getStartTime().isAfter(slot.getEndTime())) {
+                updated.add(slot); // no overlap
+            } else {
+                if (toSubtract.getStartTime().isAfter(slot.getStartTime())) {
+                    updated.add(new TimeInterval(slot.getStartTime(), toSubtract.getStartTime()));
+                }
+                if (toSubtract.getEndTime().isBefore(slot.getEndTime())) {
+                    updated.add(new TimeInterval(toSubtract.getEndTime(), slot.getEndTime()));
+                }
+            }
+        }
+
+        return updated;
+    }
+
+    private List<TimeInterval> subtractAll(List<TimeInterval> base, List<TimeInterval> toSubtractList) {
+
+        List<TimeInterval> result = new ArrayList<>(base);
+        for (TimeInterval interval : toSubtractList) {
+            result = subtractInterval(result, interval);
+        }
+        return result;
+    }
+
+
 }

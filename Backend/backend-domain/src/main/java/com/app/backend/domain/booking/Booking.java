@@ -20,8 +20,8 @@ public class Booking {
 
     private LocalDate date;
 
-    private LocalTime startTime;
-    private LocalTime endTime;
+    @Embedded
+    private TimeInterval time;
 
     @ManyToOne(optional = false)
     private AppUser user;
@@ -29,12 +29,11 @@ public class Booking {
     @ManyToOne(optional = false)
     private NamedGroup namedGroup;
 
-    public Booking(Long id, Room room, LocalDate date, LocalTime startTime, LocalTime endTime, AppUser user, NamedGroup namedGroup) {
+    public Booking(Long id, Room room, LocalDate date, TimeInterval time, AppUser user, NamedGroup namedGroup) {
         this.id = id;
         this.room = room;
         this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.time = time;
         this.user = user;
         this.namedGroup = namedGroup;
     }
@@ -68,20 +67,12 @@ public class Booking {
         this.date = date;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+    public TimeInterval getTime() {
+        return time;
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+    public void setTime(TimeInterval time) {
+        this.time = time;
     }
 
     public AppUser getUser() {

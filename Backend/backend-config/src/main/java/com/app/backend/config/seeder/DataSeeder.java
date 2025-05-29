@@ -3,6 +3,7 @@ package com.app.backend.config.seeder;
 
 import com.app.backend.domain.booking.Booking;
 import com.app.backend.domain.booking.BookingJPARepository;
+import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.group.GroupJPARepository;
 import com.app.backend.domain.group.NamedGroup;
 import com.app.backend.domain.room.GeoLocation;
@@ -117,6 +118,14 @@ public class DataSeeder {
             room8.setCoordinates(new GeoLocation(43.6532, -79.3832));
             roomJPARepository.saveAll(List.of(room1, room2, room3, room4, room5, room6, room7, room8));
 
+            for(Room room : roomJPARepository.findAll()) {
+
+                    room.setAvailableSlots(List.of(
+                            new TimeInterval(LocalTime.of(7, 0), LocalTime.of(21, 0))
+                    ));
+                    roomJPARepository.save(room);
+            }
+
             NamedGroup group1 = new NamedGroup();
             group1.setName("Mario Karts");
             group1.setNumberOfPeople(20);
@@ -139,48 +148,42 @@ public class DataSeeder {
             Booking booking1 = new Booking();
             booking1.setRoom(room1);
             booking1.setDate(LocalDate.of(2025, 6, 15));
-            booking1.setStartTime( LocalTime.of(10, 0));
-            booking1.setEndTime( LocalTime.of(12, 0));
+            booking1.setTime( new TimeInterval(LocalTime.of(10, 0),LocalTime.of(12, 0)) );
             booking1.setUser(simpleUser);
             booking1.setNamedGroup(group1);
 
             Booking booking2 = new Booking();
             booking2.setRoom(room1);
             booking2.setDate(LocalDate.of(2025, 6, 15));
-            booking2.setStartTime( LocalTime.of(12, 0));
-            booking2.setEndTime( LocalTime.of(13, 0));
+            booking2.setTime( new TimeInterval(LocalTime.of(12, 0), LocalTime.of(13, 0)));
             booking2.setUser(simpleUser);
             booking2.setNamedGroup(group2);
 
             Booking booking3 = new Booking();
             booking3.setRoom(room2);
             booking3.setDate(LocalDate.of(2023, 6, 15));
-            booking3.setStartTime( LocalTime.of(10, 0));
-            booking3.setEndTime( LocalTime.of(12, 0));
+            booking3.setTime( new TimeInterval(LocalTime.of(10, 0),LocalTime.of(12, 0)));
             booking3.setUser(simpleUser);
             booking3.setNamedGroup(group3);
 
             Booking booking4 = new Booking();
             booking4.setRoom(room2);
             booking4.setDate(LocalDate.of(2022, 6, 15));
-            booking4.setStartTime( LocalTime.of(11, 0));
-            booking4.setEndTime( LocalTime.of(13, 0));
+            booking4.setTime( new TimeInterval(LocalTime.of(11, 0), LocalTime.of(13, 0)));
             booking4.setUser(simpleUser);
             booking4.setNamedGroup(group4);
 
             Booking booking5 = new Booking();
             booking5.setRoom(room6);
             booking5.setDate(LocalDate.of(2021, 6, 15));
-            booking5.setStartTime( LocalTime.of(11, 0));
-            booking5.setEndTime( LocalTime.of(12, 0));
+            booking5.setTime(new TimeInterval( LocalTime.of(11, 0),LocalTime.of(12, 0)));
             booking5.setUser(simpleUser);
             booking5.setNamedGroup(group4);
 
             Booking booking6 = new Booking();
             booking6.setRoom(room5);
             booking6.setDate(LocalDate.of(2026, 6, 15));
-            booking6.setStartTime( LocalTime.of(10, 0));
-            booking6.setEndTime( LocalTime.of(12, 0));
+            booking6.setTime( new TimeInterval(LocalTime.of(10, 0), LocalTime.of(12, 0)));
             booking6.setUser(simpleUser);
             booking6.setNamedGroup(group1);
 

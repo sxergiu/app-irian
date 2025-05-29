@@ -88,9 +88,7 @@ public class RoomController {
             List<Room> rooms = roomService.findAvailableRooms(new RoomAvailabilityQuery(
                     request.getMinCapacity(),
                     request.getRequiredAmenities(),
-                    request.getDate(),
-                    request.getStartTime(),
-                    request.getEndTime()
+                    request.getDate()
             ));
 
             List<RoomAvailabilityResponse> response = rooms.stream()

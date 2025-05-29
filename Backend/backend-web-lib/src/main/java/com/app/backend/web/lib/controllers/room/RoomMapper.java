@@ -43,6 +43,7 @@ public class RoomMapper {
         dto.setLocation(room.getLocation());
         dto.setCapacity(room.getCapacity());
         dto.setAmenities(room.getAmenities());
+        dto.setAvailableSlots(room.getAvailableSlots());
 
         return dto;
     }

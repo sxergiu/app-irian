@@ -1,7 +1,9 @@
 package com.app.backend.web.lib.DTO.booking;
 
+import com.app.backend.domain.booking.TimeInterval;
 import lombok.Data;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -14,7 +16,5 @@ public class BookingRequest {
 
     private LocalDate date;
 
-    private LocalTime startTime;
-
-    private LocalTime endTime;
+    private TimeInterval time;
 }

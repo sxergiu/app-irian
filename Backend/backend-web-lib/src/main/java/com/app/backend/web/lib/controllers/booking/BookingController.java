@@ -35,8 +35,7 @@ public class BookingController {
                     dto.getRoomId(),
                     dto.getNamedGroupId(),
                     dto.getDate(),
-                    dto.getStartTime(),
-                    dto.getEndTime(),
+                    dto.getTime(),
                     user);
 
             return ResponseEntity.ok(bookingMapper.toDto(booking));
@@ -58,8 +57,7 @@ public class BookingController {
                 dto.getRoomId(),
                 dto.getNamedGroupId(),
                 dto.getDate(),
-                dto.getStartTime(),
-                dto.getEndTime(),
+                dto.getTime(),
                 user);
 
         return ResponseEntity.ok(bookingMapper.toDto(booking));
