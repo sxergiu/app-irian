@@ -1,0 +1,36 @@
+<table class="table table-bordered text-center align-middle">
+  <thead>
+  <tr>
+    <th>Room</th>
+    @for (slot of timeSlots; track slot) {
+      <th>{{ slot }}</th>
+    }
+  </tr>
+  </thead>
+  <tbody>
+    @for (room of rooms; track room.id) {
+      <tr>
+        <td>{{ room.name }}</td>
+        @for (slot of timeSlots; track slot) {
+          <td>
+            @if (room.availability[slot]) {
+              <button
+                class="btn btn-main"
+                (click)="slotSelected.emit({ roomId: room.id, slot })">
+                <span class="material-icons d-flex justify-content-center">
+                event_available
+                </span>
+              </button>
+            } @else {
+              <button class="btn btn-danger" disabled>
+               <span class="material-icons d-flex justify-content-center">
+                event_busy
+                </span>
+              </button>
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>

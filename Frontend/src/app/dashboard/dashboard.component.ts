@@ -6,9 +6,6 @@ import { RoomFormComponent } from '../room/room-form/room-form.component';
 import { CommonModule } from '@angular/common';
 import { RoomService } from '../room/room.service';
 import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-list.component';
-import {FooterComponent} from '../footer/footer.component';
-import {MenuComponent} from '../menu/menu.component';
-import {FeatureBookingTableComponent} from '../booking/feature-booking-table/feature-booking-table.component';
 import {FeatureBookingCalendarComponent} from '../booking/feature-booking-calendar/feature-booking-calendar.component';
 
 @Component({

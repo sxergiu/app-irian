@@ -1,1 +1,17 @@
-<p>feature-booking-calendar works!</p>
+
+<div class="container my-5">
+  <h2 class="text-white my-5">Book a Room</h2>
+
+  <div class="my-3">
+
+    <app-room-filter (filterChange)="onFilterChange($event)" (dateChange)="onDateChange($event)" />
+
+    <app-availability-table
+      [rooms]="filteredRooms"
+      [timeSlots]="timeSlots"
+      (slotSelected)="onSlotSelected($event)"
+    />
+
+  </div>
+
+</div>

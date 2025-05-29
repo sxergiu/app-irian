@@ -1,15 +1,15 @@
 
 
-<div class="container mt-4" *ngIf="booking() as booking" style="width: 875px">
+<div class="container mt-4" *ngIf="booking() as booking" style="width: 1000px">
   <h2 class="py-3 text-white">Booking Details</h2>
 
   <mat-card class="p-5 m-5">
 
-        <mat-card-title >
+        <mat-card-title class="text-main" >
           <strong class="card-title"> {{ booking.room.name }} </strong>,  {{ booking.room.location }}
         </mat-card-title>
 
-        <mat-card-subtitle>
+        <mat-card-subtitle class="text-main">
           <p class="mb-3 card-subtitle">
             <strong> Date: </strong> {{ booking.date }},
             <strong> Time: </strong> {{ booking.startTime }} - {{ booking.endTime }}
@@ -23,7 +23,7 @@
           <strong class="card-text"> Booked by: </strong>
           <ul>
             <li>
-              <p class="card-text"><strong>User: </strong> {{ booking.user.name }}</p>
+              <p class="card-text text-main"><strong>User: </strong> {{ booking.user.name }}</p>
             </li>
             <li>
               <p class="card-text"><strong>Email: </strong> {{ booking.user.email }}</p>
@@ -33,7 +33,7 @@
             <strong class="card-text"> Booked for: </strong>
             <ul>
               <li>
-                <p class="card-text"> {{ booking.group.name }} ({{ booking.group.size }} people)</p>
+                <p class="card-text"> {{ booking.group.name }} ({{ booking.group.numberOfPeople }} people)</p>
               </li>
             </ul>
 
@@ -45,7 +45,7 @@
                   <li>
                     <strong>Amenities:</strong><br>
                     @for (amenity of booking.room.amenities; track amenity) {
-                      <span class="badge bg-secondary me-1"> {{ amenity }} </span>
+                      <span class="badge bg-secondary me-1 "> {{ amenity }} </span>
                     }
                   </li>
               </ul>
@@ -63,7 +63,7 @@
             [center]="markerPosition()!"
             [zoom]="15"
             height="100%"
-            width="350px">
+            width="400px">
             <map-advanced-marker [position]="markerPosition()!"></map-advanced-marker>
           </google-map>
       </div>
