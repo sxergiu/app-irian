@@ -9,6 +9,7 @@ import {FeatureRoomListComponent} from '../room/feature-room-list/feature-room-l
 import {FooterComponent} from '../footer/footer.component';
 import {MenuComponent} from '../menu/menu.component';
 import {BookingComponent} from '../booking/booking.component';
+import {FeatureBookingCalendarComponent} from '../booking/feature-booking-calendar/feature-booking-calendar.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +18,7 @@ import {BookingComponent} from '../booking/booking.component';
     CommonModule,
     FeatureRoomListComponent,
     RoomFormComponent,
+    FeatureBookingCalendarComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
