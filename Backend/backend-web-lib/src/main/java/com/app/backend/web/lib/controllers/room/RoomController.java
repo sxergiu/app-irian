@@ -105,5 +105,9 @@ public class RoomController {
         }
     }
 
+    @GetMapping("/amenities")
+    public Set<String> getAllAvailableAmenities() {
+        return roomService.findAllAvailableAmenities();
+    }
 
 }

@@ -2,7 +2,7 @@
 <div class="container my-5 justify-content-center d-flex">
 
   <mat-accordion>
-    <mat-expansion-panel  hideToggle>
+    <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <button mat-icon-button aria-label="Filter">
@@ -12,25 +12,37 @@
         <mat-panel-description class="filter-text d-flex justify-content-end"> Show Filters </mat-panel-description>
       </mat-expansion-panel-header>
 
+      <div class="row">
 
-      <mat-form-field appearance="fill" class="me-3">
-        <mat-label class="filter-text">Choose a date</mat-label>
-        <input class="filter-text" matInput [matDatepicker]="picker" [(ngModel)]="selected" (dateChange)="dateChange.emit($event.value)">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+        <div class="col-12 col-md-3">
 
-      <mat-form-field appearance="fill" class="me-3">
-        <mat-label class="filter-text">Minimum Capacity</mat-label>
-        <input class="filter-text" matInput type="number" [(ngModel)]="capacity" (ngModelChange)="emitChange()" />
-      </mat-form-field>
+            <mat-form-field appearance="fill" class="me-3">
+              <mat-label class="filter-text">Choose a date</mat-label>
+              <input class="filter-text" matInput [matDatepicker]="picker" [(ngModel)]="selected" (dateChange)="dateChange.emit($event.value)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label class="filter-text"l>Amenities</mat-label>
-        <mat-select class="filter-text" multiple [(ngModel)]="amenities" (ngModelChange)="emitChange()">
-          <mat-option class="filter-text" *ngFor="let a of allAmenities" [value]="a">{{ a }}</mat-option>
-        </mat-select>
-      </mat-form-field>
+            <mat-form-field appearance="fill" class="me-3" style="width: 240px">
+              <mat-label class="filter-text">Minimum Capacity</mat-label>
+              <input class="filter-text" matInput type="number" [(ngModel)]="capacity" (ngModelChange)="emitChange()" />
+            </mat-form-field>
+
+        </div>
+
+        <div class="col-12 col-md-9">
+            <mat-label class="filter-text">Amenities</mat-label>
+            <mat-chip-listbox multiple aria-label="Amenities selection">
+              <mat-chip-option *ngFor="let a of amenities()"
+                        selectable="true"
+                        [class.filter-text]="true"
+                        (click)="toggleAmenity(a)">
+                <span class="text-main"> {{ a }}</span>
+              </mat-chip-option>
+            </mat-chip-listbox>
+        </div>
+
+      </div>
 
     </mat-expansion-panel>
 

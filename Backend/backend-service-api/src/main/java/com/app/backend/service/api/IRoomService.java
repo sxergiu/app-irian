@@ -18,5 +18,6 @@ public interface IRoomService {
     void deleteRoom(Long id);
     Optional<Room> findById(Long id);
     List<Room> findAvailableRooms(RoomAvailabilityQuery roomFilter);
+    Set<String> findAllAvailableAmenities();
 
 }

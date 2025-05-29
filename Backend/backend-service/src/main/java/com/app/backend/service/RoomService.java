@@ -1,12 +1,10 @@
 package com.app.backend.service;
 
 import com.app.backend.domain.booking.BookingJPARepository;
-import com.app.backend.domain.room.GeoLocation;
 import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomAvailabilityQuery;
 import com.app.backend.domain.room.RoomJPARepository;
 import com.app.backend.service.api.IRoomService;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -96,5 +94,9 @@ public class RoomService implements IRoomService {
 
     private boolean isRoomAvailable(Room room, LocalDate date, LocalTime start, LocalTime end) {
         return bookingRepository.findOverlappingBookings(room.getId(), date, start, end).isEmpty();
+    }
+
+    public Set<String> findAllAvailableAmenities() {
+        return roomRepository.findDistinctAmenities();
     }
 }
