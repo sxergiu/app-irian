@@ -1,4 +1,14 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, inject, output, Output, signal} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  inject, input,
+  output,
+  Output,
+  signal
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInput, MatInputModule} from '@angular/material/input';
@@ -12,8 +22,8 @@ import {
 } from '@angular/material/expansion';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
-import {BookingAvailabilityResourceService} from '../booking-availability-resource.service';
 import {MatChipsModule} from '@angular/material/chips';
+import {RoomFilterModel} from '../../domain/room.filter.model';
 
 @Component({
   selector: 'app-room-filter',
@@ -25,33 +35,68 @@ import {MatChipsModule} from '@angular/material/chips';
   styleUrls: [`room-filter.component.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class RoomFilterComponent {
 
-  filterChange = output<{ capacity: number, amenities: string[] }>()
-  capacity = 0;
-  availabilityService = inject(BookingAvailabilityResourceService);
-  amenities = signal<string[]>([]);
+  amenities = input<string[]>();
+
+  filterChange = output<RoomFilterModel>();
+
+  selectedCapacity = signal<number>(0);
+  selectedDate = signal<string>("");
   selectedAmenities = signal<string[]>([]);
 
-  @Output() dateChange = new EventEmitter<Date>();
-  selected = new Date();
+  filter = computed<RoomFilterModel>(() => ({
+    date: this.selectedDate(),
+    minCapacity: this.selectedCapacity(),
+    requiredAmenities: this.selectedAmenities()
+  }));
 
   constructor() {
-    this.amenities = this.availabilityService.amenities;
+
+    effect(() => {
+      this.filterChange.emit(this.filter());
+    });
+
   }
 
-  emitChange() {
-    this.filterChange.emit({ capacity: this.capacity, amenities: this.amenities() });
+  private getDateArray(date: Date): number[] {
+    return [
+      date.getFullYear(),
+      date.getMonth() + 1, // getMonth() returns 0-11, so add 1
+      date.getDate()
+    ];
   }
 
+  onCapacityChange(capacity: number): void {
+    this.selectedCapacity.set(capacity);
+  }
+
+  onDateChange(date: string): void {
+    this.selectedDate.set(date);
+  }
 
   toggleAmenity(amenity: string): void {
-    const index = this.selectedAmenities().indexOf(amenity);
+    const currentSelected = this.selectedAmenities();
+    const index = currentSelected.indexOf(amenity);
+
     if (index >= 0) {
-      this.selectedAmenities().splice(index, 1);
+
+      const newSelected = currentSelected.filter(a => a !== amenity);
+      this.selectedAmenities.set(newSelected);
     } else {
-      this.selectedAmenities().push(amenity);
+
+      this.selectedAmenities.set([...currentSelected, amenity]);
     }
-    this.emitChange();
+  }
+
+  isAmenitySelected(amenity: string): boolean {
+    return this.selectedAmenities().includes(amenity);
+  }
+
+  resetFilters(): void {
+    this.selectedCapacity.set(0);
+    this.selectedDate.set("");
+    this.selectedAmenities.set([]);
   }
 }

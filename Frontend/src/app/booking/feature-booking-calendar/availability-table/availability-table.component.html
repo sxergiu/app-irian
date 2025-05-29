@@ -1,36 +1,34 @@
-<table class="table table-bordered text-center align-middle">
-  <thead>
-  <tr>
-    <th>Room</th>
-    @for (slot of timeSlots; track slot) {
-      <th>{{ slot }}</th>
-    }
-  </tr>
-  </thead>
-  <tbody>
-    @for (room of rooms; track room.id) {
-      <tr>
-        <td>{{ room.name }}</td>
-        @for (slot of timeSlots; track slot) {
-          <td>
-            @if (room.availability[slot]) {
-              <button
-                class="btn btn-main"
-                (click)="slotSelected.emit({ roomId: room.id, slot })">
-                <span class="material-icons d-flex justify-content-center">
-                event_available
-                </span>
-              </button>
-            } @else {
-              <button class="btn btn-danger" disabled>
-               <span class="material-icons d-flex justify-content-center">
-                event_busy
-                </span>
-              </button>
-            }
-          </td>
-        }
-      </tr>
-    }
-  </tbody>
+
+<h2 class="text-white my-5 d-flex justify-content-center align-content-cente"> Schedule </h2>
+
+<table mat-table [dataSource]="rooms()" class="mat-elevation-z2">
+
+  <!-- Room Column -->
+  <ng-container matColumnDef="room">
+    <th mat-header-cell *matHeaderCellDef> Room </th>
+    <td mat-cell *matCellDef="let room"> {{ room.name }} </td>
+  </ng-container>
+
+  <!-- Time Slot Columns -->
+  <ng-container *ngFor="let slot of timeSlots" [matColumnDef]="slot">
+    <th mat-header-cell *matHeaderCellDef> {{ slot }} </th>
+    <td mat-cell *matCellDef="let room">
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="slotSelected.emit({ roomId: room.id, slot })">
+        <mat-icon>event_available</mat-icon>
+      </button>
+      <ng-template #unavailable>
+        <button mat-icon-button color="warn" disabled>
+          <mat-icon>event_busy</mat-icon>
+        </button>
+      </ng-template>
+    </td>
+  </ng-container>
+
+  <!-- Header and Row Definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
 </table>

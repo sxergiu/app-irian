@@ -1,13 +1,13 @@
 
 <div class="container my-5">
-  <h2 class="text-white my-5">Book a Room</h2>
+  <h2 class="text-white my-5r">Book a Room</h2>
 
   <div class="my-3">
 
-    <app-room-filter (filterChange)="onFilterChange($event)" (dateChange)="onDateChange($event)" />
+    <app-room-filter [amenities]="store.amenities()" (filterChange)="onFilterChange($event)" />
 
     <app-availability-table
-      [rooms]="filteredRooms"
+      [rooms]="store.rooms()"
       [timeSlots]="timeSlots"
       (slotSelected)="onSlotSelected($event)"
     />
