@@ -17,11 +17,11 @@ import {LoaderService} from '../../maps/loader.service';
     MapAdvancedMarker,
     NgIf
   ],
-  templateUrl: './booking-details.component.html',
-  styleUrl: './booking-details.component.scss'
+  templateUrl: './feature-booking-details.component.html',
+  styleUrl: './feature-booking-details.component.scss'
 })
 
-export class BookingDetailsComponent implements OnInit {
+export class FeatureBookingDetailsComponent implements OnInit {
 
   booking = signal<BookingDetailsModel | null>(null);
   markerPosition = signal<google.maps.LatLngLiteral | null>(null);

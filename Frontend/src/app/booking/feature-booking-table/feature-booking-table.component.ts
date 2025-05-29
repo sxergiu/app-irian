@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, effect, inject, ViewChild} from '@angular/core';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
-import {AuthService} from '../auth/auth.service';
-import {BookingModel} from './domain/booking.model';
+import {AuthService} from '../../auth/auth.service';
+import {BookingModel} from '../domain/booking.model';
 import {NgIf} from '@angular/common';
-import {BookingResourceService} from './booking-resource.service';
+import {BookingResourceService} from '../booking-resource.service';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {Router} from '@angular/router';
@@ -21,11 +21,11 @@ import {MatSort, MatSortModule} from '@angular/material/sort';
     MatPaginatorModule,
     MatSortModule
   ],
-  templateUrl: 'booking.component.html',
-  styleUrls: ['booking.component.scss']
+  templateUrl: 'feature-booking-table.component.html',
+  styleUrls: ['feature-booking-table.component.scss']
 })
 
-export class BookingComponent implements AfterViewInit{
+export class FeatureBookingTableComponent implements AfterViewInit{
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
