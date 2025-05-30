@@ -1,24 +1,27 @@
-import {Component, effect, input, output} from '@angular/core';
+import {AfterViewInit, Component, effect, input, output, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {AvailableRoomModel, Timeslot} from '../../domain/available.room.model';
+import {MatPaginator} from '@angular/material/paginator';
+
 
 @Component({
   selector: 'app-availability-table',
   standalone: true,
-  imports: [CommonModule,MatTableModule,MatIconModule,MatButtonModule],
+  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatPaginator, MatPaginator],
   templateUrl: 'availability-table.component.html',
   styleUrls: ['availability-table.component.scss']
 
 })
 
-export class AvailabilityTableComponent {
+export class AvailabilityTableComponent implements AfterViewInit{
 
   rooms = input<AvailableRoomModel[]>([])
   slotSelected = output<AvailableRoomModel>();
   dataSource = new MatTableDataSource<AvailableRoomModel>(this.rooms());
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor() {
 
@@ -49,5 +52,9 @@ export class AvailabilityTableComponent {
     const format = (min: number) =>
       `${Math.floor(min / 60).toString().padStart(2, '0')}:${(min % 60).toString().padStart(2, '0')}`;
     return `${format(interval.startTime)} - ${format(interval.endTime)}`;
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 }

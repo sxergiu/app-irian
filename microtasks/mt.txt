@@ -1,12 +1,10 @@
 features
-
 create/edit a booking
 export csv + cloud bucket
 view a room details?
 
 
 some fixes
-
 - id handling post/edit for room
 - jwt token expiration explicit handling?
 - add room reset map
@@ -14,19 +12,3 @@ some fixes
 - chips for amenities&named groups?
 - backend pagination
 
-ASK
-- more named groups per booking??
-- interval vs slot based booking??
-
-Hello! Se apropie deadline-ul si as avea cateva intrebari legate de proiect, in principal legat
-de procesul de booking. 
-
-Interval-based sau timeslot-based?
-
-Cand un user rezerva o camera, o poate rezerva pentru mai multe Named Groups intr-o singura
-rezervare, sau e nevoie sa faca mai multe? 
-
-Delete booking valabil doar pentru cele care urmeaza sa se intample? Sau poate sterge si din istoric?
-
-Download my bookings sunt valabile pentru toate rezervarile sau doar cele care au avut deja loc, 
-se trateaza diferit in vreun fel??

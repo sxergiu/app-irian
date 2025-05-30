@@ -18,6 +18,8 @@
 
             @if( authService.isUser()){
               <a class="nav-link mx-2" [routerLink]="['/book']" > Book a Room </a>
+            } @else {
+              <a class="nav-link mx-2" [routerLink]="['/dashboard']" > Manage Rooms </a>
             }
 
           </li>

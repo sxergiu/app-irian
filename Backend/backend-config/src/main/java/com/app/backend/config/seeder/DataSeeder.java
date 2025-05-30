@@ -161,15 +161,15 @@ public class DataSeeder {
 
             Booking booking3 = new Booking();
             booking3.setRoom(room2);
-            booking3.setDate(LocalDate.of(2023, 6, 15));
-            booking3.setTime( new TimeInterval(LocalTime.of(10, 0),LocalTime.of(12, 0)));
+            booking3.setDate(LocalDate.of(2025, 6, 15));
+            booking3.setTime( new TimeInterval(LocalTime.of(7, 0),LocalTime.of(8, 0)));
             booking3.setUser(simpleUser);
             booking3.setNamedGroup(group3);
 
             Booking booking4 = new Booking();
             booking4.setRoom(room2);
-            booking4.setDate(LocalDate.of(2022, 6, 15));
-            booking4.setTime( new TimeInterval(LocalTime.of(11, 0), LocalTime.of(13, 0)));
+            booking4.setDate(LocalDate.of(2025, 6, 15));
+            booking4.setTime( new TimeInterval(LocalTime.of(17, 0), LocalTime.of(21, 0)));
             booking4.setUser(simpleUser);
             booking4.setNamedGroup(group4);
 
@@ -183,7 +183,7 @@ public class DataSeeder {
             Booking booking6 = new Booking();
             booking6.setRoom(room5);
             booking6.setDate(LocalDate.of(2026, 6, 15));
-            booking6.setTime( new TimeInterval(LocalTime.of(10, 0), LocalTime.of(12, 0)));
+            booking6.setTime( new TimeInterval(LocalTime.of(10, 0), LocalTime.of(16, 0)));
             booking6.setUser(simpleUser);
             booking6.setNamedGroup(group1);
 
