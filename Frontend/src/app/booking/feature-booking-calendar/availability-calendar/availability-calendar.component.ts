@@ -15,7 +15,6 @@ import {AvailableRoomModel} from '../../domain/available.room.model';
 export class AvailabilityCalendarComponent {
 
   availableRooms = input.required<AvailableRoomModel[]>();
-  selectedDay = output<DateTime>();
   activeDay = signal<DateTime | null>(null);
 
   today = computed<DateTime>(() => DateTime.local())
@@ -40,20 +39,6 @@ export class AvailabilityCalendarComponent {
   })
 
   DATE_MED = DateTime.DATE_MED;
-
-  constructor() {
-
-    effect(() => {
-
-      const activeDay = this.activeDay();
-
-      if( activeDay != null ) {
-        this.selectedDay.emit(activeDay)
-      }
-
-    });
-
-  }
 
   goToPrevMonth(): void {
     this.firstDayOfActiveMonth.set(
