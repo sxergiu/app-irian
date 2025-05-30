@@ -7,50 +7,9 @@
     <app-room-filter [amenities]="store.amenities()" (filterChange)="onFilterChange($event)" />
 
     <app-availability-table
-      [rooms]="store.rooms()"
-      [timeSlots]="timeSlots"
+      [rooms]="store.roomsWithProcessedSlots()"
       (slotSelected)="onSlotSelected($event)"
     />
-
-      <div *ngFor="let room of store.roomsWithProcessedSlots()" class="mb-5 p-3 border rounded shadow bg-light">
-          <h5 class="mb-3">{{ room.name }}</h5>
-
-          <!-- Timeline Bar -->
-          <div class="position-relative bg-secondary bg-opacity-10 rounded-pill" style="height: 2rem;">
-              <!-- Available slots in green -->
-              <ng-container *ngFor="let interval of room.availableSlots">
-
-                  <div
-                          class="position-absolute bg-success rounded-pill shadow-sm"
-                          [style.left.%]="getIntervalOffset(interval)"
-                          [style.width.%]="getIntervalWidth(interval)"
-                          style="top: 0; height: 100%; cursor: pointer;"
-                          (click)="selectInterval(interval)"
-                          [attr.title]="formatInterval(interval)"
-                  ></div>
-              </ng-container>
-
-              <!-- Booked slots in red/gray, layered on top -->
-              <ng-container *ngFor="let interval of room.bookedSlots">
-
-                  <div
-                          class="position-absolute bg-danger bg-opacity-75 rounded-pill shadow-sm"
-                          [style.left.%]="getIntervalOffset(interval)"
-                          [style.width.%]="getIntervalWidth(interval)"
-                          style="top: 0; height: 100%; pointer-events: none;"
-                          [attr.title]="formatInterval(interval)"
-                  ></div>
-              </ng-container>
-          </div>
-
-          <!-- Time Labels -->
-          <div class="d-flex justify-content-between text-muted small mt-2 px-1">
-              <span>07:00</span>
-              <span>12:00</span>
-              <span>17:00</span>
-              <span>21:00</span>
-          </div>
-      </div>
 
   </div>
 
