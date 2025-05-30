@@ -47,7 +47,6 @@ export class RoomFilterComponent {
   });
   filterChange = output<RoomFilterModel>();
 
-  selectedDate = model<DateTime>(DateTime.fromISO(""))
   dateChange = output<DateTime>();
 
   view= input.required<boolean>();
@@ -59,8 +58,6 @@ export class RoomFilterComponent {
     effect(() => {
 
       this.filterChange.emit(this.filter());
-
-      this.dateChange.emit(this.selectedDate());
 
     });
 
@@ -82,10 +79,6 @@ export class RoomFilterComponent {
         date: $event
       }
     })
-
-    const jsDate = new Date($event);
-    const luxonDate = DateTime.fromJSDate(jsDate);
-    this.selectedDate.set(luxonDate);
   }
 
   toggleAmenity(amenity: string): void {

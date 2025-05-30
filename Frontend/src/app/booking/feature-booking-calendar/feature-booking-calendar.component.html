@@ -34,12 +34,11 @@
         />
 
     } @else {
-
-      @if( store.selectedDate(); as date) {
+      
       <app-availability-calendar
           [availableRooms]="store.roomsWithProcessedSlots()"
         />
-      }
+
     }
 
   </div>
