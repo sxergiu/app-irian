@@ -2,7 +2,6 @@ import {Component, computed, effect, EventEmitter, input, output, Output, Signal
 import {DateTime, Info, Interval} from 'luxon';
 import {NgClass} from '@angular/common';
 import {AvailableRoomModel} from '../../domain/available.room.model';
-import {filter} from 'rxjs';
 
 @Component({
   selector: 'app-availability-calendar',
@@ -17,7 +16,6 @@ export class AvailabilityCalendarComponent {
 
   availableRooms = input.required<AvailableRoomModel[]>();
   selectedDay = output<DateTime>();
-
   activeDay = signal<DateTime | null>(null);
 
   today = computed<DateTime>(() => DateTime.local())

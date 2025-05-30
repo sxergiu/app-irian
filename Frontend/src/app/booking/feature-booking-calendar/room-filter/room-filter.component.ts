@@ -50,6 +50,7 @@ export class RoomFilterComponent {
   selectedDate = model<DateTime>(DateTime.fromISO(""))
   dateChange = output<DateTime>();
 
+  view= input.required<boolean>();
   amenities = input<string[]>([]);
   selectedAmenities = signal<string[]>([]);
 

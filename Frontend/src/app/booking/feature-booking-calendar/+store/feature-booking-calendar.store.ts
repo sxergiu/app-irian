@@ -82,24 +82,10 @@ export const featureBookingCalendarStore = signalStore(
     ),
 
     updateFilters: (filter: RoomFilterModel) => {
-      patchState(state, { filters: filter });
-      console.log("UPDATE FILTER STORE:" + filter.date);
-    },
-
-    updateDate: (date: DateTime) => {
-      patchState(state, { selectedDate: date} );
-      console.log("UPDATE DATE STORE:"+date.toString());
-    },
-
-    syncSelectedDate(date: DateTime) {
       patchState(state, {
-
-        selectedDate: date,
-        filters: {
-          ...state.filters(),
-          date: luxonToFilterString(date)
-        }
+        filters: filter
       });
+
     }
 
   })),
@@ -119,9 +105,6 @@ function toNumTime(time: number[] | number): number {
   return time;
 }
 
-function luxonToFilterString(luxonDateTime: DateTime): string {
-  const jsDate = luxonDateTime.startOf('day').toJSDate();
-  return jsDate.toString();
-}
+
 
 

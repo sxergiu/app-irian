@@ -22,7 +22,7 @@
 
     <app-room-filter [amenities]="store.amenities()"
                      (filterChange)="onFilterChange($event)"
-                     (dateChange)="onDateChange($event)"
+                     [view]="checked"
     />
 
 
@@ -35,10 +35,11 @@
 
     } @else {
 
+      @if( store.selectedDate(); as date) {
       <app-availability-calendar
           [availableRooms]="store.roomsWithProcessedSlots()"
         />
-
+      }
     }
 
   </div>

@@ -29,10 +29,6 @@ export class FeatureBookingCalendarComponent {
     this.store.updateFilters(filter);
   }
 
-  onDateChange(date: DateTime) {
-    this.store.updateDate(date);
-  }
-
   onSlotSelected(data: AvailableRoomModel) {
     console.log('User clicked:', data);
   }

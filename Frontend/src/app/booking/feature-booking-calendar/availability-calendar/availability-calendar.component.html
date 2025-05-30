@@ -36,6 +36,23 @@
         'calendar-grid-cell-inactive': dayOfMonth.month !== firstDayOfActiveMonth().month}"
             (click)="activeDay.set(dayOfMonth)">
          {{ dayOfMonth.day }}
+
+         <div>
+           @if( activeDay() && availableRooms().length===0 ) {
+             <div>
+               No bookings today.
+             </div>
+           }
+           @if ( activeDay() && availableRooms().length > 0 ) {
+
+             @for( room of availableRooms(); track room.id) {
+               <div>
+                 {{ room.name }}
+               </div>
+             }
+           }
+         </div>
+
        </div>
 
       }
@@ -51,20 +68,6 @@
           Please select a day.
         }
       </div>
-      <div>
-        @if( activeDay() && availableRooms().length===0 ) {
-          <div>
-            No bookings today.
-          </div>
-        }
-        @if ( activeDay() && availableRooms().length > 0 ) {
 
-          @for( room of availableRooms(); track room.id) {
-            <div>
-              {{ room.name }}
-            </div>
-          }
-        }
-      </div>
     </div>
 </div>
