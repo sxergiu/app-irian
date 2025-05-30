@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatInput, MatInputModule} from '@angular/material/input';
+import {MatInput} from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import {
@@ -24,6 +24,8 @@ import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {MatChipsModule} from '@angular/material/chips';
 import {RoomFilterModel} from '../../domain/room.filter.model';
+import {DateTime} from 'luxon';
+
 
 @Component({
   selector: 'app-room-filter',
@@ -43,8 +45,10 @@ export class RoomFilterComponent {
     minCapacity: 0,
     requiredAmenities: []
   });
-
   filterChange = output<RoomFilterModel>();
+
+  selectedDate = model<DateTime>(DateTime.fromISO(""))
+  dateChange = output<DateTime>();
 
   amenities = input<string[]>([]);
   selectedAmenities = signal<string[]>([]);
@@ -52,7 +56,11 @@ export class RoomFilterComponent {
   constructor() {
 
     effect(() => {
+
       this.filterChange.emit(this.filter());
+
+      this.dateChange.emit(this.selectedDate());
+
     });
 
   }
@@ -73,6 +81,10 @@ export class RoomFilterComponent {
         date: $event
       }
     })
+
+    const jsDate = new Date($event);
+    const luxonDate = DateTime.fromJSDate(jsDate);
+    this.selectedDate.set(luxonDate);
   }
 
   toggleAmenity(amenity: string): void {

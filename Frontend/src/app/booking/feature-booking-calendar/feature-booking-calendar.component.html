@@ -20,20 +20,24 @@
 
   <div class="my-3">
 
-    <app-room-filter [amenities]="store.amenities()" (filterChange)="onFilterChange($event)" />
+    <app-room-filter [amenities]="store.amenities()"
+                     (filterChange)="onFilterChange($event)"
+                     (dateChange)="onDateChange($event)"
+    />
 
 
     @if( !checked ) {
+
         <app-availability-table
           [rooms]="store.roomsWithProcessedSlots()"
           (slotSelected)="onSlotSelected($event)"
         />
+
     } @else {
 
       <app-availability-calendar
-
+          [availableRooms]="store.roomsWithProcessedSlots()"
         />
-
 
     }
 

@@ -1,1 +1,69 @@
-<p>availability-calendar works!</p>
+
+
+
+
+<div class="calendar-container">
+
+  <div class="calendar">
+
+    <div class="calendar-headline">
+      <div class="calendar-headline-month">
+        {{ firstDayOfActiveMonth().monthShort }},
+        {{ firstDayOfActiveMonth().year }}
+      </div>
+
+      <div class="calendar-headline-controls">
+        <div class="calendar-headline-control"><<</div>
+        <div class="calendar-headline-control calendar-headline-control-today">Today</div>
+        <div class="calendar-headline-control">>></div>
+      </div>
+    </div>
+
+    <div class="calendar-weeks-grid">
+
+      @for (weekDay of weekDays(); track $index) {
+        <div class="calendar-weeks-grid-cell">
+          {{  weekDay }}
+        </div>
+
+      }
+    </div>
+    <div class="calendar-grid">
+      @for( dayOfMonth of daysOfMonth(); track $index) {
+
+       <div [ngClass]="{'calendar-grid-cell': true,
+        'calendar-grid-cell-active': activeDay()?.toISODate() === dayOfMonth.toISODate()}"
+            (click)="activeDay.set(dayOfMonth)">
+         {{ dayOfMonth.day }}
+       </div>
+
+      }
+    </div>
+
+  </div>
+    <div class="schedule">
+      <div class="schedule-headline">
+        @if(activeDay(); as activeDay) {
+          <div> {{ activeDay.toLocaleString(DATE_MED) }} </div>
+          <div> {{ activeDay }} </div>
+        } @else {
+          Please select a day.
+        }
+      </div>
+      <div>
+        @if( activeDay() && availableRooms().length===0 ) {
+          <div>
+            No bookings today.
+          </div>
+        }
+        @if ( activeDay() && availableRooms().length > 0 ) {
+
+          @for( room of availableRooms(); track room.id) {
+            <div>
+              {{ room.name }}
+            </div>
+          }
+        }
+      </div>
+    </div>
+</div>
