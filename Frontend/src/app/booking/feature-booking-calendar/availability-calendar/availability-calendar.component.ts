@@ -56,4 +56,22 @@ export class AvailabilityCalendarComponent {
     });
 
   }
+
+  goToPrevMonth(): void {
+    this.firstDayOfActiveMonth.set(
+      this.firstDayOfActiveMonth().minus({ month: 1})
+    )
+  }
+
+  goToNextMonth(): void {
+    this.firstDayOfActiveMonth.set(
+      this.firstDayOfActiveMonth().plus({ month: 1})
+    )
+  }
+
+  goToToday(): void {
+    this.firstDayOfActiveMonth.set(
+      this.today().startOf('month')
+    )
+  }
 }

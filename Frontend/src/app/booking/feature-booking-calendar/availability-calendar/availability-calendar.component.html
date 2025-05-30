@@ -13,9 +13,9 @@
       </div>
 
       <div class="calendar-headline-controls">
-        <div class="calendar-headline-control"><<</div>
-        <div class="calendar-headline-control calendar-headline-control-today">Today</div>
-        <div class="calendar-headline-control">>></div>
+        <div class="calendar-headline-control" (click)="goToPrevMonth()"><<</div>
+        <div class="calendar-headline-control calendar-headline-control-today" (click)="goToToday()">Today</div>
+        <div class="calendar-headline-control" (click)="goToNextMonth()">>></div>
       </div>
     </div>
 
@@ -32,7 +32,8 @@
       @for( dayOfMonth of daysOfMonth(); track $index) {
 
        <div [ngClass]="{'calendar-grid-cell': true,
-        'calendar-grid-cell-active': activeDay()?.toISODate() === dayOfMonth.toISODate()}"
+        'calendar-grid-cell-active': activeDay()?.toISODate() === dayOfMonth.toISODate(),
+        'calendar-grid-cell-inactive': dayOfMonth.month !== firstDayOfActiveMonth().month}"
             (click)="activeDay.set(dayOfMonth)">
          {{ dayOfMonth.day }}
        </div>
