@@ -5,11 +5,15 @@ import {AvailabilityTableComponent} from './availability-table/availability-tabl
 import {RoomFilterModel} from '../domain/room.filter.model';
 import {featureBookingCalendarStore} from './+store/feature-booking-calendar.store';
 import {AvailableRoomModel, Timeslot} from '../domain/available.room.model';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
+import {MatIcon} from '@angular/material/icon';
+import {MatButton} from '@angular/material/button';
+import {AvailabilityCalendarComponent} from './availability-calendar/availability-calendar.component';
 
 @Component({
   selector: 'app-feature-booking-calendar-page',
   standalone: true,
-  imports: [CommonModule, RoomFilterComponent, AvailabilityTableComponent, RoomFilterComponent, AvailabilityTableComponent],
+  imports: [CommonModule, MatIcon, RoomFilterComponent, AvailabilityTableComponent, AvailabilityCalendarComponent],
   templateUrl: `feature-booking-calendar.component.html`,
   styleUrls : [`feature-booking-calendar.component.scss`],
   providers : [featureBookingCalendarStore]
@@ -18,6 +22,9 @@ import {AvailableRoomModel, Timeslot} from '../domain/available.room.model';
 export class FeatureBookingCalendarComponent {
 
   store = inject(featureBookingCalendarStore);
+
+  checked = false;
+  disabled = false;
 
   onFilterChange(filter: RoomFilterModel) {
     this.store.updateFilters(filter);
@@ -28,4 +35,32 @@ export class FeatureBookingCalendarComponent {
   }
 
 
+  toggle(): void {
+    if (!this.disabled) {
+      this.checked = !this.checked;
+      this.onViewChange();
+    }
+  }
+  // Handle view change logic
+  onViewChange(): void {
+    if (this.checked) {
+      console.log('Switched to Calendar View');
+      // Add your calendar view logic here
+      this.showCalendarView();
+    } else {
+      console.log('Switched to Table View');
+      // Add your table view logic here
+      this.showTableView();
+    }
+  }
+
+  private showCalendarView(): void {
+    // Your calendar view implementation
+    // e.g., change route, show/hide components, etc.
+  }
+
+  private showTableView(): void {
+    // Your table view implementation
+    // e.g., change route, show/hide components, etc.
+  }
 }

@@ -1,15 +1,41 @@
 
 <div class="container my-5">
-  <h2 class="text-white my-5r">Book a Room</h2>
+
+  <div class="row">
+
+      <h2 class="col-12 col-md-11 text-white ">Book a Room</h2>
+
+      <section class="d-flex col-12 col-md-1 example-section">
+
+        <div class="custom-view-toggle" [class.checked]="checked" [class.unchecked]="!checked" (click)="toggle()">
+          <div class="toggle-track">
+            <div class="toggle-handle">
+              <mat-icon>{{ checked ? 'calendar_month' : 'view_list' }}</mat-icon>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  </div>
 
   <div class="my-3">
 
     <app-room-filter [amenities]="store.amenities()" (filterChange)="onFilterChange($event)" />
 
-    <app-availability-table
-      [rooms]="store.roomsWithProcessedSlots()"
-      (slotSelected)="onSlotSelected($event)"
-    />
+
+    @if( !checked ) {
+        <app-availability-table
+          [rooms]="store.roomsWithProcessedSlots()"
+          (slotSelected)="onSlotSelected($event)"
+        />
+    } @else {
+
+      <app-availability-calendar
+
+        />
+
+
+    }
 
   </div>
 
