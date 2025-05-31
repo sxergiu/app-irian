@@ -23,27 +23,29 @@ public class BookingController {
     private final IBookingService bookingService;
     private final BookingMapper bookingMapper;
 
-    @PostMapping
-    public ResponseEntity<?> createBooking(
-            @RequestBody BookingRequest dto,
-            @AuthenticationPrincipal AppUser user) {
+        @PostMapping
+        public ResponseEntity<?> createBooking(
+                @RequestBody BookingRequest dto,
+                @AuthenticationPrincipal AppUser user) {
 
-        System.out.println("Req by user: " + user);
+            System.out.println("Req by user: " + user);
 
-        try {
-            Booking booking = bookingService.createBooking(
-                    dto.getRoomId(),
-                    dto.getNamedGroupId(),
-                    dto.getDate(),
-                    dto.getTime(),
-                    user);
+            try {
+                Booking booking = bookingService.createBooking(
+                        dto.getRoomId(),
+                        dto.getNamedGroupId(),
+                        dto.getDate(),
+                        dto.getTime(),
+                        user);
 
-            return ResponseEntity.ok(bookingMapper.toDto(booking));
+                System.out.println("Booking created: " + booking.toString() );
+
+                return ResponseEntity.ok(bookingMapper.toDto(booking));
+            }
+            catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
         }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<BookingResponse> updateBooking(

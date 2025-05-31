@@ -2,6 +2,7 @@ package com.app.backend.service.api;
 
 import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomAvailabilityQuery;
+import com.app.backend.domain.room.RoomWithAvailability;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +19,7 @@ public interface IRoomService {
     Set<Room> getAllRooms();
     void deleteRoom(Long id);
     Optional<Room> findById(Long id);
-    List<Room> findAvailableRooms(RoomAvailabilityQuery roomFilter);
+    List<RoomWithAvailability> findAvailableRooms(RoomAvailabilityQuery roomFilter);
     Set<String> findAllAvailableAmenities();
-    Map<LocalDate, List<Room>> getRoomAvailabilityRange(LocalDate startDate, LocalDate endDate, Integer minCapacity, Set<String> requiredAmenities);
+    Map<LocalDate, List<RoomWithAvailability>> getRoomAvailabilityRange(LocalDate startDate, LocalDate endDate, Integer minCapacity, Set<String> requiredAmenities);
 }

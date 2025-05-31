@@ -13,6 +13,7 @@ import {FeatureBookingDialogComponent} from '../../feature-booking-dialog/featur
   templateUrl: './feature-timeline-bar.component.html',
   styleUrl: './feature-timeline-bar.component.scss'
 })
+
 export class FeatureTimelineBarComponent {
 
   room = input.required<AvailableRoomModel>()

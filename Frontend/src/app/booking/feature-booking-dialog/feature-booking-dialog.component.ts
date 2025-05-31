@@ -1,7 +1,7 @@
 import {Component, Inject, model, output, computed, signal, inject, effect, AfterViewInit} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-   MatDialogModule,
+  MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
 import {AvailableRoomModel, Timeslot} from '../domain/available.room.model';
@@ -13,11 +13,14 @@ import {MatSelect, MatOption, MatSelectModule} from '@angular/material/select';
 import { MatTimepickerModule} from '@angular/material/timepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {BookingValidatorDirective} from '../booking-validator.directive';
-
 import {MatIconModule} from '@angular/material/icon';
 import {GroupModel} from '../../named-groups/domain/group.models';
 import {GroupService} from '../../named-groups/groups.service';
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {BookingResourceService} from '../booking-resource.service';
+
+// Type for flexible time representation
+type TimeValue = number | number[];
 
 @Component({
   selector: 'app-feature-booking-dialog',
@@ -38,13 +41,16 @@ import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocom
   templateUrl: './feature-booking-dialog.component.html',
   styleUrl: './feature-booking-dialog.component.scss'
 })
+
 export class FeatureBookingDialogComponent {
+
+  groupService = inject(GroupService);
+  bookingService = inject(BookingResourceService);
 
   booking = model.required<CreateBookingModel>();
   bookingChanged = output<CreateBookingModel>();
 
   namedGroups = signal<GroupModel[]>([]);
-  groupService = inject(GroupService);
 
   constructor(
     public dialogRef: MatDialogRef<FeatureBookingDialogComponent>,
@@ -57,37 +63,96 @@ export class FeatureBookingDialogComponent {
 
     this.fetchGroups();
 
+    console.log(this.data.interval)
+    console.log(this.data.room)
+    console.log(this.data.date)
+    console.log(typeof this.data.interval)
+    const startTime = this.timeValueToTimeString(this.data.interval.startTime);
+    const endTime = this.timeValueToTimeString(this.data.interval.endTime);
+
     this.booking.set({
       date: this.data.date,
       namedGroupId: undefined,
       roomId: this.data.room.id!,
-      startTime: this.minutesToTimeString(this.data.interval.startTime),
-      endTime: this.minutesToTimeString(this.data.interval.endTime),
+      time: {
+        startTime: startTime,
+        endTime: endTime
+      }
     });
   }
 
   onSubmit(bookingForm: NgForm) {
-    if (bookingForm.valid && this.isValidTimeRange()) {
 
-      this.dialogRef.close(this.booking());
+    if (bookingForm.valid) {
+
+      this.bookingService.createBooking(this.booking());
+
+      this.dialogRef.close();
     }
     else {
       console.log("INVALID TIME")
     }
   }
 
-  isValidTimeRange(): boolean {
-    const startTime = this.booking()!.startTime;
-    const endTime = this.booking()!.endTime;
+  updateDate(newDate: string): void {
+    this.booking.update(current => ({
+      ...current,
+      date: newDate
+    }));
+  }
 
-    if (!startTime || !endTime) return false;
+  updateStartTime(newStartTime: string): void {
+    this.booking.update(current => ({
+      ...current,
+      startTime: newStartTime
+    }));
+  }
 
-    const startMinutes = typeof startTime === 'string' ?
-      this.timeStringToMinutes(startTime) : startTime;
-    const endMinutes = typeof endTime === 'string' ?
-      this.timeStringToMinutes(endTime) : endTime;
+  updateEndTime(newEndTime: string): void {
+    this.booking.update(current => ({
+      ...current,
+      endTime: newEndTime
+    }));
+  }
 
-    return endMinutes > startMinutes;
+  updateNamedGroup(groupId: number | undefined): void {
+    this.booking.update(current => ({
+      ...current,
+      namedGroupId: groupId
+    }));
+  }
+
+  updateRoomId(roomId: number): void {
+    this.booking.update(current => ({
+      ...current,
+      roomId: roomId
+    }));
+  }
+
+  /**
+   * Converts a TimeValue (number or number[]) to minutes since 00:00
+   * @param timeValue - Either minutes since 00:00 (number) or [hours, minutes] array
+   * @returns Total minutes since 00:00
+   */
+  private timeValueToMinutes(timeValue: TimeValue): number {
+    if (Array.isArray(timeValue)) {
+      // timeValue is [hours, minutes]
+      const [hours, minutes] = timeValue;
+      return hours * 60 + (minutes || 0);
+    } else {
+      // timeValue is already minutes since 00:00
+      return timeValue;
+    }
+  }
+
+  /**
+   * Converts a TimeValue to a time string (HH:MM format)
+   * @param timeValue - Either minutes since 00:00 (number) or [hours, minutes] array
+   * @returns Time string in HH:MM format
+   */
+  private timeValueToTimeString(timeValue: TimeValue): string {
+    const totalMinutes = this.timeValueToMinutes(timeValue);
+    return this.minutesToTimeString(totalMinutes);
   }
 
   private minutesToTimeString(minutes: number): string {
@@ -96,31 +161,51 @@ export class FeatureBookingDialogComponent {
     return `${hours}:${mins}`;
   }
 
-  private timeStringToMinutes(timeString: string): number {
-    const [hours, minutes] = timeString.split(':').map(Number);
-    return hours * 60 + minutes;
+  private timeStringToMinutes(time: unknown): number {
+    if (typeof time === 'string') {
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours * 60 + minutes;
+    }
+
+    if (typeof time === 'number') {
+      return time;
+    }
+
+    if (Array.isArray(time)) {
+      const [hours, minutes] = time;
+      return hours * 60 + (minutes || 0);
+    }
+
+    if (time instanceof Date) {
+      return time.getHours() * 60 + time.getMinutes();
+    }
+
+    console.warn('Invalid time format:', time);
+    return 0;
   }
 
   getDuration(): number {
-    const start = this.timeStringToMinutes(this.booking()!.startTime!);
-    const end = this.timeStringToMinutes(this.booking()!.endTime!);
+    const start = this.timeStringToMinutes(this.booking()!.time.startTime!);
+    const end = this.timeStringToMinutes(this.booking()!.time.endTime!);
     return end - start;
   }
 
   getFormattedStartTime(): string {
-    return this.minutesToTimeString(this.data.interval.startTime);
+    return this.timeValueToTimeString(this.data.interval.startTime);
   }
 
   getFormattedEndTime(): string {
-    return this.minutesToTimeString(this.data.interval.endTime);
+    return this.timeValueToTimeString(this.data.interval.endTime);
   }
 
   getMaxStartTime(): string {
-    return this.minutesToTimeString(this.data.interval.endTime-30);
+    const endMinutes = this.timeValueToMinutes(this.data.interval.endTime);
+    return this.minutesToTimeString(endMinutes - 30);
   }
 
   getMinEndTime(): string {
-    return this.minutesToTimeString(this.data.interval.startTime+30);
+    const startMinutes = this.timeValueToMinutes(this.data.interval.startTime);
+    return this.minutesToTimeString(startMinutes + 30);
   }
 
   fetchGroups(): void {
@@ -136,4 +221,22 @@ export class FeatureBookingDialogComponent {
     const group = this.namedGroups().find(g => g.id === groupId);
     return group ? `${group.name} - ${group.numberOfPeople} people` : '';
   };
+
+
+  /**
+   * Helper method to get current start time as minutes for calculations
+   */
+  getCurrentStartTimeMinutes(): number {
+    const startTime = this.booking().time.startTime;
+    return startTime ? this.timeStringToMinutes(startTime) : 0;
+  }
+
+  /**
+   * Helper method to get current end time as minutes for calculations
+   */
+  getCurrentEndTimeMinutes(): number {
+    const endTime = this.booking().time.endTime;
+    return endTime ? this.timeStringToMinutes(endTime) : 0;
+  }
+
 }

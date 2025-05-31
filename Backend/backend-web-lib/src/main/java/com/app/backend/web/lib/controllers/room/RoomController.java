@@ -2,6 +2,7 @@ package com.app.backend.web.lib.controllers.room;
 
 import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomAvailabilityQuery;
+import com.app.backend.domain.room.RoomWithAvailability;
 import com.app.backend.service.api.IRoomService;
 import com.app.backend.web.lib.DTO.room.*;
 import io.micrometer.core.instrument.config.validate.Validated;
@@ -73,65 +74,58 @@ public class RoomController {
     }
 
     @PostMapping("/available")
-    public ResponseEntity<List<RoomAvailabilityResponse>> getAvailableRooms(
-            @RequestBody RoomAvailabilityRequest request) {
-
+    public ResponseEntity<List<RoomWithAvailabilityDTO>> getAvailableRooms(@RequestBody RoomAvailabilityRequest request) {
         try {
-
-            if( request.getMinCapacity() == null ) {
+            if (request.getMinCapacity() == null) {
                 request.setMinCapacity(0);
             }
-
-            if( request.getRequiredAmenities() == null ) {
+            if (request.getRequiredAmenities() == null) {
                 request.setRequiredAmenities(new HashSet<>());
             }
 
-            List<Room> rooms = roomService.findAvailableRooms(new RoomAvailabilityQuery(
+            List<RoomWithAvailability> rooms = roomService.findAvailableRooms(new RoomAvailabilityQuery(
                     request.getMinCapacity(),
                     request.getRequiredAmenities(),
                     request.getDate()
             ));
 
-            List<RoomAvailabilityResponse> response = rooms.stream()
-                    .map(this.roomMapper::toRoomAvailabilityResponse)
-                    .toList();
+            List<RoomWithAvailabilityDTO> response = rooms.stream()
+                    .map(roomMapper::toRoomWithAvailabilityDTO)
+                    .collect(Collectors.toList());
 
             return ResponseEntity.ok(response);
-        }catch ( Exception e ) {
 
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/available/range")
-    public ResponseEntity<Map<String, List<RoomAvailabilityResponse>>> getRoomAvailabilityRange(
+    public ResponseEntity<Map<String, List<RoomWithAvailabilityDTO>>> getRoomAvailabilityRange(
             @RequestBody RoomAvailabilityRangeRequest request) {
-
         try {
-            Map<LocalDate, List<Room>> entityResult = roomService.getRoomAvailabilityRange(
+            Map<LocalDate, List<RoomWithAvailability>> entityResult = roomService.getRoomAvailabilityRange(
                     request.getStartDate(),
                     request.getEndDate(),
                     request.getMinCapacity(),
                     request.getRequiredAmenities()
             );
 
-            Map<String, List<RoomAvailabilityResponse>> dtoResult = entityResult.entrySet().stream()
+            Map<String, List<RoomWithAvailabilityDTO>> dtoResult = entityResult.entrySet().stream()
                     .collect(Collectors.toMap(
                             entry -> entry.getKey().toString(),
                             entry -> entry.getValue().stream()
-                                    .map(roomMapper::toRoomAvailabilityResponse)
+                                    .map(roomMapper::toRoomWithAvailabilityDTO)
                                     .collect(Collectors.toList())
                     ));
-            return ResponseEntity.ok(dtoResult);
-        }
-        catch(Exception e) {
 
+            return ResponseEntity.ok(dtoResult);
+
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-
     }
+
 
     @GetMapping("/amenities")
     public Set<String> getAllAvailableAmenities() {

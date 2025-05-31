@@ -118,13 +118,6 @@ public class DataSeeder {
             room8.setCoordinates(new GeoLocation(43.6532, -79.3832));
             roomJPARepository.saveAll(List.of(room1, room2, room3, room4, room5, room6, room7, room8));
 
-            for(Room room : roomJPARepository.findAll()) {
-
-                    room.setAvailableSlots(List.of(
-                            new TimeInterval(LocalTime.of(7, 0), LocalTime.of(21, 0))
-                    ));
-                    roomJPARepository.save(room);
-            }
 
             NamedGroup group1 = new NamedGroup();
             group1.setName("Mario Karts");

@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface RoomJPARepository extends JpaRepository<Room, Long> {
@@ -23,15 +22,6 @@ public interface RoomJPARepository extends JpaRepository<Room, Long> {
             @Param("minCapacity") int capacity,
             @Param("requiredAmenities") Set<String> amenities
     );
-
-
-    @Query("""
-    SELECT DISTINCT r FROM Room r
-    LEFT JOIN FETCH r.availableSlots
-    WHERE r.capacity >= :capacity
-    """)
-    List<Room> findWithAvailability(@Param("capacity") int capacity);
-
 
     @Query("SELECT DISTINCT a FROM Room r JOIN r.amenities a")
     Set<String> findDistinctAmenities();

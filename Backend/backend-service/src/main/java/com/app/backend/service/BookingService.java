@@ -24,10 +24,10 @@ public class BookingService implements IBookingService {
     private final BookingJPARepository bookingRepository;
     private final RoomJPARepository roomRepository;
     private final GroupJPARepository namedGroupRepository;
+    private final RoomService roomService;
 
     @Override
     public Booking createBooking(Long roomId, Long namedGroupId, LocalDate date, TimeInterval time, AppUser user) {
-
 
         Room room = fetchValidatedRoom(roomId, date, time.getStartTime(), time.getEndTime());
         NamedGroup group = fetchValidatedNamedGroup(namedGroupId, room);

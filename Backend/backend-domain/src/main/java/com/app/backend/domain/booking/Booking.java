@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Entity
 public class Booking {
@@ -68,11 +69,11 @@ public class Booking {
     }
 
     public TimeInterval getTime() {
-        return time;
+        return new TimeInterval(time.getStartTime(), time.getEndTime());
     }
 
     public void setTime(TimeInterval time) {
-        this.time = time;
+        this.time = new TimeInterval(time.getStartTime(), time.getEndTime());
     }
 
     public AppUser getUser() {
@@ -89,6 +90,30 @@ public class Booking {
 
     public void setNamedGroup(NamedGroup namedGroup) {
         this.namedGroup = namedGroup;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Booking booking = (Booking) o;
+        return Objects.equals(id, booking.id) && Objects.equals(room, booking.room) && Objects.equals(date, booking.date) && Objects.equals(time, booking.time) && Objects.equals(user, booking.user) && Objects.equals(namedGroup, booking.namedGroup);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, room, date, time, user, namedGroup);
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id=" + id +
+                ", room=" + room +
+                ", date=" + date +
+                ", time=" + time +
+                ", user=" + user +
+                ", namedGroup=" + namedGroup +
+                '}';
     }
 }
 

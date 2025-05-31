@@ -6,6 +6,7 @@ import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomAvailabilityQuery;
 import com.app.backend.domain.room.RoomJPARepository;
+import com.app.backend.domain.room.RoomWithAvailability;
 import com.app.backend.service.api.IRoomService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -33,12 +34,6 @@ public class RoomService implements IRoomService {
         if (roomRepository.existsByName(room.getName())) {
             throw new RuntimeException("Room name must be unique");
         }
-
-        room.setAvailableSlots(List.of(new TimeInterval(
-                LocalTime.of(7, 0),
-                LocalTime.of(21, 0)
-        )));
-
 
         return roomRepository.save(room);
     }
@@ -85,51 +80,53 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public List<Room> findAvailableRooms(RoomAvailabilityQuery query) {
+    public List<RoomWithAvailability> findAvailableRooms(RoomAvailabilityQuery query) {
+        List<Room> rooms = roomRepository.findByCapacityGreaterThanEqualAndAmenitiesContainingAll(
+                query.minCapacity(), query.requiredAmenities()
+        );
 
-        System.out.println("Filtering: " +query.date());
-
-        return roomRepository.findWithAvailability(query.minCapacity())
-                .stream()
-                .filter(room -> room.getAmenities().containsAll(query.requiredAmenities()))
-                .map(room -> getRoomWithFreeSlots(room, query.date()))
-                .collect(Collectors.toList());
+        return rooms.stream()
+                .map(room -> convertToRoomWithAvailability(room, query.date()))
+                .toList();
     }
 
-    private Room getRoomWithFreeSlots(Room room, LocalDate date) {
+    private RoomWithAvailability getRoomWithFreeSlots(RoomWithAvailability room, LocalDate date) {
 
-        List<TimeInterval> roomAvailability = new ArrayList<>(room.getAvailableSlots());
+        List<TimeInterval> roomAvailability = room.availableSlots().stream()
+                .map(slot -> new TimeInterval(slot.getStartTime(), slot.getEndTime()))
+                .collect(Collectors.toList());
 
-        List<Booking> bookings = bookingRepository.findByRoomIdAndDate(room.getId(), date);
-
+        List<Booking> bookings = bookingRepository.findByRoomIdAndDate(room.id(), date);
         List<TimeInterval> bookingIntervals = bookings.stream()
                 .map(Booking::getTime)
                 .toList();
 
         List<TimeInterval> freeSlots = subtractAll(roomAvailability, bookingIntervals);
 
-        room.setAvailableSlots(freeSlots);
-
-        return room;
-    }
-
-    private boolean isRoomAvailable(Room room, LocalDate date) {
-        return bookingRepository.findOverlappingBookings(room.getId(), date).isEmpty();
+        return new RoomWithAvailability(
+                room.id(),
+                room.name(),
+                room.location(),
+                room.capacity(),
+                room.amenities(),
+                freeSlots
+        );
     }
 
     public Set<String> findAllAvailableAmenities() {
         return roomRepository.findDistinctAmenities();
     }
 
-    private List<TimeInterval> subtractInterval(List<TimeInterval> slots, TimeInterval toSubtract) {
+    public List<TimeInterval> subtractInterval(List<TimeInterval> slots, TimeInterval toSubtract) {
 
         List<TimeInterval> updated = new ArrayList<>();
 
         for (TimeInterval slot : slots) {
-            if (toSubtract.getEndTime().isBefore(slot.getStartTime()) ||
-                    toSubtract.getStartTime().isAfter(slot.getEndTime())) {
-                updated.add(slot); // no overlap
-            } else {
+            if (!toSubtract.getStartTime().isBefore(slot.getEndTime()) ||
+                    !toSubtract.getEndTime().isAfter(slot.getStartTime())) {
+                updated.add(slot); // no overlap (before or after, even if touching)
+            }
+            else {
                 if (toSubtract.getStartTime().isAfter(slot.getStartTime())) {
                     updated.add(new TimeInterval(slot.getStartTime(), toSubtract.getStartTime()));
                 }
@@ -138,6 +135,10 @@ public class RoomService implements IRoomService {
                 }
             }
         }
+
+        System.out.println("Subtracting: " + toSubtract);
+        System.out.println("From slots: " + slots);
+        System.out.println("Result: " + updated);
 
         return updated;
     }
@@ -152,60 +153,46 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Map<LocalDate, List<Room>> getRoomAvailabilityRange(
-            LocalDate start,
-            LocalDate end,
-            Integer minCapacity,
-            Set<String> requiredAmenities
-    ) {
+    public Map<LocalDate, List<RoomWithAvailability>> getRoomAvailabilityRange(
+            LocalDate start, LocalDate end, Integer minCapacity, Set<String> requiredAmenities) {
 
+        Map<LocalDate, List<RoomWithAvailability>> availabilityByDate = new LinkedHashMap<>();
 
-        if (start == null || end == null) {
-            throw new IllegalArgumentException("Start and end dates must not be null");
-        }
+        List<Room> matchingRooms = roomRepository.findByCapacityGreaterThanEqualAndAmenitiesContainingAll(
+                minCapacity, requiredAmenities
+        );
 
-        
-        List<Room> filteredRooms = roomRepository.findAll().stream()
-                .filter(room -> minCapacity == null || room.getCapacity() >= minCapacity)
-                .filter(room -> requiredAmenities == null || room.getAmenities().containsAll(requiredAmenities))
-                .toList();
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
+            final LocalDate currentDate = date;
 
-        Map<LocalDate, List<Room>> availabilityByDate = new LinkedHashMap<>();
-
-        LocalDate current = start;
-        while (!current.isAfter(end)) {
-            LocalDate date = current;
-
-            List<Room> roomsWithFreeSlots = filteredRooms.stream()
-                    .map(room -> {
-                        List<Booking> bookings = bookingRepository.findByRoomIdAndDate(room.getId(), date);
-                        List<TimeInterval> bookedIntervals = bookings.stream().map(Booking::getTime).toList();
-
-                        List<TimeInterval> roomDefaultAvailability = new ArrayList<>(room.getAvailableSlots());
-                        List<TimeInterval> freeSlots = subtractAll(roomDefaultAvailability, bookedIntervals);
-
-                        Room roomCopy = copyRoomWithSlots(room, freeSlots);
-                        return roomCopy;
-                    })
+            List<RoomWithAvailability> roomsForDate = matchingRooms.stream()
+                    .map(room -> createAvailableRoomForDate(room, currentDate))
                     .toList();
 
-            availabilityByDate.put(date, roomsWithFreeSlots);
-            current = current.plusDays(1);
+            availabilityByDate.put(currentDate, roomsForDate);
         }
 
         return availabilityByDate;
     }
 
-    private Room copyRoomWithSlots(Room source, List<TimeInterval> availableSlots) {
-        Room copy = new Room();
-        copy.setId(source.getId());
-        copy.setName(source.getName());
-        copy.setLocation(source.getLocation());
-        copy.setCapacity(source.getCapacity());
-        copy.setAmenities(source.getAmenities());
-        copy.setCoordinates(source.getCoordinates());
-        copy.setAvailableSlots(availableSlots);
-        return copy;
+    private RoomWithAvailability createAvailableRoomForDate(Room room, LocalDate date) {
+
+        RoomWithAvailability copy = convertToRoomWithAvailability(room,date);
+
+        return getRoomWithFreeSlots(copy, date);
+    }
+
+    private RoomWithAvailability convertToRoomWithAvailability(Room room, LocalDate date) {
+        List<TimeInterval> baseAvailability = List.of(new TimeInterval(LocalTime.of(7, 0), LocalTime.of(21, 0)));
+
+        List<Booking> bookings = bookingRepository.findByRoomIdAndDate(room.getId(), date);
+        List<TimeInterval> bookedIntervals = bookings.stream()
+                .map(Booking::getTime)
+                .toList();
+
+        List<TimeInterval> freeSlots = subtractAll(baseAvailability, bookedIntervals);
+
+        return new RoomWithAvailability(room, freeSlots);
     }
 
 
