@@ -38,33 +38,10 @@
         <th mat-header-cell *matHeaderCellDef class="text-main fw-bold" style="width: 800px"> Schedule </th>
         <td mat-cell class="my-5" *matCellDef="let room">
 
-          <!-- Timeline Bar -->
-          <div class="position-relative my-3 bg-unavailable bg-opacity-10 rounded-pill" style="height: 2rem;">
-            <!-- Available slots in green -->
-            <ng-container *ngFor="let interval of room.availableSlots">
+          <app-feature-timeline-bar [room]="room">
 
-              <div
-                class="position-absolute bg-available rounded-pill shadow-sm"
-                [style.left.%]="getIntervalOffset(interval)"
-                [style.width.%]="getIntervalWidth(interval)"
-                style="top: 0; height: 100%; cursor: pointer;"
-                (click)="selectInterval(interval)"
-                [attr.title]="formatInterval(interval)"
-              ></div>
-            </ng-container>
+          </app-feature-timeline-bar>
 
-            <!-- Booked slots in red/gray, layered on top -->
-            <ng-container class="bg-unavailable" *ngFor="let interval of room.bookedSlots">
-
-              <div
-                class="position-absolute bg-opacity-75 rounded-pill shadow-sm"
-                [style.left.%]="getIntervalOffset(interval)"
-                [style.width.%]="getIntervalWidth(interval)"
-                style="top: 0; height: 100%; pointer-events: none;"
-                [attr.title]="formatInterval(interval)"
-              ></div>
-            </ng-container>
-          </div>
           <!-- Time Labels -->
           <div class="d-flex justify-content-between text-dark small my-3 px-1 text-main">
             <span>07:00</span>

@@ -38,11 +38,14 @@ public class RoomMapper {
     public RoomAvailabilityResponse toRoomAvailabilityResponse(Room room) {
 
         RoomAvailabilityResponse dto = new RoomAvailabilityResponse();
+
         dto.setId(room.getId());
         dto.setName(room.getName());
         dto.setLocation(room.getLocation());
         dto.setCapacity(room.getCapacity());
         dto.setAmenities(room.getAmenities());
+
+
         dto.setAvailableSlots(room.getAvailableSlots());
 
         return dto;

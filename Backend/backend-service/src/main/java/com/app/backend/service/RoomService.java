@@ -151,5 +151,62 @@ public class RoomService implements IRoomService {
         return result;
     }
 
+    @Override
+    public Map<LocalDate, List<Room>> getRoomAvailabilityRange(
+            LocalDate start,
+            LocalDate end,
+            Integer minCapacity,
+            Set<String> requiredAmenities
+    ) {
+
+
+        if (start == null || end == null) {
+            throw new IllegalArgumentException("Start and end dates must not be null");
+        }
+
+        
+        List<Room> filteredRooms = roomRepository.findAll().stream()
+                .filter(room -> minCapacity == null || room.getCapacity() >= minCapacity)
+                .filter(room -> requiredAmenities == null || room.getAmenities().containsAll(requiredAmenities))
+                .toList();
+
+        Map<LocalDate, List<Room>> availabilityByDate = new LinkedHashMap<>();
+
+        LocalDate current = start;
+        while (!current.isAfter(end)) {
+            LocalDate date = current;
+
+            List<Room> roomsWithFreeSlots = filteredRooms.stream()
+                    .map(room -> {
+                        List<Booking> bookings = bookingRepository.findByRoomIdAndDate(room.getId(), date);
+                        List<TimeInterval> bookedIntervals = bookings.stream().map(Booking::getTime).toList();
+
+                        List<TimeInterval> roomDefaultAvailability = new ArrayList<>(room.getAvailableSlots());
+                        List<TimeInterval> freeSlots = subtractAll(roomDefaultAvailability, bookedIntervals);
+
+                        Room roomCopy = copyRoomWithSlots(room, freeSlots);
+                        return roomCopy;
+                    })
+                    .toList();
+
+            availabilityByDate.put(date, roomsWithFreeSlots);
+            current = current.plusDays(1);
+        }
+
+        return availabilityByDate;
+    }
+
+    private Room copyRoomWithSlots(Room source, List<TimeInterval> availableSlots) {
+        Room copy = new Room();
+        copy.setId(source.getId());
+        copy.setName(source.getName());
+        copy.setLocation(source.getLocation());
+        copy.setCapacity(source.getCapacity());
+        copy.setAmenities(source.getAmenities());
+        copy.setCoordinates(source.getCoordinates());
+        copy.setAvailableSlots(availableSlots);
+        return copy;
+    }
+
 
 }

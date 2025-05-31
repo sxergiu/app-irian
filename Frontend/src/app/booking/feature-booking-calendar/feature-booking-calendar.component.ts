@@ -51,11 +51,20 @@ export class FeatureBookingCalendarComponent {
   }
 
   private showCalendarView(): void {
+    const selectedRoom = this.store.selectedRoom();
+    const date = this.store.date();
 
+    if (selectedRoom && date) {
+      this.store.loadAvailableRoomsRange(date);
+    }
   }
 
   private showTableView(): void {
 
+      const filters = this.store.filters();
+      if (filters) {
+        this.store.loadAvailableRooms(filters);
+      }
   }
 
   onRoomSelected($event: AvailableRoomModel) {

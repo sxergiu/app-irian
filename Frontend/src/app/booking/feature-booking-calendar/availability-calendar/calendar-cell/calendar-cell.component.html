@@ -1,52 +1,39 @@
 @if( room(); as room ) {
-  <div class="card border-0 shadow-sm h-100 position-relative">
-    <!-- Status Bar -->
-    @if( room.availableSlots && room.availableSlots.length > 0 ) {
-      <div class="position-absolute top-0 start-0 w-100 bg-success" style="height: 2px; z-index: 1;"></div>
-    } @else if( room.bookedSlots && room.bookedSlots.length > 0 ) {
-      <div class="position-absolute top-0 start-0 w-100 bg-danger" style="height: 2px; z-index: 1;"></div>
-    } @else {
-      <div class="position-absolute top-0 start-0 w-100 bg-secondary" style="height: 2px; z-index: 1;"></div>
-    }
 
-    <div class="card-body p-2" style="font-size: 0.75rem;">
-      <!-- Room Name -->
-      <div class="mb-1">
-        <span class="fw-bold text-truncate d-block" [title]="room.name + ' - ' + room.location">
-          {{ room.name }}
-        </span>
+
+  <div class="p-5 h-100 position-relative row">
+
+    <div class="col-12 col-md-4">
+
+      <div class="d-flex flex-column text-dark small my-3 px-1 text-main text-white">
+        <span class="my-1">07:00</span>
+        <span class="my-1">10:00</span>
+        <span class="my-1">13:00</span>
+        <span class="my-1">16:00</span>
+        <span class="my-1">19:00</span>
+        <span class="my-1">21:00</span>
       </div>
 
-      <!-- Status Summary -->
-      <div class="d-flex gap-1 mb-1">
-        @if( room.availableSlots && room.availableSlots.length > 0 ) {
-          <span class="badge bg-success-subtle text-success px-1 py-0" style="font-size: 0.6rem;">
-            {{ room.availableSlots.length }}F
-          </span>
-        }
-        @if( room.bookedSlots && room.bookedSlots.length > 0 ) {
-          <span class="badge bg-danger-subtle text-danger px-1 py-0" style="font-size: 0.6rem;">
-            {{ room.bookedSlots.length }}B
-          </span>
-        }
-      </div>
+    </div>
 
-      <!-- Next Time -->
-      @if( room.availableSlots && room.availableSlots.length > 0 ) {
-        <div class="text-truncate" style="font-size: 0.65rem;">
-          <span class="text-success">●</span>
-          <span class="text-muted">{{ room.availableSlots[0].startTime.toLocaleString() }}</span>
+    <div class="col-12 col-md-8 timeline-container">
+
+      <div style="font-size: 0.75rem;">
+
+        <div class="" style="width: 150px">
+          <app-feature-timeline-bar
+            [isVertical]="true"
+            [room]="room">
+          </app-feature-timeline-bar>
         </div>
-      } @else if( room.bookedSlots && room.bookedSlots.length > 0 ) {
-        <div class="text-truncate" style="font-size: 0.65rem;">
-          <span class="text-danger">●</span>
-          <span class="text-muted">Until {{ room.bookedSlots[0].endTime }}</span>
-        </div>
-      } @else {
-        <div class="text-center text-muted" style="font-size: 0.65rem;">
-          No bookings
-        </div>
-      }
+
+      </div>
+    </div>
+
+    <div class="mb-1 d-flex justify-content-start">
+              <span class="fw-bold text-truncate d-block" [title]="room.name + ' - ' + room.location">
+                {{ room.name }}
+              </span>
     </div>
   </div>
 }

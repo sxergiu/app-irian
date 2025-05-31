@@ -23,6 +23,8 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
   selectedRoom = input.required<AvailableRoomModel | null>();
   filteredDate = input<DateTime | null>();
 
+  calendarMap = input<Record<string, AvailableRoomModel[]>>();
+
   activeDay = signal<DateTime | null>(null);
 
   today = computed<DateTime>(() => DateTime.local())
@@ -93,5 +95,6 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
     this.activeDay.set(this.filteredDate() ?? null);
     this.goToDate(this.activeDay())
   }
+
 
 }

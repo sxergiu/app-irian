@@ -1,0 +1,59 @@
+@if( room(); as room ) {
+
+  @if( isVertical() ) {
+    <!-- Vertical Timeline -->
+    <div class="position-relative my-3 bg-unavailable bg-opacity-10 rounded-pill" style="width: 2rem; height: 180px;">
+
+      <ng-container *ngFor="let interval of room.availableSlots">
+        <div
+          class="position-absolute bg-available rounded-pill shadow-sm"
+          [style.top.%]="getIntervalOffset(interval)"
+          [style.height.%]="getIntervalWidth(interval)"
+          style="left: 0; width: 100%; cursor: pointer; z-index: 2;"
+          (click)="selectInterval(interval)"
+          [attr.title]="formatInterval(interval)"
+        ></div>
+        <p> {{interval.startTime }} {{interval.endTime}}</p>
+      </ng-container>
+
+      <ng-container *ngFor="let interval of room.bookedSlots">
+        <div
+          class="position-absolute bg-unavailable rounded-pill shadow-sm"
+          [style.top.%]="getIntervalOffset(interval)"
+          [style.height.%]="getIntervalWidth(interval)"
+          style="left: 0; width: 100%; pointer-events: none; z-index: 1;"
+          [attr.title]="formatInterval(interval)"
+        ></div>
+        <p> {{interval.startTime }} {{interval.endTime}}</p>
+      </ng-container>
+    </div>
+  } @else {
+    <!-- Horizontal Timeline -->
+    <div class="position-relative my-3 bg-unavailable bg-opacity-10 rounded-pill" style="height: 2rem;">
+
+      <ng-container *ngFor="let interval of room.availableSlots">
+        <div
+          class="position-absolute bg-available rounded-pill shadow-sm"
+          [style.left.%]="getIntervalOffset(interval)"
+          [style.width.%]="getIntervalWidth(interval)"
+          style="top: 0; height: 100%; cursor: pointer;"
+          (click)="selectInterval(interval)"
+          [attr.title]="formatInterval(interval)"
+        ></div>
+      </ng-container>
+
+      <ng-container class="bg-unavailable" *ngFor="let interval of room.bookedSlots">
+        <div
+          class="position-absolute bg-unavailable rounded-pill shadow-sm"
+          [style.left.%]="getIntervalOffset(interval)"
+          [style.width.%]="getIntervalWidth(interval)"
+          style="top: 0; height: 100%; pointer-events: none;"
+          [attr.title]="formatInterval(interval)"
+        ></div>
+      </ng-container>
+    </div>
+  }
+
+} @else {
+  <p class="my-3"> Timeline error</p>
+}

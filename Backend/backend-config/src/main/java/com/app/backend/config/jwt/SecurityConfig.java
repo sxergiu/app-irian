@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/actuator/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/room/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST,"/api/room/available").hasAnyRole("ADMIN","USER")
+                        .requestMatchers(HttpMethod.POST,"/api/room/available/**").hasAnyRole("ADMIN","USER")
                         .requestMatchers(HttpMethod.POST, "/api/room/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/room/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("ADMIN")

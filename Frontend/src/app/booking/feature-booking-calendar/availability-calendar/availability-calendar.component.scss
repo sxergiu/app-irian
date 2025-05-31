@@ -39,7 +39,7 @@
   grid-template-columns: repeat(7, minmax(0, 1fr));
   font-size: 12px;
   margin-bottom: 10px;
-  color: rgb(81, 81, 81);
+  color: white;
 }
 
 .calendar-weeks-grid-cell {
@@ -58,20 +58,28 @@
 }
 
 .calendar-grid-cell {
-  padding: 5px;
+  padding: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Changed from center to flex-start */
   border-bottom: 1px solid rgb(190, 190, 190);
   border-right: 1px solid rgb(190, 190, 190);
   cursor: pointer;
+  overflow: hidden; /* Prevent content from overflowing */
+  position: relative; /* Establish containing block for absolute positioned children */
+  min-height: 0; /* Allow flex item to shrink below content size */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
 }
 
+.calendar-grid-cell > * {
+  margin: 0 auto; /* Center the direct children manually */
+}
 .calendar-grid-cell:hover {
   background: #9ba3bf;
 }
 
 .calendar-grid-cell-active {
+  color: lightblue;
   background: #9ba3bf;
 }
 

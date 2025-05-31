@@ -1,9 +1,12 @@
 import {Component, effect, input} from '@angular/core';
 import {AvailableRoomModel} from '../../../domain/available.room.model';
+import {FeatureTimelineBarComponent} from '../../feature-timeline-bar/feature-timeline-bar.component';
 
 @Component({
   selector: 'app-calendar-cell',
-  imports: [],
+  imports: [
+    FeatureTimelineBarComponent
+  ],
   templateUrl: './calendar-cell.component.html',
   styleUrl: './calendar-cell.component.scss'
 })

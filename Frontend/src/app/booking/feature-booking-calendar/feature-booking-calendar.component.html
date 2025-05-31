@@ -10,7 +10,7 @@
         <div class="custom-view-toggle" [class.checked]="checked" [class.unchecked]="!checked" (click)="toggle()">
           <div class="toggle-track">
             <div class="toggle-handle">
-              <mat-icon>{{ checked ? 'calendar_month' : 'view_list' }}</mat-icon>
+              <mat-icon>{{ checked ? 'calendar_month' : 'table_rows' }}</mat-icon>
             </div>
           </div>
         </div>
@@ -39,6 +39,7 @@
 
       <app-availability-calendar
           [availableRooms]="store.roomsWithProcessedSlots()"
+          [calendarMap]="store.monthlyAvailabilityMap()"
           [selectedRoom]="store.selectedRoom()"
           [filteredDate]="store.date()"
         />

@@ -64,4 +64,8 @@ export class RoomService {
     return this.http.post<AvailableRoomModel[]>(`${this.apiUrl}/available`, filter);
   }
 
+  fetchMonthlyAvailability(filter: RoomFilterModel & { startDate: string; endDate: string }): Observable<Record<string, AvailableRoomModel[]>> {
+    return this.http.post<Record<string, AvailableRoomModel[]>>(`${this.apiUrl}/available/range`, filter);
+  }
+
 }
