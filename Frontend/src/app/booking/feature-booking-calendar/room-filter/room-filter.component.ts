@@ -63,10 +63,14 @@ export class RoomFilterComponent {
       effect(() => {
 
         const currentFilter = this.filter();
-        console.log(this.filter().date)
+
+        if(!currentFilter)
+          return;
+
         this.filterChange.emit(currentFilter);
 
-        const currentDate = this.filter().date;
+
+        const currentDate = currentFilter.date;
 
         if (this.isDate(currentDate)) {
           const dateTime = DateTime.fromJSDate(currentDate);
@@ -134,4 +138,5 @@ export class RoomFilterComponent {
 
 
 }
+
 
