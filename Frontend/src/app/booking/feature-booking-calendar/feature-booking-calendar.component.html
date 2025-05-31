@@ -24,6 +24,7 @@
                          (filterChange)="onFilterChange($event)"
                          [availableRooms]="store.roomsWithProcessedSlots()"
                          (selectedRoom)="onRoomSelected($event)"
+                         (dateChange)="onDatepickerChange($event)"
                          [view]="checked"
         />
 
@@ -39,6 +40,7 @@
       <app-availability-calendar
           [availableRooms]="store.roomsWithProcessedSlots()"
           [selectedRoom]="store.selectedRoom()"
+          [filteredDate]="store.date()"
         />
 
     }

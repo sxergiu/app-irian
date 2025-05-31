@@ -49,8 +49,6 @@ export class RoomFilterComponent {
   });
   filterChange = output<RoomFilterModel>();
 
-  dateChange = output<DateTime>();
-
   view= input.required<boolean>();
   amenities = input<string[]>([]);
   selectedAmenities = signal<string[]>([]);
@@ -58,17 +56,41 @@ export class RoomFilterComponent {
   availableRooms = input.required<AvailableRoomModel[]>();
   selectedRoom = output<AvailableRoomModel>();
 
-  constructor() {
+  dateChange = output<DateTime>();
 
-    effect(() => {
+    constructor() {
 
-      this.filterChange.emit(this.filter());
+      effect(() => {
 
-    });
+        const currentFilter = this.filter();
+        console.log(this.filter().date)
+        this.filterChange.emit(currentFilter);
 
-  }
+        const currentDate = this.filter().date;
 
-    onCapacityChange($event: number): void {
+        if (this.isDate(currentDate)) {
+          const dateTime = DateTime.fromJSDate(currentDate);
+          this.dateChange.emit(dateTime);
+          console.log("FILTER EMITS" +dateTime.toJSDate())
+        } else if (typeof currentDate === 'string') {
+          const dateTime = DateTime.fromISO(currentDate);
+          if (dateTime.isValid) {
+            this.dateChange.emit(dateTime);
+            console.log("FILTER EMITS" +dateTime.toString())
+          }
+        }
+
+
+      });
+
+    }
+
+    isDate(value: unknown): value is Date {
+      return value instanceof Date && !isNaN(value.getTime());
+    }
+
+
+  onCapacityChange($event: number): void {
     this.filter.update(filter => {
       return {
         ...filter,
@@ -77,14 +99,14 @@ export class RoomFilterComponent {
     })
   }
 
-  onDateChange($event: string): void {
-    this.filter.update(filter => {
-      return {
-        ...filter,
-        date: $event
-      }
-    })
+  onDateChange($event: Date): void {
+    const localDateOnly = DateTime.fromJSDate($event).toISODate(); // '2025-05-16'
+    this.filter.update(filter => ({
+      ...filter,
+      date: (localDateOnly ?? undefined)
+    }));
   }
+
 
   toggleAmenity(amenity: string): void {
     const currentSelected = this.selectedAmenities();
@@ -109,4 +131,7 @@ export class RoomFilterComponent {
   onRoomSelected($event: AvailableRoomModel) {
     this.selectedRoom.emit($event);
   }
+
+
 }
+

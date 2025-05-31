@@ -1,9 +1,10 @@
-import {Component, computed, Input, input, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, Input, input, OnInit, signal} from '@angular/core';
 import {DateTime, Info, Interval} from 'luxon';
 import {NgClass} from '@angular/common';
 import {AvailableRoomModel} from '../../domain/available.room.model';
 import {CalendarCellComponent} from './calendar-cell/calendar-cell.component';
 import {MatIconModule} from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-availability-calendar',
@@ -16,10 +17,11 @@ import {MatIconModule} from '@angular/material/icon';
   styleUrl: './availability-calendar.component.scss'
 })
 
-export class AvailabilityCalendarComponent {
+export class AvailabilityCalendarComponent implements AfterViewInit{
 
   availableRooms = input.required<AvailableRoomModel[]>();
   selectedRoom = input.required<AvailableRoomModel | null>();
+  filteredDate = input<DateTime | null>();
 
   activeDay = signal<DateTime | null>(null);
 
@@ -47,7 +49,15 @@ export class AvailabilityCalendarComponent {
   DATE_MED = DateTime.DATE_MED;
 
   constructor() {
-    //console.log("selected room " + this.selectedRoom()?.name)
+
+    effect(() => {
+      console.log("selected day" + this.activeDay()?.toJSDate() )
+    });
+
+    effect(() => {
+      console.log("STORE " + this.filteredDate())
+    });
+
   }
 
   goToPrevMonth(): void {
@@ -69,4 +79,19 @@ export class AvailabilityCalendarComponent {
 
     this.activeDay.set(this.today());
   }
+
+  goToDate(date: DateTime | null): void {
+    if (!date) return;
+
+    this.firstDayOfActiveMonth.set(date.startOf('month'));
+    this.activeDay.set(date);
+  }
+
+
+  ngAfterViewInit(): void {
+
+    this.activeDay.set(this.filteredDate() ?? null);
+    this.goToDate(this.activeDay())
+  }
+
 }

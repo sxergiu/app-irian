@@ -13,6 +13,7 @@ import { RoomService } from '../../../room/room.service';
 import { BookingResourceService } from '../../booking-resource.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { debounceTime, pipe, switchMap, tap } from 'rxjs';
+import {DateTime} from 'luxon';
 
 export const featureBookingCalendarStore = signalStore(
 
@@ -21,7 +22,8 @@ export const featureBookingCalendarStore = signalStore(
     availableRooms: [] as AvailableRoomModel[],
     amenities: [] as string[],
     selectedRoom: null as AvailableRoomModel | null,
-    filters: null as RoomFilterModel | null
+    filters: null as RoomFilterModel | null,
+    date: null as DateTime | null
   }),
 
   withComputed((state) => ({
@@ -92,6 +94,12 @@ export const featureBookingCalendarStore = signalStore(
       patchState(state, {
         selectedRoom: room
       });
+    },
+
+    updateDatepicker: (date:DateTime) => {
+      patchState(state, {
+        date: date
+      })
     }
 
   })),
