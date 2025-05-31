@@ -6,12 +6,25 @@
 
   <div class="calendar">
 
+    <div>
+      <div class="d-flex justify-content-center">
+        @if(selectedRoom(); as r) {
+          <h3> Weekly Schedule for <strong>{{ r.name }}</strong> </h3>
+        } @else {
+          <h3> Please select a room. </h3>
+        }
+      </div>
+
+    </div>
+
+
     <div class="calendar-headline text-main text-white fw-bold">
       <div class="calendar-headline-month">
         <h2>
         {{ firstDayOfActiveMonth().monthShort }},
         {{ firstDayOfActiveMonth().year }}
         </h2>
+
       </div>
 
       <div>

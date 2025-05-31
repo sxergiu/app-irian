@@ -1,12 +1,12 @@
-@if (room(); as selected) {
-  <div class="p-5 h-100 position-relative row">
-    <!-- Times column -->
-    <div class="col-12 col-md-4">
 
-    </div>
+
+
+
+@if (room(); as selected) {
+  <div class="p-5 h-100 position-relative">
 
     <!-- Timeline column -->
-    <div class="col-12 col-md-8 timeline-container">
+    <div class="timeline-container">
       <div style="font-size: 0.75rem;">
         <div style="width: 150px">
 
@@ -21,11 +21,6 @@
       </div>
     </div>
 
-    <!-- Room info -->
-    <div class="mb-1 d-flex justify-content-start">
-      <span class="fw-bold text-truncate d-block" [title]="selected.name + ' - ' + selected.location">
-        {{ selected.name }}
-      </span>
-    </div>
   </div>
 }
+

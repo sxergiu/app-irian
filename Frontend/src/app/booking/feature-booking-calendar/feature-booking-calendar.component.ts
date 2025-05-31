@@ -76,7 +76,6 @@ export class FeatureBookingCalendarComponent {
   }
 
   onCalendarMonthChanged(newMonth: DateTime) {
-    console.log('Calendar month changed:', newMonth.toISODate());
 
     if (this.store.filters() && this.store.selectedRoom()) {
       this.store.loadAvailableRoomsRange(newMonth);

@@ -75,12 +75,12 @@
   margin: 0 auto; /* Center the direct children manually */
 }
 .calendar-grid-cell:hover {
-  background: #9ba3bf;
+  background: lightslategray;
 }
 
 .calendar-grid-cell-active {
   color: lightblue;
-  background: #9ba3bf;
+  background: slategray;
 }
 
 .schedule {

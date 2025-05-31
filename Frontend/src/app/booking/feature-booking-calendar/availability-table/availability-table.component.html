@@ -1,4 +1,7 @@
 
+
+<h3 class="d-flex justify-content-center"> <strong> Available Rooms </strong> </h3>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
 
       <!-- Room Column -->
@@ -38,7 +41,8 @@
         <th mat-header-cell *matHeaderCellDef class="text-main fw-bold" style="width: 800px"> Schedule </th>
         <td mat-cell class="my-5" *matCellDef="let room">
 
-          <app-feature-timeline-bar [room]="room">
+          <app-feature-timeline-bar [room]="room"
+          [isVertical]="false">
 
           </app-feature-timeline-bar>
 

@@ -51,23 +51,17 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
   })
 
   DATE_MED = DateTime.DATE_MED;
-  intervals: string[] = ['7:00','10:00','13:00','16:00','19:00','21:00'];
 
   constructor() {
 
     effect(() => {
-      console.log("selected day" + this.activeDay()?.toJSDate() )
-    });
-
-    effect(() => {
-      console.log("STORE " + this.filteredDate())
-    });
-
-    effect(() => {
-
       const currentMonth = this.firstDayOfActiveMonth();
+      const selectedRoom = this.selectedRoom();
+
+      console.log(this.selectedRoom()?.availableSlots);
       this.monthChange.emit(currentMonth);
     });
+
   }
 
   goToPrevMonth(): void {
@@ -86,8 +80,6 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
     this.firstDayOfActiveMonth.set(
       this.today().startOf('month')
     )
-
-    this.activeDay.set(this.today());
   }
 
   goToDate(date: DateTime | null): void {
@@ -101,7 +93,9 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
 
     this.activeDay.set(this.filteredDate() ?? null);
     this.goToDate(this.activeDay())
+
   }
+
 
   getRoomsForDay(day: DateTime): AvailableRoomModel[] {
 

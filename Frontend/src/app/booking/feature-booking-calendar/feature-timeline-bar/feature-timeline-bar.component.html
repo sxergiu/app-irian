@@ -2,34 +2,21 @@
 
   @if( isVertical() ) {
 
-    <!-- Vertical Timeline -->
-    <div class="position-relative my-3 bg-unavailable bg-opacity-10 rounded-pill" style="width: 2rem; height: 100%; min-height: 180px;">
 
-      <!-- Available Intervals -->
+      <div class="position-relative my-3 bg-unavailable bg-opacity-10" style="width: 3rem; height: 340px;">
+
       <ng-container *ngFor="let interval of room.availableSlots">
         <div
-          class="position-absolute bg-available rounded-pill shadow-sm"
-          [style.top.%]="getIntervalOffset(interval)"
-          [style.height.%]="getIntervalWidth(interval)"
-          style="left: 0; width: 100%; cursor: pointer; z-index: 2;"
+          class="position-absolute bg-available shadow-sm booking-bar"
+          [style.top.%]="getVerticalOffset(interval)"
+          [style.height.%]="getVerticalHeight(interval)"
+          style="left: 0; width: 100%; cursor: pointer;"
           (click)="selectInterval(interval)"
-          [attr.title]="formatInterval(interval)">
-        </div>
-      </ng-container>
-
-      <!-- Booked Intervals -->
-      <ng-container *ngFor="let interval of room.bookedSlots">
-        <div
-          class="position-absolute bg-unavailable rounded-pill shadow-sm"
-          [style.top.%]="getIntervalOffset(interval)"
-          [style.height.%]="getIntervalWidth(interval)"
-          style="left: 0; width: 100%; pointer-events: none; z-index: 1;"
-          [attr.title]="formatInterval(interval)">
+          [attr.title]="formatVerticalInterval(interval)">
         </div>
       </ng-container>
 
     </div>
-
 
   } @else {
     <!-- Horizontal Timeline -->
@@ -46,15 +33,6 @@
         ></div>
       </ng-container>
 
-      <ng-container class="bg-unavailable" *ngFor="let interval of room.bookedSlots">
-        <div
-          class="position-absolute bg-unavailable rounded-pill shadow-sm"
-          [style.left.%]="getIntervalOffset(interval)"
-          [style.width.%]="getIntervalWidth(interval)"
-          style="top: 0; height: 100%; pointer-events: none;"
-          [attr.title]="formatInterval(interval)"
-        ></div>
-      </ng-container>
     </div>
   }
 

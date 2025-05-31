@@ -47,6 +47,8 @@ export const featureBookingCalendarStore = signalStore(
           }))
         };
 
+        console.log("INTERVALS " + newRoom.availableSlots + newRoom.bookedSlots);
+
         return newRoom;
       });
 
