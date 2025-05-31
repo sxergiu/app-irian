@@ -1,10 +1,7 @@
-@if( room(); as room ) {
-
-
+@if (room(); as selected) {
   <div class="p-5 h-100 position-relative row">
-
+    <!-- Times column -->
     <div class="col-12 col-md-4">
-
       <div class="d-flex flex-column text-dark small my-3 px-1 text-main text-white">
         <span class="my-1">07:00</span>
         <span class="my-1">10:00</span>
@@ -13,27 +10,29 @@
         <span class="my-1">19:00</span>
         <span class="my-1">21:00</span>
       </div>
-
     </div>
 
+    <!-- Timeline column -->
     <div class="col-12 col-md-8 timeline-container">
-
       <div style="font-size: 0.75rem;">
+        <div style="width: 150px">
 
-        <div class="" style="width: 150px">
-          <app-feature-timeline-bar
-            [isVertical]="true"
-            [room]="room">
-          </app-feature-timeline-bar>
+          <ng-container *ngIf="selectedRoomForDay as r">
+            <app-feature-timeline-bar
+              [isVertical]="true"
+              [room]="r">
+            </app-feature-timeline-bar>
+          </ng-container>
+
         </div>
-
       </div>
     </div>
 
+    <!-- Room info -->
     <div class="mb-1 d-flex justify-content-start">
-              <span class="fw-bold text-truncate d-block" [title]="room.name + ' - ' + room.location">
-                {{ room.name }}
-              </span>
+      <span class="fw-bold text-truncate d-block" [title]="selected.name + ' - ' + selected.location">
+        {{ selected.name }}
+      </span>
     </div>
   </div>
 }

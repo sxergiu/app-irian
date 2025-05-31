@@ -74,4 +74,13 @@ export class FeatureBookingCalendarComponent {
   onDatepickerChange($event: DateTime) {
     this.store.updateDatepicker($event)
   }
+
+  onCalendarMonthChanged(newMonth: DateTime) {
+    console.log('Calendar month changed:', newMonth.toISODate());
+
+    if (this.store.filters() && this.store.selectedRoom()) {
+      this.store.loadAvailableRoomsRange(newMonth);
+    }
+  }
+
 }

@@ -1,6 +1,7 @@
 import {Component, input} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {AvailableRoomModel, Timeslot} from '../../domain/available.room.model';
+import {DateTime} from 'luxon';
 
 @Component({
   selector: 'app-feature-timeline-bar',
@@ -34,5 +35,6 @@ export class FeatureTimelineBarComponent {
       `${Math.floor(min / 60).toString().padStart(2, '0')}:${(min % 60).toString().padStart(2, '0')}`;
     return `${format(interval.startTime)} - ${format(interval.endTime)}`;
   }
+
 
 }

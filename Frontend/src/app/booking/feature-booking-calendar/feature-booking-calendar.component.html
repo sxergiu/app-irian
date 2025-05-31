@@ -42,6 +42,7 @@
           [calendarMap]="store.monthlyAvailabilityMap()"
           [selectedRoom]="store.selectedRoom()"
           [filteredDate]="store.date()"
+          (monthChange)="onCalendarMonthChanged($event)"
         />
 
     }

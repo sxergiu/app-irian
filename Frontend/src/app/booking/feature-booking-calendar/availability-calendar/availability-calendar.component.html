@@ -47,9 +47,12 @@
         <div class="calendar-weeks-grid-cell text-main text-white">
           {{  weekDay }}
         </div>
-
       }
+      <div class="calendar-weeks-grid-cell text-main text-white">
+        mata
+      </div>
     </div>
+
     <div class="calendar-grid">
 
       @for( dayOfMonth of daysOfMonth(); track $index) {
@@ -66,8 +69,12 @@
 
 
          <div class="d-flex justify-content-center" >
-           <app-calendar-cell [room]="this.selectedRoom()">
+           <app-calendar-cell
+             [day]="dayOfMonth"
+             [rooms]="getRoomsForDay(dayOfMonth)"
+             [room]="selectedRoom()">
            </app-calendar-cell>
+
          </div>
 
        </div>

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, effect, Input, input, OnInit, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, Input, input, OnInit, output, signal} from '@angular/core';
 import {DateTime, Info, Interval} from 'luxon';
 import {NgClass} from '@angular/common';
 import {AvailableRoomModel} from '../../domain/available.room.model';
@@ -19,13 +19,15 @@ import {MatIconModule} from '@angular/material/icon';
 
 export class AvailabilityCalendarComponent implements AfterViewInit{
 
-  availableRooms = input.required<AvailableRoomModel[]>();
-  selectedRoom = input.required<AvailableRoomModel | null>();
-  filteredDate = input<DateTime | null>();
+    availableRooms = input.required<AvailableRoomModel[]>();
+    selectedRoom = input.required<AvailableRoomModel | null>();
+    filteredDate = input<DateTime | null>();
 
-  calendarMap = input<Record<string, AvailableRoomModel[]>>();
+    calendarMap = input<Record<string, AvailableRoomModel[]>>();
+    availableByDate = computed(() => this.calendarMap() ?? {});
 
-  activeDay = signal<DateTime | null>(null);
+    activeDay = signal<DateTime | null>(null);
+    monthChange = output<DateTime>()
 
   today = computed<DateTime>(() => DateTime.local())
   firstDayOfActiveMonth = signal<DateTime> (
@@ -49,6 +51,7 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
   })
 
   DATE_MED = DateTime.DATE_MED;
+  intervals: string[] = ['7:00','10:00','13:00','16:00','19:00','21:00'];
 
   constructor() {
 
@@ -60,6 +63,11 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
       console.log("STORE " + this.filteredDate())
     });
 
+    effect(() => {
+
+      const currentMonth = this.firstDayOfActiveMonth();
+      this.monthChange.emit(currentMonth);
+    });
   }
 
   goToPrevMonth(): void {
@@ -89,12 +97,24 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
     this.activeDay.set(date);
   }
 
-
   ngAfterViewInit(): void {
 
     this.activeDay.set(this.filteredDate() ?? null);
     this.goToDate(this.activeDay())
   }
 
+  getRoomsForDay(day: DateTime): AvailableRoomModel[] {
+
+    const dayIso = day.toISODate();
+    const map = this.availableByDate();
+
+
+    if( dayIso === null  || !map){
+      console.log("DAY NULL");
+      return [];
+    }
+
+    return map[dayIso] || [];
+  }
 
 }

@@ -1,22 +1,36 @@
-import {Component, effect, input} from '@angular/core';
+import {Component, effect, input, signal} from '@angular/core';
 import {AvailableRoomModel} from '../../../domain/available.room.model';
 import {FeatureTimelineBarComponent} from '../../feature-timeline-bar/feature-timeline-bar.component';
+import {DateTime} from 'luxon';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-calendar-cell',
   imports: [
-    FeatureTimelineBarComponent
+    FeatureTimelineBarComponent,
+    NgIf
   ],
   templateUrl: './calendar-cell.component.html',
   styleUrl: './calendar-cell.component.scss'
 })
 export class CalendarCellComponent {
 
-  room = input.required<AvailableRoomModel | null>()
+  rooms = input.required<AvailableRoomModel[]>(); // rooms scheduled on this day
+  room = input.required<AvailableRoomModel | null>(); // selected room to highlight
+  day = input.required<DateTime>();
+
+  get selectedRoomForDay(): AvailableRoomModel | null {
+    const selected = this.room();
+    if (!selected) return null;
+
+    return this.rooms().find(r => r.id === selected.id) ?? null;
+  }
 
   constructor() {
     effect(() => {
-        this.room()
+      console.log('Selected room:', this.room());
+      //console.log('Rooms for day:', this.rooms());
     });
   }
+
 }

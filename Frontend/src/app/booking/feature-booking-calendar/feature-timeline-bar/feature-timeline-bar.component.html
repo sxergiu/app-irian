@@ -1,9 +1,11 @@
 @if( room(); as room ) {
 
   @if( isVertical() ) {
-    <!-- Vertical Timeline -->
-    <div class="position-relative my-3 bg-unavailable bg-opacity-10 rounded-pill" style="width: 2rem; height: 180px;">
 
+    <!-- Vertical Timeline -->
+    <div class="position-relative my-3 bg-unavailable bg-opacity-10 rounded-pill" style="width: 2rem; height: 100%; min-height: 180px;">
+
+      <!-- Available Intervals -->
       <ng-container *ngFor="let interval of room.availableSlots">
         <div
           class="position-absolute bg-available rounded-pill shadow-sm"
@@ -11,22 +13,24 @@
           [style.height.%]="getIntervalWidth(interval)"
           style="left: 0; width: 100%; cursor: pointer; z-index: 2;"
           (click)="selectInterval(interval)"
-          [attr.title]="formatInterval(interval)"
-        ></div>
-        <p> {{interval.startTime }} {{interval.endTime}}</p>
+          [attr.title]="formatInterval(interval)">
+        </div>
       </ng-container>
 
+      <!-- Booked Intervals -->
       <ng-container *ngFor="let interval of room.bookedSlots">
         <div
           class="position-absolute bg-unavailable rounded-pill shadow-sm"
           [style.top.%]="getIntervalOffset(interval)"
           [style.height.%]="getIntervalWidth(interval)"
           style="left: 0; width: 100%; pointer-events: none; z-index: 1;"
-          [attr.title]="formatInterval(interval)"
-        ></div>
-        <p> {{interval.startTime }} {{interval.endTime}}</p>
+          [attr.title]="formatInterval(interval)">
+        </div>
       </ng-container>
+
     </div>
+
+
   } @else {
     <!-- Horizontal Timeline -->
     <div class="position-relative my-3 bg-unavailable bg-opacity-10 rounded-pill" style="height: 2rem;">
