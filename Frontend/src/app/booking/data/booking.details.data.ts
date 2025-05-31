@@ -1,7 +1,6 @@
 import {BookingDetailsModel} from '../domain/booking.details.model';
 
 
-
 export const mockBookingDetails: BookingDetailsModel = {
   id: 1,
   date: '2025-06-10',
@@ -10,7 +9,7 @@ export const mockBookingDetails: BookingDetailsModel = {
   group: {
     id: 45,
     name: "Board of Directors",
-    size: 9
+    numberOfPeople: 9
   },
   user: {
     id: 2,

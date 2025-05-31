@@ -24,4 +24,16 @@ public interface RoomJPARepository extends JpaRepository<Room, Long> {
             @Param("requiredAmenities") Set<String> amenities
     );
 
+
+    @Query("""
+    SELECT DISTINCT r FROM Room r
+    LEFT JOIN FETCH r.availableSlots
+    WHERE r.capacity >= :capacity
+    """)
+    List<Room> findWithAvailability(@Param("capacity") int capacity);
+
+
+    @Query("SELECT DISTINCT a FROM Room r JOIN r.amenities a")
+    Set<String> findDistinctAmenities();
+
 }

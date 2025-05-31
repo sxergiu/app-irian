@@ -1,6 +1,10 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid space-between">
-    <a class="navbar-brand" href="/">Conference Room Booking</a>
+
+    <a class="navbar-brand ms-2" href="/">
+      <img src="https://mario.wiki.gallery/images/4/47/Mario_Party_Star_Rush_King_Boo.png?download" style="width:30px" alt="kingbooimg">
+      Boo King
+    </a>
     <div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
               aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,6 +13,16 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
 
         <ul class="navbar-nav">
+
+          <li class="nav-item">
+
+            @if( authService.isUser()){
+              <a class="nav-link mx-2" [routerLink]="['/book']" > Book a Room </a>
+            } @else {
+              <a class="nav-link mx-2" [routerLink]="['/dashboard']" > Manage Rooms </a>
+            }
+
+          </li>
 
           <li class="nav-item">
             <a class="nav-link mx-2" [routerLink]="['/bookings']" > View Bookings </a>

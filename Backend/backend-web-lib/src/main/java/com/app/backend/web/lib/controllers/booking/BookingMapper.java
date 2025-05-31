@@ -36,8 +36,8 @@ public class BookingMapper {
         }
 
         dto.setDate(booking.getDate());
-        dto.setStartTime(booking.getStartTime());
-        dto.setEndTime(booking.getEndTime());
+        dto.setStartTime(booking.getTime().getStartTime());
+        dto.setEndTime(booking.getTime().getEndTime());
 
         if (booking.getUser() != null) {
             dto.setUserId(booking.getUser().getId());
@@ -61,7 +61,7 @@ public class BookingMapper {
         UserResponse userDto = new UserResponse(user.getId(), user.getName(), user.getEmail());
 
         return new BookingDetailsResponse(
-                booking.getId(), booking.getDate(), booking.getStartTime(), booking.getEndTime(),
+                booking.getId(), booking.getDate(), booking.getTime().getStartTime(), booking.getTime().getEndTime(),
                 groupDto, userDto, roomDto
         );
     }

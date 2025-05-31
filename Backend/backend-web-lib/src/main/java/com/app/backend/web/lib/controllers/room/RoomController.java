@@ -3,17 +3,18 @@ package com.app.backend.web.lib.controllers.room;
 import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomAvailabilityQuery;
 import com.app.backend.service.api.IRoomService;
-import com.app.backend.web.lib.DTO.room.RoomAvailabilityRequest;
-import com.app.backend.web.lib.DTO.room.RoomAvailabilityResponse;
-import com.app.backend.web.lib.DTO.room.RoomRequest;
-import com.app.backend.web.lib.DTO.room.RoomResponse;
+import com.app.backend.web.lib.DTO.room.*;
+import io.micrometer.core.instrument.config.validate.Validated;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/room")
@@ -88,9 +89,7 @@ public class RoomController {
             List<Room> rooms = roomService.findAvailableRooms(new RoomAvailabilityQuery(
                     request.getMinCapacity(),
                     request.getRequiredAmenities(),
-                    request.getDate(),
-                    request.getStartTime(),
-                    request.getEndTime()
+                    request.getDate()
             ));
 
             List<RoomAvailabilityResponse> response = rooms.stream()
@@ -105,5 +104,38 @@ public class RoomController {
         }
     }
 
+    @PostMapping("/available/range")
+    public ResponseEntity<Map<String, List<RoomAvailabilityResponse>>> getRoomAvailabilityRange(
+            @RequestBody RoomAvailabilityRangeRequest request) {
+
+        try {
+            Map<LocalDate, List<Room>> entityResult = roomService.getRoomAvailabilityRange(
+                    request.getStartDate(),
+                    request.getEndDate(),
+                    request.getMinCapacity(),
+                    request.getRequiredAmenities()
+            );
+
+            Map<String, List<RoomAvailabilityResponse>> dtoResult = entityResult.entrySet().stream()
+                    .collect(Collectors.toMap(
+                            entry -> entry.getKey().toString(),
+                            entry -> entry.getValue().stream()
+                                    .map(roomMapper::toRoomAvailabilityResponse)
+                                    .collect(Collectors.toList())
+                    ));
+            return ResponseEntity.ok(dtoResult);
+        }
+        catch(Exception e) {
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
+    }
+
+    @GetMapping("/amenities")
+    public Set<String> getAllAvailableAmenities() {
+        return roomService.findAllAvailableAmenities();
+    }
 
 }

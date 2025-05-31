@@ -6,6 +6,7 @@ import com.app.backend.domain.room.RoomAvailabilityQuery;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,5 +19,6 @@ public interface IRoomService {
     void deleteRoom(Long id);
     Optional<Room> findById(Long id);
     List<Room> findAvailableRooms(RoomAvailabilityQuery roomFilter);
-
+    Set<String> findAllAvailableAmenities();
+    Map<LocalDate, List<Room>> getRoomAvailabilityRange(LocalDate startDate, LocalDate endDate, Integer minCapacity, Set<String> requiredAmenities);
 }

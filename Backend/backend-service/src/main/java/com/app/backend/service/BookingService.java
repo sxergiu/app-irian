@@ -2,6 +2,7 @@ package com.app.backend.service;
 
 import com.app.backend.domain.booking.Booking;
 import com.app.backend.domain.booking.BookingJPARepository;
+import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.group.GroupJPARepository;
 import com.app.backend.domain.group.NamedGroup;
 import com.app.backend.domain.room.Room;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,25 +26,24 @@ public class BookingService implements IBookingService {
     private final GroupJPARepository namedGroupRepository;
 
     @Override
-    public Booking createBooking(Long roomId, Long namedGroupId, LocalDate date, LocalTime start, LocalTime end, AppUser user) {
+    public Booking createBooking(Long roomId, Long namedGroupId, LocalDate date, TimeInterval time, AppUser user) {
 
 
-        Room room = fetchValidatedRoom(roomId, date, start, end);
+        Room room = fetchValidatedRoom(roomId, date, time.getStartTime(), time.getEndTime());
         NamedGroup group = fetchValidatedNamedGroup(namedGroupId, room);
 
         Booking booking = new Booking();
         booking.setRoom(room);
         booking.setNamedGroup(group);
         booking.setDate(date);
-        booking.setStartTime(start);
-        booking.setEndTime(end);
+        booking.setTime(time);
         booking.setUser(user);
 
         return bookingRepository.save(booking);
     }
 
     @Override
-    public Booking updateBooking(Long id, Long roomId, Long namedGroupId, LocalDate date, LocalTime start, LocalTime end, AppUser user) {
+    public Booking updateBooking(Long id, Long roomId, Long namedGroupId, LocalDate date, TimeInterval time, AppUser user) {
 
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
@@ -51,14 +52,22 @@ public class BookingService implements IBookingService {
             throw new RuntimeException("Unauthorized - update booking");
         }
 
-        Room room = fetchValidatedRoom(roomId, date, start, end);
+        List<Booking> overlaps = bookingRepository.findOverlappingBookingsExcludingId(
+                roomId, date, time.getStartTime(), time.getEndTime(), id
+        );
+
+
+        if (!overlaps.isEmpty()) {
+            throw new IllegalStateException("New time slot overlaps with existing bookings.");
+        }
+
+        Room room = fetchValidatedRoom(roomId, date, time.getStartTime(), time.getEndTime());
         NamedGroup group = fetchValidatedNamedGroup(namedGroupId, room);
 
         booking.setRoom(room);
         booking.setNamedGroup(group);
         booking.setDate(date);
-        booking.setStartTime(start);
-        booking.setEndTime(end);
+        booking.setTime(time);
 
         return bookingRepository.save(booking);
     }
@@ -111,4 +120,6 @@ public class BookingService implements IBookingService {
         }
         return room;
     }
+
+
 }

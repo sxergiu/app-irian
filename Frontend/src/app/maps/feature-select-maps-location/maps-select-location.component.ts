@@ -26,21 +26,17 @@ import { NgIf } from '@angular/common';
 export class MapsSelectLocationComponent implements AfterViewInit {
   @ViewChild('googleMap', { static: false }) googleMap!: GoogleMap;
 
-  // Input signals
   center = input<{ lat: number; lng: number }>({ lat: 40.73061, lng: -73.935242 });
   markerPosition = input<{ lat: number; lng: number } | null>(null);
   autocompleteInputRef = input<ElementRef<HTMLInputElement> | null>(null);
 
-  // Output signals
   placeSelected = output<PinModel>();
   mapReady = output<boolean>();
 
-  // Internal signals
   isMapReady = signal(false);
   private marker = signal<google.maps.marker.AdvancedMarkerElement | null>(null);
   private autocomplete = signal<google.maps.places.Autocomplete | null>(null);
 
-  // Computed signals
   zoom = signal(12);
 
   mapOptions = computed(() => {

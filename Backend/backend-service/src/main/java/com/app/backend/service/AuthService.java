@@ -1,11 +1,10 @@
 package com.app.backend.service;
 
-import com.app.backend.config.JwtUtil;
+import com.app.backend.config.jwt.JwtUtil;
 import com.app.backend.domain.user.AppUser;
 import com.app.backend.domain.user.UserJPARepository;
 import com.app.backend.domain.user.UserRole;
 import com.app.backend.service.api.IAuthService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,16 +29,6 @@ public class AuthService implements IAuthService {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.jwtUtil = jwtUtil;
-    }
-
-    @PostConstruct
-    void init() {
-        AppUser adminUser = new AppUser();
-        adminUser.setName("Adminul");
-        adminUser.setEmail("admin@gmail.com");
-        adminUser.setPassword(encoder.encode("admin"));
-        adminUser.setRole(UserRole.ADMIN);
-        userRepository.save(adminUser);
     }
 
     @Override

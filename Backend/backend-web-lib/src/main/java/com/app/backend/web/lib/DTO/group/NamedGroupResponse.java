@@ -8,5 +8,5 @@ import lombok.Data;
 public class NamedGroupResponse {
     private Long id;
     private String name;
-    private int size;
+    private int numberOfPeople;
 }

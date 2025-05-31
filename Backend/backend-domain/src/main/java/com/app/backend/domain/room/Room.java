@@ -1,15 +1,16 @@
 package com.app.backend.domain.room;
 
+import com.app.backend.domain.booking.TimeInterval;
 import jakarta.persistence.*;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 public class Room {
-
-    @Version
-    private Long version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,12 @@ public class Room {
     private Set<String> amenities = new HashSet<>();
 
     private Integer capacity;
+
+    @Column(nullable = false)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "room_availability", joinColumns = @JoinColumn(name = "room_id"))
+    private List<TimeInterval> availableSlots =
+            new ArrayList<>(List.of(new TimeInterval(LocalTime.of(7, 0), LocalTime.of(21, 0))));
 
     public Long getId() {
         return id;
@@ -74,6 +81,14 @@ public class Room {
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    public List<TimeInterval> getAvailableSlots() {
+        return availableSlots;
+    }
+
+    public void setAvailableSlots(List<TimeInterval> availableSlots) {
+        this.availableSlots = availableSlots;
     }
 
     @Override

@@ -1,11 +1,9 @@
 package com.app.backend.domain.room;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Set;
 
-public record RoomAvailabilityQuery(int minCapacity, Set<String> requiredAmenities, LocalDate date, LocalTime startTime,
-                                    LocalTime endTime) {
+public record RoomAvailabilityQuery(int minCapacity, Set<String> requiredAmenities, LocalDate date) {
 
     @Override
     public String toString() {
@@ -13,8 +11,6 @@ public record RoomAvailabilityQuery(int minCapacity, Set<String> requiredAmeniti
                 "capacity=" + minCapacity +
                 ", amenities=" + requiredAmenities +
                 ", date=" + date +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
                 '}';
     }
 

@@ -1,21 +1,19 @@
 package com.app.backend.service;
 
+import com.app.backend.domain.booking.Booking;
 import com.app.backend.domain.booking.BookingJPARepository;
-import com.app.backend.domain.room.GeoLocation;
+import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomAvailabilityQuery;
 import com.app.backend.domain.room.RoomJPARepository;
 import com.app.backend.service.api.IRoomService;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService implements IRoomService {
@@ -23,73 +21,6 @@ public class RoomService implements IRoomService {
     private final RoomJPARepository roomRepository;
     private final BookingJPARepository bookingRepository;
 
-    @PostConstruct
-    void init() {
-        if (roomRepository.count() == 0) {
-            if (roomRepository.count() == 0) {
-                Room room1 = new Room();
-                room1.setName("Ocean View Meeting Room");
-                room1.setLocation("San Francisco");
-                room1.setCapacity(12);
-                room1.setAmenities(Set.of("Projector", "Whiteboard", "Wi-Fi"));
-                room1.setCoordinates(new GeoLocation(37.7749, -122.4194));
-
-                Room room2 = new Room();
-                room2.setName("Downtown Conference Hall");
-                room2.setLocation("New York");
-                room2.setCapacity(25);
-                room2.setAmenities(Set.of("TV", "Microphone", "Coffee Machine"));
-                room2.setCoordinates(new GeoLocation(40.7128, -74.0060));
-
-                Room room3 = new Room();
-                room3.setName("Creative Studio");
-                room3.setLocation("Berlin");
-                room3.setCapacity(8);
-                room3.setAmenities(Set.of("Whiteboard", "Sound System"));
-                room3.setCoordinates(new GeoLocation(52.5200, 13.4050));
-
-                Room room4 = new Room();
-                room4.setName("Skyline Boardroom");
-                room4.setLocation("Chicago");
-                room4.setCapacity(15);
-                room4.setAmenities(Set.of("Projector", "Conference Phone", "Wi-Fi"));
-                room4.setCoordinates(new GeoLocation(41.8781, -87.6298));
-
-                Room room5 = new Room();
-                room5.setName("Innovation Hub");
-                room5.setLocation("London");
-                room5.setCapacity(10);
-                room5.setAmenities(Set.of("Smart TV", "Whiteboard", "Coffee Machine"));
-                room5.setCoordinates(new GeoLocation(51.5074, -0.1278));
-
-                Room room6 = new Room();
-                room6.setName("Tech Talk Space");
-                room6.setLocation("Tokyo");
-                room6.setCapacity(20);
-                room6.setAmenities(Set.of("Microphone", "Projector", "Wi-Fi", "Sound System"));
-                room6.setCoordinates(new GeoLocation(35.6895, 139.6917));
-
-                Room room7 = new Room();
-                room7.setName("Mountain View Lab");
-                room7.setLocation("Zurich");
-                room7.setCapacity(6);
-                room7.setAmenities(Set.of("Whiteboard", "High-Speed Wi-Fi"));
-                room7.setCoordinates(new GeoLocation(47.3769, 8.5417));
-
-                Room room8 = new Room();
-                room8.setName("Lakeside Meeting Spot");
-                room8.setLocation("Toronto");
-                room8.setCapacity(18);
-                room8.setAmenities(Set.of("TV", "Coffee Machine", "Wi-Fi", "Projector"));
-                room8.setCoordinates(new GeoLocation(43.6532, -79.3832));
-
-
-                roomRepository.saveAll(List.of(room1, room2, room3, room4, room5, room6, room7, room8));
-
-                System.out.println("Seeded sample rooms");
-            }
-        }
-    }
 
     public RoomService(RoomJPARepository roomRepository, BookingJPARepository bookingRepository) {
         this.roomRepository = roomRepository;
@@ -98,9 +29,17 @@ public class RoomService implements IRoomService {
 
     @Override
     public Room createRoom(Room room) {
+
         if (roomRepository.existsByName(room.getName())) {
             throw new RuntimeException("Room name must be unique");
         }
+
+        room.setAvailableSlots(List.of(new TimeInterval(
+                LocalTime.of(7, 0),
+                LocalTime.of(21, 0)
+        )));
+
+
         return roomRepository.save(room);
     }
 
@@ -148,20 +87,126 @@ public class RoomService implements IRoomService {
     @Override
     public List<Room> findAvailableRooms(RoomAvailabilityQuery query) {
 
-        System.out.println("Filtering by: " + query.requiredAmenities());
+        System.out.println("Filtering: " +query.date());
 
-        List<Room> allMatchingRooms = roomRepository.findByCapacityGreaterThanEqualAndAmenitiesContainingAll(
-                query.minCapacity(), query.requiredAmenities()
-        );
+        return roomRepository.findWithAvailability(query.minCapacity())
+                .stream()
+                .filter(room -> room.getAmenities().containsAll(query.requiredAmenities()))
+                .map(room -> getRoomWithFreeSlots(room, query.date()))
+                .collect(Collectors.toList());
+    }
 
+    private Room getRoomWithFreeSlots(Room room, LocalDate date) {
 
-        return allMatchingRooms.stream()
-                .filter(room -> isRoomAvailable(room, query.date(), query.startTime(), query.endTime()))
+        List<TimeInterval> roomAvailability = new ArrayList<>(room.getAvailableSlots());
+
+        List<Booking> bookings = bookingRepository.findByRoomIdAndDate(room.getId(), date);
+
+        List<TimeInterval> bookingIntervals = bookings.stream()
+                .map(Booking::getTime)
                 .toList();
+
+        List<TimeInterval> freeSlots = subtractAll(roomAvailability, bookingIntervals);
+
+        room.setAvailableSlots(freeSlots);
+
+        return room;
+    }
+
+    private boolean isRoomAvailable(Room room, LocalDate date) {
+        return bookingRepository.findOverlappingBookings(room.getId(), date).isEmpty();
+    }
+
+    public Set<String> findAllAvailableAmenities() {
+        return roomRepository.findDistinctAmenities();
+    }
+
+    private List<TimeInterval> subtractInterval(List<TimeInterval> slots, TimeInterval toSubtract) {
+
+        List<TimeInterval> updated = new ArrayList<>();
+
+        for (TimeInterval slot : slots) {
+            if (toSubtract.getEndTime().isBefore(slot.getStartTime()) ||
+                    toSubtract.getStartTime().isAfter(slot.getEndTime())) {
+                updated.add(slot); // no overlap
+            } else {
+                if (toSubtract.getStartTime().isAfter(slot.getStartTime())) {
+                    updated.add(new TimeInterval(slot.getStartTime(), toSubtract.getStartTime()));
+                }
+                if (toSubtract.getEndTime().isBefore(slot.getEndTime())) {
+                    updated.add(new TimeInterval(toSubtract.getEndTime(), slot.getEndTime()));
+                }
+            }
+        }
+
+        return updated;
+    }
+
+    private List<TimeInterval> subtractAll(List<TimeInterval> base, List<TimeInterval> toSubtractList) {
+
+        List<TimeInterval> result = new ArrayList<>(base);
+        for (TimeInterval interval : toSubtractList) {
+            result = subtractInterval(result, interval);
+        }
+        return result;
+    }
+
+    @Override
+    public Map<LocalDate, List<Room>> getRoomAvailabilityRange(
+            LocalDate start,
+            LocalDate end,
+            Integer minCapacity,
+            Set<String> requiredAmenities
+    ) {
+
+
+        if (start == null || end == null) {
+            throw new IllegalArgumentException("Start and end dates must not be null");
+        }
+
+        
+        List<Room> filteredRooms = roomRepository.findAll().stream()
+                .filter(room -> minCapacity == null || room.getCapacity() >= minCapacity)
+                .filter(room -> requiredAmenities == null || room.getAmenities().containsAll(requiredAmenities))
+                .toList();
+
+        Map<LocalDate, List<Room>> availabilityByDate = new LinkedHashMap<>();
+
+        LocalDate current = start;
+        while (!current.isAfter(end)) {
+            LocalDate date = current;
+
+            List<Room> roomsWithFreeSlots = filteredRooms.stream()
+                    .map(room -> {
+                        List<Booking> bookings = bookingRepository.findByRoomIdAndDate(room.getId(), date);
+                        List<TimeInterval> bookedIntervals = bookings.stream().map(Booking::getTime).toList();
+
+                        List<TimeInterval> roomDefaultAvailability = new ArrayList<>(room.getAvailableSlots());
+                        List<TimeInterval> freeSlots = subtractAll(roomDefaultAvailability, bookedIntervals);
+
+                        Room roomCopy = copyRoomWithSlots(room, freeSlots);
+                        return roomCopy;
+                    })
+                    .toList();
+
+            availabilityByDate.put(date, roomsWithFreeSlots);
+            current = current.plusDays(1);
+        }
+
+        return availabilityByDate;
+    }
+
+    private Room copyRoomWithSlots(Room source, List<TimeInterval> availableSlots) {
+        Room copy = new Room();
+        copy.setId(source.getId());
+        copy.setName(source.getName());
+        copy.setLocation(source.getLocation());
+        copy.setCapacity(source.getCapacity());
+        copy.setAmenities(source.getAmenities());
+        copy.setCoordinates(source.getCoordinates());
+        copy.setAvailableSlots(availableSlots);
+        return copy;
     }
 
 
-    private boolean isRoomAvailable(Room room, LocalDate date, LocalTime start, LocalTime end) {
-        return bookingRepository.findOverlappingBookings(room.getId(), date, start, end).isEmpty();
-    }
 }

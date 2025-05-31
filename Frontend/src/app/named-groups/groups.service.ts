@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, Observable, throwError} from 'rxjs';
-import {GroupDto} from './domain/group.models';
+import {GroupModel} from './domain/group.models';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +11,8 @@ export class GroupService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost:8080/api/group';
 
-  getGroups(): Observable<GroupDto[]> {
-    return this.http.get<GroupDto[]>(this.baseUrl).pipe(
+  getGroups(): Observable<GroupModel[]> {
+    return this.http.get<GroupModel[]>(this.baseUrl).pipe(
       catchError(this.handleError)
     );
   }

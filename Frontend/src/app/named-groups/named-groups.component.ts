@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { GroupService } from './groups.service';
 import { CommonModule } from '@angular/common';
-import {GroupDto} from './domain/group.models';
+import {GroupModel} from './domain/group.models';
 
 @Component({
   selector: 'app-named-groups',
@@ -15,7 +15,7 @@ export class NamedGroupsComponent {
 
 
   selectedFile = signal<File | null>(null);
-  groups = signal<GroupDto[]>([]);
+  groups = signal<GroupModel[]>([]);
   uploadResponse = signal<string>('');
   isLoading = signal<boolean>(false);
   isUploading = signal<boolean>(false);

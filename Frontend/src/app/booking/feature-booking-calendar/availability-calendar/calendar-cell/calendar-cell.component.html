@@ -1,0 +1,26 @@
+
+
+
+
+@if (room(); as selected) {
+  <div class="p-5 h-100 position-relative">
+
+    <!-- Timeline column -->
+    <div class="timeline-container">
+      <div style="font-size: 0.75rem;">
+        <div style="width: 150px">
+
+          <ng-container *ngIf="selectedRoomForDay as r">
+            <app-feature-timeline-bar
+              [isVertical]="true"
+              [room]="r">
+            </app-feature-timeline-bar>
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+}
+

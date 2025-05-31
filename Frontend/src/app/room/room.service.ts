@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { BackendRoom, mapBackendRoomToFrontend, RoomModel } from './domain/room.model';
+import {RoomFilterModel} from '../booking/domain/room.filter.model';
+import {Observable} from 'rxjs';
+import {AvailableRoomModel} from '../booking/domain/available.room.model';
 
 @Injectable({ providedIn: 'root' })
 export class RoomService {
@@ -52,4 +55,17 @@ export class RoomService {
         this.rooms.set(mappedRooms);
       });
   }
+
+  fetchAmenities() {
+    return this.http.get<string[]>(`${this.apiUrl}/amenities`);
+  }
+
+  fetchAvailableRooms(filter?: RoomFilterModel): Observable<AvailableRoomModel[]> {
+    return this.http.post<AvailableRoomModel[]>(`${this.apiUrl}/available`, filter);
+  }
+
+  fetchMonthlyAvailability(filter: RoomFilterModel & { startDate: string; endDate: string }): Observable<Record<string, AvailableRoomModel[]>> {
+    return this.http.post<Record<string, AvailableRoomModel[]>>(`${this.apiUrl}/available/range`, filter);
+  }
+
 }

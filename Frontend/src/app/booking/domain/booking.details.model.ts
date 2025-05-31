@@ -10,7 +10,7 @@ export interface BookingDetailsModel {
   group: {
     id: number;
     name: string;
-    size: number;
+    numberOfPeople: number;
   };
 
   user: {
@@ -18,7 +18,7 @@ export interface BookingDetailsModel {
     name: string;
     email: string;
   };
-  
+
   room: {
     id: number;
     name: string;

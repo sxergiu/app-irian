@@ -1,9 +1,14 @@
-some fixes irian
+features
+create/edit a booking
+export csv + cloud bucket
+view a room details?
 
-- id handling post/edit
-- jwt token expiration explicit handling
+
+some fixes
+- id handling post/edit for room
+- jwt token expiration explicit handling?
 - add room reset map
 - refactor view child?
-- chips for amenities named groups
-- morenamed groups per booking?
-- booking table sorting + pagination
+- chips for amenities&named groups?
+- backend pagination
+

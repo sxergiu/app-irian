@@ -1,4 +1,4 @@
-package com.app.backend.config;
+package com.app.backend.config.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
