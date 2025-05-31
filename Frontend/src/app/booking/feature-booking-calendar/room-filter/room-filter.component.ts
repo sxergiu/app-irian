@@ -4,7 +4,7 @@ import {
   computed,
   effect,
   EventEmitter,
-  inject, input, model,
+  inject, Input, input, model,
   output,
   Output,
   signal
@@ -25,6 +25,8 @@ import {MatIconButton} from '@angular/material/button';
 import {MatChipsModule} from '@angular/material/chips';
 import {RoomFilterModel} from '../../domain/room.filter.model';
 import {DateTime} from 'luxon';
+import {FeatureSelectRoomComponent} from '../feature-select-room/feature-select-room.component';
+import {AvailableRoomModel} from '../../domain/available.room.model';
 
 
 @Component({
@@ -32,7 +34,7 @@ import {DateTime} from 'luxon';
   standalone: true,
   imports: [CommonModule,
     FormsModule, MatFormFieldModule, MatDatepickerModule,
-    MatFormFieldModule, MatSelectModule, MatExpansionModule, MatInput, MatIcon, MatIconButton, MatChipsModule],
+    MatFormFieldModule, MatSelectModule, MatExpansionModule, MatInput, MatIcon, MatIconButton, MatChipsModule, FeatureSelectRoomComponent],
   templateUrl: `room-filter.component.html`,
   styleUrls: [`room-filter.component.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,6 +54,9 @@ export class RoomFilterComponent {
   view= input.required<boolean>();
   amenities = input<string[]>([]);
   selectedAmenities = signal<string[]>([]);
+
+  availableRooms = input.required<AvailableRoomModel[]>();
+  selectedRoom = output<AvailableRoomModel>();
 
   constructor() {
 
@@ -101,4 +106,7 @@ export class RoomFilterComponent {
     })
   }
 
+  onRoomSelected($event: AvailableRoomModel) {
+    this.selectedRoom.emit($event);
+  }
 }

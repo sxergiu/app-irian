@@ -83,3 +83,39 @@
   font-weight: 600;
   margin-bottom: 30px;
 }
+
+.my-custom-button {
+  /* To make the outline invisible (on focus) */
+  outline: none;       /* For standard browsers */
+  box-shadow: none;    /* For some browser-specific outlines like Webkit's */
+  border: none;        /* If there's a default border you want to remove */
+
+  /* Make the background completely invisible/transparent */
+  background-color: transparent;
+
+  /* Change the color of the icon (and any text inside if there was any) */
+  color: white; /* Example: A blue color for the icon */
+
+  /* Optional: Add padding around the icon to make it a clickable area */
+  padding: 8px; /* Adjust as needed */
+
+  /* Optional: Make it look like a clickable element */
+  cursor: pointer;
+  display: inline-flex; /* To ensure the icon is centered */
+  align-items: center;
+  justify-content: center;
+  /* Remove border-radius if you don't want any visual hint of a button shape */
+}
+
+/* Optional: Style on hover to give visual feedback */
+.my-custom-button:hover {
+  /* You can make the icon slightly darker, or add a subtle background */
+  color: lightblue; /* Darker blue on hover */
+  /* background-color: rgba(0, 0, 0, 0.05); /* Very subtle light grey background on hover */
+}
+
+/* If the mat-icon itself needs specific styling for some reason, though `color` usually suffices */
+.my-custom-button mat-icon {
+  /* You can target the icon specifically if needed, but `color` on the parent is usually inherited */
+  font-size: 24px; /* Example: Adjust icon size if needed */
+}

@@ -7,7 +7,6 @@ import {featureBookingCalendarStore} from './+store/feature-booking-calendar.sto
 import {AvailableRoomModel, Timeslot} from '../domain/available.room.model';
 import {MatIcon} from '@angular/material/icon';
 import {AvailabilityCalendarComponent} from './availability-calendar/availability-calendar.component';
-import {DateTime} from 'luxon';
 
 @Component({
   selector: 'app-feature-booking-calendar-page',
@@ -58,4 +57,7 @@ export class FeatureBookingCalendarComponent {
 
   }
 
+  onRoomSelected($event: AvailableRoomModel) {
+    this.store.updateSelectedRoom($event);
+  }
 }

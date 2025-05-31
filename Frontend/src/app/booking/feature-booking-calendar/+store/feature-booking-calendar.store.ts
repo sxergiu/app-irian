@@ -20,12 +20,14 @@ export const featureBookingCalendarStore = signalStore(
     loading: 0,
     availableRooms: [] as AvailableRoomModel[],
     amenities: [] as string[],
+    selectedRoom: null as AvailableRoomModel | null,
     filters: null as RoomFilterModel | null
   }),
 
   withComputed((state) => ({
     amenities: computed(() => state.amenities()),
     rooms: computed(() => state.availableRooms()),
+    selectedRoom: computed(() => state.selectedRoom()),
 
     roomsWithProcessedSlots: computed<AvailableRoomModel[]>((): AvailableRoomModel[] => {
       const processed = state.availableRooms().map(room => {
@@ -84,6 +86,12 @@ export const featureBookingCalendarStore = signalStore(
         filters: filter
       });
 
+    },
+
+    updateSelectedRoom: (room: AvailableRoomModel) => {
+      patchState(state, {
+        selectedRoom: room
+      });
     }
 
   })),

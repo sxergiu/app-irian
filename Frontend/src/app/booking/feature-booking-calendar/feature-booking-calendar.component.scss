@@ -2,7 +2,7 @@
   width: 64px;
   height: 36px;
   border-radius: 18px;
-  background: lightblue;
+  background: white;
   position: relative;
   cursor: pointer;
   transition: background 0.3s ease;
@@ -10,14 +10,14 @@
 }
 
 .custom-view-toggle.checked {
-  background: #fff;
+  background: lightblue;
 }
 
 .toggle-handle {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: lightblue;
+  background: white;
   position: absolute;
   top: 2px;
   left: 2px;
@@ -30,7 +30,7 @@
 
 .custom-view-toggle.checked .toggle-handle {
   transform: translateX(28px);
-  background-color: white;
+  background-color: lightblue;;
 }
 
 .toggle-handle mat-icon {

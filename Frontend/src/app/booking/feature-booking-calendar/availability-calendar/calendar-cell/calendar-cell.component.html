@@ -1,0 +1,52 @@
+@if( room(); as room ) {
+  <div class="card border-0 shadow-sm h-100 position-relative">
+    <!-- Status Bar -->
+    @if( room.availableSlots && room.availableSlots.length > 0 ) {
+      <div class="position-absolute top-0 start-0 w-100 bg-success" style="height: 2px; z-index: 1;"></div>
+    } @else if( room.bookedSlots && room.bookedSlots.length > 0 ) {
+      <div class="position-absolute top-0 start-0 w-100 bg-danger" style="height: 2px; z-index: 1;"></div>
+    } @else {
+      <div class="position-absolute top-0 start-0 w-100 bg-secondary" style="height: 2px; z-index: 1;"></div>
+    }
+
+    <div class="card-body p-2" style="font-size: 0.75rem;">
+      <!-- Room Name -->
+      <div class="mb-1">
+        <span class="fw-bold text-truncate d-block" [title]="room.name + ' - ' + room.location">
+          {{ room.name }}
+        </span>
+      </div>
+
+      <!-- Status Summary -->
+      <div class="d-flex gap-1 mb-1">
+        @if( room.availableSlots && room.availableSlots.length > 0 ) {
+          <span class="badge bg-success-subtle text-success px-1 py-0" style="font-size: 0.6rem;">
+            {{ room.availableSlots.length }}F
+          </span>
+        }
+        @if( room.bookedSlots && room.bookedSlots.length > 0 ) {
+          <span class="badge bg-danger-subtle text-danger px-1 py-0" style="font-size: 0.6rem;">
+            {{ room.bookedSlots.length }}B
+          </span>
+        }
+      </div>
+
+      <!-- Next Time -->
+      @if( room.availableSlots && room.availableSlots.length > 0 ) {
+        <div class="text-truncate" style="font-size: 0.65rem;">
+          <span class="text-success">●</span>
+          <span class="text-muted">{{ room.availableSlots[0].startTime.toLocaleString() }}</span>
+        </div>
+      } @else if( room.bookedSlots && room.bookedSlots.length > 0 ) {
+        <div class="text-truncate" style="font-size: 0.65rem;">
+          <span class="text-danger">●</span>
+          <span class="text-muted">Until {{ room.bookedSlots[0].endTime }}</span>
+        </div>
+      } @else {
+        <div class="text-center text-muted" style="font-size: 0.65rem;">
+          No bookings
+        </div>
+      }
+    </div>
+  </div>
+}
