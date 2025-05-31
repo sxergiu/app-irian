@@ -15,8 +15,8 @@ import {NgIf} from '@angular/common';
 })
 export class CalendarCellComponent {
 
-  rooms = input.required<AvailableRoomModel[]>(); // rooms scheduled on this day
-  room = input.required<AvailableRoomModel | null>(); // selected room to highlight
+  rooms = input.required<AvailableRoomModel[]>();
+  room = input.required<AvailableRoomModel | null>();
   day = input.required<DateTime>();
 
   get selectedRoomForDay(): AvailableRoomModel | null {
