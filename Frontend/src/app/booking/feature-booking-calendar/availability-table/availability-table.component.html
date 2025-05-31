@@ -1,70 +1,76 @@
 
+@if( selectedDate() ) {
+      <h3 class="d-flex justify-content-center"> <strong> Available Rooms </strong> </h3>
 
-<h3 class="d-flex justify-content-center"> <strong> Available Rooms </strong> </h3>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+            <!-- Room Column -->
+            <ng-container matColumnDef="room">
+              <th mat-header-cell *matHeaderCellDef class="text-main fw-bold" style="width: 300px" > Room </th>
 
-      <!-- Room Column -->
-      <ng-container matColumnDef="room">
-        <th mat-header-cell *matHeaderCellDef class="text-main fw-bold" style="width: 300px" > Room </th>
+              <td mat-cell class="text-main p-3" *matCellDef="let room">
+                <div class="d-flex flex-column gap-0">
 
-        <td mat-cell class="text-main p-3" *matCellDef="let room">
-          <div class="d-flex flex-column gap-0">
+                  <!-- Capacity and Name -->
+                  <div class="d-flex align-items-center flex-wrap text-secondary">
+                  <span class="me-2 d-flex align-items-center">
+                    {{ room.capacity }}
+                    <mat-icon class="ms-1">group</mat-icon>
+                  </span>
+                    <h6 class="mb-0 text-dark">{{ room.name }}</h6>
+                  </div>
 
-            <!-- Capacity and Name -->
-            <div class="d-flex align-items-center flex-wrap text-secondary">
-            <span class="me-2 d-flex align-items-center">
-              {{ room.capacity }}
-              <mat-icon class="ms-1">group</mat-icon>
-            </span>
-              <h6 class="mb-0 text-dark">{{ room.name }}</h6>
-            </div>
+                  <!-- Location -->
+                  <div class="text-secondary">
+                    <p class="mb-1">{{ room.location }}</p>
+                  </div>
 
-            <!-- Location -->
-            <div class="text-secondary">
-              <p class="mb-1">{{ room.location }}</p>
-            </div>
+                  <!-- Amenities -->
+                  <div class="d-flex flex-wrap">
+                    @for (amenity of room.amenities; track amenity) {
+                      <span class="badge bg-secondary me-1 mb-1"> {{ amenity }} </span>
+                    }
+                  </div>
 
-            <!-- Amenities -->
-            <div class="d-flex flex-wrap">
-              @for (amenity of room.amenities; track amenity) {
-                <span class="badge bg-secondary me-1 mb-1"> {{ amenity }} </span>
-              }
-            </div>
-
-          </div>
-        </td>
-      </ng-container>
-
-
-      <ng-container matColumnDef="intervals">
-        <th mat-header-cell *matHeaderCellDef class="text-main fw-bold" style="width: 800px"> Schedule </th>
-        <td mat-cell class="my-5" *matCellDef="let room">
-
-          <app-feature-timeline-bar [room]="room"
-          [isVertical]="false">
-
-          </app-feature-timeline-bar>
-
-          <!-- Time Labels -->
-          <div class="d-flex justify-content-between text-dark small my-3 px-1 text-main">
-            <span>07:00</span>
-            <span>10:00</span>
-            <span>13:00</span>
-            <span>16:00</span>
-            <span>19:00</span>
-            <span>21:00</span>
-          </div>
-
-        </td>
-      </ng-container>
+                </div>
+              </td>
+            </ng-container>
 
 
-  <!-- Header and Row Definitions -->
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <ng-container matColumnDef="intervals">
+              <th mat-header-cell *matHeaderCellDef class="text-main fw-bold" style="width: 800px"> Schedule </th>
+              <td mat-cell class="my-5" *matCellDef="let room">
 
-</table>
+                <app-feature-timeline-bar
+                  [date]="filterDate()"
+                  [room]="room"
+                [isVertical]="false">
 
-<mat-paginator [pageSizeOptions]="[1,5,10]" showFirstLastButtons> </mat-paginator>
+                </app-feature-timeline-bar>
+
+                <!-- Time Labels -->
+                <div class="d-flex justify-content-between text-dark small my-3 px-1 text-main">
+                  <span>07:00</span>
+                  <span>10:00</span>
+                  <span>13:00</span>
+                  <span>16:00</span>
+                  <span>19:00</span>
+                  <span>21:00</span>
+                </div>
+
+              </td>
+            </ng-container>
+
+
+        <!-- Header and Row Definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[1,5,10]" showFirstLastButtons> </mat-paginator>
+} @else {
+
+  <h1 class="d-flex justify-content-center text-muted"> Please select a date. </h1>
+}
 

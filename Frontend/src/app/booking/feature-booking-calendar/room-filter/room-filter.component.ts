@@ -75,15 +75,17 @@ export class RoomFilterComponent {
         if (this.isDate(currentDate)) {
           const dateTime = DateTime.fromJSDate(currentDate);
           this.dateChange.emit(dateTime);
+
           console.log("FILTER EMITS" +dateTime.toJSDate())
         } else if (typeof currentDate === 'string') {
+
           const dateTime = DateTime.fromISO(currentDate);
           if (dateTime.isValid) {
             this.dateChange.emit(dateTime);
+
             console.log("FILTER EMITS" +dateTime.toString())
           }
         }
-
 
       });
 

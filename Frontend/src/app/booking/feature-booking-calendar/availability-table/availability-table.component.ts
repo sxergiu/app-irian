@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, effect, input, output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, effect, input, output, signal, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
@@ -20,6 +20,11 @@ import {FeatureTimelineBarComponent} from '../feature-timeline-bar/feature-timel
 export class AvailabilityTableComponent implements AfterViewInit{
 
   rooms = input<AvailableRoomModel[]>([])
+
+  selectedDate = input.required<string | undefined>();
+
+  filterDate = signal<string>("");
+
   slotSelected = output<AvailableRoomModel>();
   dataSource = new MatTableDataSource<AvailableRoomModel>(this.rooms());
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -28,6 +33,20 @@ export class AvailabilityTableComponent implements AfterViewInit{
 
     effect(() => {
       this.dataSource.data = this.rooms();
+    });
+
+    effect(() => {
+
+       const filterDate = this.selectedDate()
+
+        if ( !filterDate ) {
+          console.log("Attempted to set date ")
+        }
+        else {
+          this.filterDate.set(filterDate);
+          console.log("Table date" + this.filterDate())
+        }
+
     });
   }
 

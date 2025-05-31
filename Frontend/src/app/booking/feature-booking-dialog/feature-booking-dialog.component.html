@@ -1,0 +1,160 @@
+
+
+<div class="container">
+
+  <div class="my-2 d-flex flex-column justify-content-start">
+
+    <h2 class="text-main text-dark card-title ms-3" mat-dialog-title>
+      Booking for: <strong> {{this.booking().date}} </strong>
+    </h2>
+
+
+  <form
+    #bookingForm="ngForm"
+    (ngSubmit)="onSubmit(bookingForm)"
+    class="mb-xl-1 pb-xl-1"
+  >
+
+  <mat-dialog-content class="mat-typography">
+
+    <div class="row d-flex flex-row" >
+
+      <div class="mx-1">
+        <div class="alert alert-info text-main d-flex justify-content-center" role="alert">
+             Please select a valid slot between:  <strong class="ms-2"> {{ getFormattedStartTime()}}-{{getFormattedEndTime()}} </strong>
+        </div>
+      </div>
+
+    <div class="col-12 col-md-5 ms-4 me-2">
+
+            <label class="text-main my-3"> Select starting time: </label>
+            <mat-form-field style="width: 160px">
+              <mat-label>Pick a time</mat-label>
+              <input
+                matInput
+                name="startTime"
+                [ngModel]="this.booking().startTime"
+                [matTimepicker]="startPicker"
+                [matTimepickerMin]="getFormattedStartTime()"
+                [matTimepickerMax]="getMaxStartTime()"
+                #start="ngModel">
+              <mat-timepicker-toggle matIconSuffix [for]="startPicker"/>
+              <mat-timepicker #startPicker/>
+
+              @if (start.errors?.['matTimepickerParse']) {
+                <mat-error  class="my-2 text-main"> isn't a valid time</mat-error>
+              }
+
+              @if (start.errors?.['matTimepickerMin']) {
+                <mat-error  class="my-2 text-main"> too early</mat-error>
+              }
+
+              @if (start.errors?.['matTimepickerMax']) {
+                <mat-error  class="my-2 text-main"> too late</mat-error>
+              }
+
+            </mat-form-field>
+
+    </div>
+
+    <div class="col-12 col-md-5 ms-5">
+
+          <label class="text-main my-3"> Select ending time: </label>
+          <mat-form-field style="width: 160px">
+            <mat-label >Pick a time</mat-label>
+            <input
+              name="endTime"
+              matInput
+              [ngModel]="this.booking().endTime"
+              [matTimepicker]="picker"
+              [matTimepickerMin]="getMinEndTime()"
+              [matTimepickerMax]="getFormattedEndTime()"
+              appBookingValidator
+              #end="ngModel">
+            <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+            <mat-timepicker #picker/>
+
+            @if (end.errors?.['matTimepickerParse']) {
+              <mat-error  class="my-2 text-main"> isn't a valid time</mat-error>
+            }
+
+            @if (end.errors?.['matTimepickerMin']) {
+              <mat-error  class="my-2 text-main"> too early</mat-error>
+            }
+
+            @if (end.errors?.['matTimepickerMax']) {
+              <mat-error  class="my-2 text-main"> too late</mat-error>
+            }
+
+          </mat-form-field>
+
+        </div>
+
+    </div>
+
+    <label class="text-main mx-3 my-3"> Who are you booking for? </label>
+    <div class="ms-3">
+
+      <mat-form-field class="example-full-width" style="width: 450px">
+        <mat-label class="text-main">Select group</mat-label>
+        <input class="text-main" type="text"
+               placeholder="Select group"
+               aria-label="group"
+               matInput
+               [(ngModel)]="this.booking().namedGroupId"
+               #groups="ngModel"
+               required
+               [matAutocomplete]="auto"
+               [ngModelOptions]="{ standalone: true }">
+        <mat-autocomplete class="text-main" #auto="matAutocomplete"  [displayWith]="displayGroupName">
+          @for (group of namedGroups(); track group.id) {
+            <mat-option class="text-main fw-bold" [value]="group.id">{{group.name}} - {{group.numberOfPeople}} people </mat-option>
+          }
+        </mat-autocomplete>
+
+        @if (groups.errors?.['required']) {
+          <mat-error class="my-2 text-main"> Select Named Group</mat-error>
+        }
+
+      </mat-form-field>
+    </div>
+
+    <!-- Display selected duration -->
+    @if (this.booking().startTime && this.booking().endTime) {
+      <div class="mb-3">
+        <p class="text-muted">
+          Duration: {{getDuration()}} minutes
+        </p>
+      </div>
+    }
+
+      <p class="text-dark">{{getFormattedStartTime()}} - {{getFormattedEndTime()}} for room {{data.room.name}}</p>
+
+    <h2 class="text-main text-dark card-subtitle" mat-dialog-title>
+      <div class="ms-5">
+        <div class="ms-5">
+          <div class="ms-5">
+            <div class="ms-5">
+              <div class="ms-5">
+                at <strong>{{ this.data.room.name }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </h2>
+            <mat-dialog-actions align="end">
+              <button mat-button mat-dialog-close>
+                <div class="btn btn-red">Cancel</div>
+              </button>
+              <button
+                class="btn btn-main"
+                [disabled]="!bookingForm.valid || !isValidTimeRange()">
+                Book
+              </button>
+            </mat-dialog-actions>
+
+        </mat-dialog-content>
+    </form>
+
+</div>

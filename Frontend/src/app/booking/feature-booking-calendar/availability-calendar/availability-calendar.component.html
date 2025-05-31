@@ -2,129 +2,134 @@
 
 
 
+@if( selectedRoom(); as r ) {
+
 <div class="calendar-container">
 
-  <div class="calendar">
+      <div class="calendar">
 
-    <div>
-      <div class="d-flex justify-content-center">
-        @if(selectedRoom(); as r) {
-          <h3> Weekly Schedule for <strong>{{ r.name }}</strong> </h3>
-        } @else {
-          <h3> Please select a room. </h3>
-        }
-      </div>
+        <div>
+          <div class="d-flex justify-content-center">
+            @if(selectedRoom(); as r) {
+              <h3> Weekly Schedule for <strong>{{ r.name }}</strong> </h3>
+            } @else {
+              <h3> Please select a room. </h3>
+            }
+          </div>
 
-    </div>
-
-
-    <div class="calendar-headline text-main text-white fw-bold">
-      <div class="calendar-headline-month">
-        <h2>
-        {{ firstDayOfActiveMonth().monthShort }},
-        {{ firstDayOfActiveMonth().year }}
-        </h2>
-
-      </div>
-
-      <div>
-
-        <div class="btn my-custom-button" (click)="goToPrevMonth()">
-          <mat-icon>
-          <span class="material-icons">
-          arrow_back_ios_new
-          </span>
-          </mat-icon>
-        </div>
-        <div class="btn  my-custom-button" (click)="goToToday()">
-          <mat-icon>
-          <span class="material-icons">
-          calendar_today
-          </span>
-          </mat-icon>
-        </div>
-        <div class="btn  my-custom-button" (click)="goToNextMonth()">
-          <mat-icon>
-          <span class="material-icons">
-          arrow_forward_ios_new
-          </span>
-          </mat-icon>
         </div>
 
-      </div>
-    </div>
 
-    <div class="calendar-weeks-grid">
+        <div class="calendar-headline text-main text-white fw-bold">
+          <div class="calendar-headline-month">
+            <h2>
+            {{ firstDayOfActiveMonth().monthShort }},
+            {{ firstDayOfActiveMonth().year }}
+            </h2>
 
+          </div>
 
-      <div class="calendar-weeks-grid-cell text-main text-white">
-        Hour
-      </div>
+          <div>
 
-      @for (weekDay of weekDays(); track $index) {
-        <div class="calendar-weeks-grid-cell text-main text-white">
-          {{  weekDay }}
-        </div>
-      }
-
-
-    </div>
-
-    <div class="calendar-grid">
-
-
-      @for( dayOfMonth of daysOfMonth(); track $index) {
-
-        @if( $index % 7 === 0) {
-          <div class="calendar-grid-cell" style="width:160px">
-
-            <div class="fw-bold d-flex flex-column justify-content-end my-5 p-1 text-main text-white">
-              <span class="my-3">07:00</span>
-              <span class="my-3">10:00</span>
-              <span class="my-3">13:00</span>
-              <span class="my-3">16:00</span>
-              <span class="my-3">19:00</span>
-              <span class="my-3">21:00</span>
+            <div class="btn my-custom-button" (click)="goToPrevMonth()">
+              <mat-icon>
+              <span class="material-icons">
+              arrow_back_ios_new
+              </span>
+              </mat-icon>
+            </div>
+            <div class="btn  my-custom-button" (click)="goToToday()">
+              <mat-icon>
+              <span class="material-icons">
+              calendar_today
+              </span>
+              </mat-icon>
+            </div>
+            <div class="btn  my-custom-button" (click)="goToNextMonth()">
+              <mat-icon>
+              <span class="material-icons">
+              arrow_forward_ios_new
+              </span>
+              </mat-icon>
             </div>
 
           </div>
-        }
+        </div>
 
-           <div class="d-flex flex-column" [ngClass]="{'calendar-grid-cell': true,
-            'calendar-grid-cell-active': activeDay()?.toISODate() === dayOfMonth.toISODate(),
-            'calendar-grid-cell-inactive': dayOfMonth.month !== firstDayOfActiveMonth().month}"
-                (click)="activeDay.set(dayOfMonth)">
-
-             <p class="fw-bold text-truncate d-block"
-                [ngClass]="{'text-mute': dayOfMonth.month !== firstDayOfActiveMonth().month}">
-              {{ dayOfMonth.day }}
-             </p>
+        <div class="calendar-weeks-grid">
 
 
-         <div class="d-flex justify-content-center" >
-           <app-calendar-cell
-             [day]="dayOfMonth"
-             [rooms]="getRoomsForDay(dayOfMonth)"
-             [room]="selectedRoom()">
-           </app-calendar-cell>
+          <div class="calendar-weeks-grid-cell text-main text-white">
+            Hour
+          </div>
 
-         </div>
+          @for (weekDay of weekDays(); track $index) {
+            <div class="calendar-weeks-grid-cell text-main text-white">
+              {{  weekDay }}
+            </div>
+          }
 
-       </div>
 
-      }
+        </div>
+
+        <div class="calendar-grid">
+
+
+          @for( dayOfMonth of daysOfMonth(); track $index) {
+
+            @if( $index % 7 === 0) {
+              <div class="calendar-grid-cell" style="width:160px">
+
+                <div class="fw-bold d-flex flex-column justify-content-end my-5 p-1 text-main text-white">
+                  <span class="my-3">07:00</span>
+                  <span class="my-3">10:00</span>
+                  <span class="my-3">13:00</span>
+                  <span class="my-3">16:00</span>
+                  <span class="my-3">19:00</span>
+                  <span class="my-3">21:00</span>
+                </div>
+
+              </div>
+            }
+
+               <div class="d-flex flex-column" [ngClass]="{'calendar-grid-cell': true,
+                'calendar-grid-cell-active': activeDay().toISODate() === dayOfMonth.toISODate(),
+                'calendar-grid-cell-inactive': dayOfMonth.month !== firstDayOfActiveMonth().month}"
+                    (click)="activeDay.set(dayOfMonth)">
+
+                 <p class="fw-bold text-truncate d-block"
+                    [ngClass]="{'text-mute': dayOfMonth.month !== firstDayOfActiveMonth().month}">
+                  {{ dayOfMonth.day }}
+                 </p>
+
+
+             <div class="d-flex justify-content-center" >
+               <app-calendar-cell
+                 [day]="this.activeDay()"
+                 [rooms]="getRoomsForDay(dayOfMonth)"
+                 [room]="selectedRoom()">
+               </app-calendar-cell>
+
+             </div>
+
+           </div>
+
+          }
+        </div>
+
+      </div>
     </div>
 
-  </div>
-</div>
+    <div>
+      <div>
+        @if(activeDay(); as activeDay) {
+          <div class="d-flex justify-content-end"> {{ activeDay.toLocaleString(DATE_MED) }} </div>
+        } @else {
+          Please select a day.
+        }
+      </div>
 
-<div>
-  <div>
-    @if(activeDay(); as activeDay) {
-      <div class="d-flex justify-content-end"> {{ activeDay.toLocaleString(DATE_MED) }} </div>
-    } @else {
-      Please select a day.
-    }
-  </div>
-
-</div>
+    </div>
+} @else {
+  <h1 class="text-muted d-flex justify-content-center"> Please select a room. </h1>
+}
