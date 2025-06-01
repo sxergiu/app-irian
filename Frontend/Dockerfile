@@ -1,9 +1,9 @@
-FROM node:20-alpine as build
 
+FROM node:20-alpine as builder
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build --prod
+RUN npm install && npm run build
+
 
 FROM nginx:alpine
-COPY --from=build /app/dist/frontend /usr/share/nginx/html
-EXPOSE 80
+COPY --from=builder /app/dist/frontend /usr/share/nginx/html
