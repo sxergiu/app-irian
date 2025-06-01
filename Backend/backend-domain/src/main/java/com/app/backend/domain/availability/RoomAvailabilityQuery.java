@@ -1,4 +1,4 @@
-package com.app.backend.domain.room;
+package com.app.backend.domain.availability;
 
 import java.time.LocalDate;
 import java.util.Set;

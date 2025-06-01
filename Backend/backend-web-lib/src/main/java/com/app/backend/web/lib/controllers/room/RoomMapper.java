@@ -1,7 +1,9 @@
 package com.app.backend.web.lib.controllers.room;
 
 import com.app.backend.domain.room.Room;
-import com.app.backend.domain.room.RoomWithAvailability;
+import com.app.backend.domain.availability.RoomWithAvailability;
+import com.app.backend.web.lib.DTO.availability.RoomWithAvailabilityDTO;
+import com.app.backend.web.lib.DTO.availability.TimeIntervalDTO;
 import com.app.backend.web.lib.DTO.room.*;
 import org.springframework.stereotype.Component;
 
@@ -48,8 +50,8 @@ public class RoomMapper {
         if (room.availableSlots() != null) {
             List<TimeIntervalDTO> slots = room.availableSlots().stream()
                     .map(slot -> new TimeIntervalDTO(
-                            slot.getStartTime().toString(),
-                            slot.getEndTime().toString()
+                            slot.getStartTime(),
+                            slot.getEndTime()
                     ))
                     .collect(Collectors.toList());
 

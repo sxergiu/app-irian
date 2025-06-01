@@ -55,11 +55,11 @@ export class BookingResourceService {
       roomId: booking.roomId,
       namedGroupId: booking.namedGroupId,
       date: booking.date,
-      time: {
-        startTime: booking.time.startTime,
-        endTime: booking.time.endTime
-      }
-    }).subscribe( _ => this.fetchBookings());
+      startTime: booking.time.startTime,
+      endTime: booking.time.endTime
+    }).subscribe( _ => {
+      this.fetchBookings()
+    });
   }
 
 

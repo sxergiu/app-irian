@@ -1,11 +1,10 @@
 package com.app.backend.service.api;
 
 import com.app.backend.domain.room.Room;
-import com.app.backend.domain.room.RoomAvailabilityQuery;
-import com.app.backend.domain.room.RoomWithAvailability;
+import com.app.backend.domain.availability.RoomAvailabilityQuery;
+import com.app.backend.domain.availability.RoomWithAvailability;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

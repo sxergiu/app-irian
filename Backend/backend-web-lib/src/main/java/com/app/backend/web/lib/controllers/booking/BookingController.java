@@ -1,6 +1,7 @@
 package com.app.backend.web.lib.controllers.booking;
 
 import com.app.backend.domain.booking.Booking;
+import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.user.AppUser;
 import com.app.backend.service.api.IBookingService;
 import com.app.backend.web.lib.DTO.booking.BookingDetailsResponse;
@@ -30,12 +31,14 @@ public class BookingController {
 
             System.out.println("Req by user: " + user);
 
+            TimeInterval interval = new TimeInterval(dto.getStartTime(), dto.getEndTime());
+
             try {
                 Booking booking = bookingService.createBooking(
                         dto.getRoomId(),
                         dto.getNamedGroupId(),
                         dto.getDate(),
-                        dto.getTime(),
+                        interval,
                         user);
 
                 System.out.println("Booking created: " + booking.toString() );
@@ -54,12 +57,19 @@ public class BookingController {
             @AuthenticationPrincipal AppUser user) {
 
         System.out.println("Req by user: " + user);
+
+        System.out.println("Received BookingRequest: " + dto);
+        System.out.println("StartTime: " + dto.getStartTime());
+        System.out.println("EndTime: " + dto.getEndTime());
+
+        TimeInterval interval = new TimeInterval(dto.getStartTime(), dto.getEndTime());
+
         Booking booking = bookingService.updateBooking(
                 id,
                 dto.getRoomId(),
                 dto.getNamedGroupId(),
                 dto.getDate(),
-                dto.getTime(),
+                interval,
                 user);
 
         return ResponseEntity.ok(bookingMapper.toDto(booking));

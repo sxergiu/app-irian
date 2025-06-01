@@ -1,11 +1,13 @@
 package com.app.backend.web.lib.controllers.room;
 
 import com.app.backend.domain.room.Room;
-import com.app.backend.domain.room.RoomAvailabilityQuery;
-import com.app.backend.domain.room.RoomWithAvailability;
+import com.app.backend.domain.availability.RoomAvailabilityQuery;
+import com.app.backend.domain.availability.RoomWithAvailability;
 import com.app.backend.service.api.IRoomService;
+import com.app.backend.web.lib.DTO.availability.RoomAvailabilityRangeRequest;
+import com.app.backend.web.lib.DTO.availability.RoomAvailabilityRequest;
+import com.app.backend.web.lib.DTO.availability.RoomWithAvailabilityDTO;
 import com.app.backend.web.lib.DTO.room.*;
-import io.micrometer.core.instrument.config.validate.Validated;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

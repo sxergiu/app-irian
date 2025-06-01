@@ -1,5 +1,6 @@
 package com.app.backend.domain.booking;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -10,9 +11,11 @@ import java.util.Objects;
 public class TimeInterval {
 
     @Column(name = "start_time", nullable = false)
+    @JsonFormat(pattern = "HH:mm")
     private final LocalTime startTime;
 
     @Column(name = "end_time", nullable = false)
+    @JsonFormat(pattern = "HH:mm")
     private final LocalTime endTime;
 
     protected TimeInterval() {
@@ -33,6 +36,13 @@ public class TimeInterval {
         return endTime;
     }
 
+    public LocalTime setStartTime(LocalTime startTime) {
+        return startTime;
+    }
+
+    public LocalTime setEndTime(LocalTime endTime) {
+        return endTime;
+    }
 
     @Override
     public boolean equals(Object o) {

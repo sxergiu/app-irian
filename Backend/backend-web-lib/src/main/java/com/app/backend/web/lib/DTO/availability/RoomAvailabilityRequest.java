@@ -1,4 +1,4 @@
-package com.app.backend.web.lib.DTO.room;
+package com.app.backend.web.lib.DTO.availability;
 
 import jakarta.annotation.Nullable;
 import lombok.Data;

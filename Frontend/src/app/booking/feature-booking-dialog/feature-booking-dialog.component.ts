@@ -67,6 +67,7 @@ export class FeatureBookingDialogComponent {
     console.log(this.data.room)
     console.log(this.data.date)
     console.log(typeof this.data.interval)
+
     const startTime = this.timeValueToTimeString(this.data.interval.startTime);
     const endTime = this.timeValueToTimeString(this.data.interval.endTime);
 
@@ -86,6 +87,13 @@ export class FeatureBookingDialogComponent {
     if (bookingForm.valid) {
 
       this.bookingService.createBooking(this.booking());
+      console.log("CREATED BOOKING ");
+
+      console.log(this.booking().roomId)
+      console.log(this.booking().namedGroupId)
+      console.log(this.booking().date)
+      console.log(this.booking().time.startTime)
+      console.log(this.booking().time.endTime)
 
       this.dialogRef.close();
     }
@@ -101,17 +109,24 @@ export class FeatureBookingDialogComponent {
     }));
   }
 
+
   updateStartTime(newStartTime: string): void {
     this.booking.update(current => ({
       ...current,
-      startTime: newStartTime
+      time: {
+        ...current.time,
+        startTime: this.extractHourOnly(newStartTime)
+      }
     }));
   }
 
   updateEndTime(newEndTime: string): void {
     this.booking.update(current => ({
       ...current,
-      endTime: newEndTime
+      time: {
+        ...current.time,
+        endTime: this.extractHourOnly(newEndTime)
+      }
     }));
   }
 
@@ -143,6 +158,12 @@ export class FeatureBookingDialogComponent {
       // timeValue is already minutes since 00:00
       return timeValue;
     }
+  }
+
+  private extractHourOnly(dateStr: string) {
+    const date = new Date(dateStr);
+    const hours = String(date.getHours()).padStart(2, '0');
+    return `${hours}:00`;
   }
 
   /**

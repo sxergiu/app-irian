@@ -1,4 +1,4 @@
-package com.app.backend.web.lib.DTO.room;
+package com.app.backend.web.lib.DTO.availability;
 
 import com.app.backend.domain.booking.TimeInterval;
 import lombok.Data;

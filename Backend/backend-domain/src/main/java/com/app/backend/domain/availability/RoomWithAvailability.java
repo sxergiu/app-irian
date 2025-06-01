@@ -1,6 +1,7 @@
-package com.app.backend.domain.room;
+package com.app.backend.domain.availability;
 
 import com.app.backend.domain.booking.TimeInterval;
+import com.app.backend.domain.room.Room;
 
 import java.util.List;
 import java.util.Set;
