@@ -92,10 +92,14 @@
               </div>
             }
 
-               <div class="d-flex flex-column" [ngClass]="{'calendar-grid-cell': true,
-                'calendar-grid-cell-active': activeDay().toISODate() === dayOfMonth.toISODate(),
-                'calendar-grid-cell-inactive': dayOfMonth.month !== firstDayOfActiveMonth().month}"
-                    (click)="activeDay.set(dayOfMonth)">
+            <div class="d-flex flex-column"
+                 [ngClass]="{
+                     'calendar-grid-cell': true,
+                     'calendar-grid-cell-active': activeDay().toISODate() === dayOfMonth.toISODate(),
+                     'calendar-grid-cell-selected': activeDay().toISODate() === dayOfMonth.toISODate(),
+                     'calendar-grid-cell-inactive': dayOfMonth.month !== firstDayOfActiveMonth().month
+                   }"
+                 (click)="activeDay.set(dayOfMonth)">
 
                  <p class="fw-bold text-truncate d-block"
                     [ngClass]="{'text-mute': dayOfMonth.month !== firstDayOfActiveMonth().month}">

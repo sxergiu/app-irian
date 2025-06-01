@@ -34,7 +34,7 @@ export class CalendarCellComponent {
 
       const dateString = this.day().toString().substr(0,10);
       this.dayAsString.set(dateString);
-      console.log("calendar string" + dateString)
+
     });
   }
 

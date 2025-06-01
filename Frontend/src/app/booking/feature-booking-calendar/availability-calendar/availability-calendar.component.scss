@@ -127,3 +127,32 @@
   /* You can target the icon specifically if needed, but `color` on the parent is usually inherited */
   font-size: 24px; /* Example: Adjust icon size if needed */
 }
+
+.calendar-grid-cell:not(.calendar-grid-cell-selected) * {
+  pointer-events: none !important;
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.calendar-grid-cell-selected * {
+  pointer-events: auto !important;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.calendar-grid-cell-selected .my-custom-button {
+  pointer-events: auto !important;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.calendar-grid-cell-selected {
+  background: white !important;
+  color: black;
+}
+
+.calendar-grid-cell-selected * {
+  pointer-events: auto !important;
+  opacity: 1;
+  cursor: pointer;
+}
