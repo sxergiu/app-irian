@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 @RestController
-@RequestMapping("api/export")
+@RequestMapping("api/booking")
 public class ExportController {
 
     private final IExportService bookingExportService;
@@ -26,7 +26,7 @@ public class ExportController {
         this.bookingExportService = bookingExportService;
     }
 
-    @GetMapping
+    @GetMapping("/export")
     public ResponseEntity<Resource> downloadExport(@AuthenticationPrincipal AppUser user) throws IOException {
 
         Path filePath;

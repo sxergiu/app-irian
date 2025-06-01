@@ -2,7 +2,7 @@ import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BookingModel} from './domain/booking.model';
 import {BookingDetailsModel} from './domain/booking.details.model';
-import {map, Observable} from 'rxjs';
+import {map, Observable, tap} from 'rxjs';
 import {CreateBookingModel} from './domain/create.booking.model';
 
 @Injectable({
@@ -74,6 +74,27 @@ export class BookingResourceService {
       })
     }
   }
+
+  downloadBookings() {
+    this.http.get(`${this.apiUrl}/export`, { responseType: 'blob' })
+      .pipe(
+        tap(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'my_bookings.csv';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        })
+      )
+      .subscribe({
+        error: error => console.error('Download failed', error)
+      });
+
+  }
+
 
 
   private formatDate(raw: string): string {

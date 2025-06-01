@@ -114,4 +114,7 @@ export class FeatureBookingTableComponent implements AfterViewInit{
     return bookingDate < today;
   }
 
+  downloadBookings() {
+      this.bookingService.downloadBookings();
+  }
 }
