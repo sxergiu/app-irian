@@ -8,7 +8,6 @@ import com.app.backend.web.lib.DTO.booking.BookingDetailsResponse;
 import com.app.backend.web.lib.DTO.booking.BookingRequest;
 import com.app.backend.web.lib.DTO.booking.BookingResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,17 +18,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/booking")
-
+@RequiredArgsConstructor
 public class BookingController {
 
     private final IBookingService bookingService;
     private final BookingMapper bookingMapper;
-
-    @Autowired
-    public BookingController(IBookingService bookingService, BookingMapper bookingMapper) {
-        this.bookingService = bookingService;
-        this.bookingMapper = bookingMapper;
-    }
 
         @PostMapping
         public ResponseEntity<?> createBooking(
