@@ -160,8 +160,6 @@ export const featureBookingCalendarStore = signalStore(
         })
       )
     )
-
-
   })),
 
   withHooks({

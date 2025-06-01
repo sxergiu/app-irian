@@ -37,28 +37,9 @@ export class MapsSelectLocationComponent implements AfterViewInit {
   private marker = signal<google.maps.marker.AdvancedMarkerElement | null>(null);
   private autocomplete = signal<google.maps.places.Autocomplete | null>(null);
 
-  zoom = signal(12);
-
-  mapOptions = computed(() => {
-    if (!this.isMapReady()) return {};
-
-    return {
-      disableDefaultUI: false,
-      clickableIcons: true,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    } as google.maps.MapOptions;
-  });
-
-  markerOptions = computed(() => {
-    if (!this.isMapReady()) return {};
-
-    return {
-      gmpDraggable: false
-    } as google.maps.marker.AdvancedMarkerElementOptions;
-  });
-
   constructor(private loader: LoaderService, private ngZone: NgZone) {
-    // Effect to handle center changes
+
+
     effect(() => {
       const newCenter = this.center();
       if (this.isMapReady() && this.googleMap?.googleMap) {
@@ -68,7 +49,7 @@ export class MapsSelectLocationComponent implements AfterViewInit {
       }
     });
 
-    // Effect to handle marker position changes
+
     effect(() => {
       const newPosition = this.markerPosition();
       const mapReady = this.isMapReady();
@@ -88,7 +69,6 @@ export class MapsSelectLocationComponent implements AfterViewInit {
       }
     });
 
-    // Effect to handle autocomplete input reference changes
     effect(() => {
       const inputRef = this.autocompleteInputRef();
       const mapReady = this.isMapReady();
@@ -112,7 +92,6 @@ export class MapsSelectLocationComponent implements AfterViewInit {
       this.isMapReady.set(true);
       this.mapReady.emit(true);
 
-      // Initialize autocomplete if input reference is already provided
       const inputRef = this.autocompleteInputRef();
       console.log('Input ref available on init:', inputRef);
       if (inputRef?.nativeElement) {
@@ -120,7 +99,6 @@ export class MapsSelectLocationComponent implements AfterViewInit {
         this.initializeAutocomplete();
       }
 
-      // Apply initial center and marker if they exist
       const currentCenter = this.center();
       const currentMarkerPos = this.markerPosition();
 
@@ -188,13 +166,12 @@ export class MapsSelectLocationComponent implements AfterViewInit {
   }
 
   addMarker(lat: number, lng: number) {
-    // Remove existing marker
+
     const currentMarker = this.marker();
     if (currentMarker) {
       currentMarker.map = null;
     }
 
-    // Add new marker
     const newMarker = new google.maps.marker.AdvancedMarkerElement({
       position: { lat, lng },
       map: this.googleMap.googleMap!,
@@ -205,6 +182,7 @@ export class MapsSelectLocationComponent implements AfterViewInit {
   }
 
   handlePlaceSelection(event: google.maps.MapMouseEvent) {
+
     const latLng = event.latLng;
     if (!latLng) return;
 
@@ -259,11 +237,9 @@ export class MapsSelectLocationComponent implements AfterViewInit {
               city
             };
 
-            // Move the map and add marker
             this.googleMap.googleMap?.setCenter({ lat, lng });
             this.addMarker(lat, lng);
 
-            // Emit the pin data
             this.placeSelected.emit(pin);
           } else {
             console.warn('Geocoding failed:', status);
@@ -273,12 +249,4 @@ export class MapsSelectLocationComponent implements AfterViewInit {
     });
   }
 
-  // Getter methods for template access to signal values
-  get mapReady$() {
-    return this.isMapReady();
-  }
-
-  get currentMarker() {
-    return this.marker();
-  }
 }

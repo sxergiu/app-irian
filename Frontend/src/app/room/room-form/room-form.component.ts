@@ -42,7 +42,7 @@ export class RoomFormComponent implements AfterViewInit {
   mapReady = signal(false);
 
   constructor(private loaderService: LoaderService, private ngZone: NgZone) {
-    // Create an effect that watches for room changes and updates the map accordingly
+
     effect(() => {
       const room = this.room();
 
@@ -50,6 +50,7 @@ export class RoomFormComponent implements AfterViewInit {
         this.updateMapWithRoomData(room);
       }
     });
+
   }
 
   private isComponentReady(): boolean {
@@ -57,43 +58,39 @@ export class RoomFormComponent implements AfterViewInit {
   }
 
   private updateMapWithRoomData(room: RoomModel) {
-    // Update the autocomplete input
+
     if (this.autocompleteInput?.nativeElement) {
       this.autocompleteInput.nativeElement.value = room.address || '';
     }
 
-    // Update the manual address model
     this.manualAddress.set(room.address || '');
 
-    // If room has coordinates, update map directly
+
     if (room.lat && room.lng) {
       this.center.set({ lat: room.lat, lng: room.lng });
       this.markerPosition.set({ lat: room.lat, lng: room.lng });
     } else if (room.address?.trim()) {
-      // If no coordinates but has address, geocode it
       this.mapsComponent?.geocodeAndSetPin(room.address);
     }
   }
 
   ngAfterViewInit() {
     if (this.mapsComponent && this.autocompleteInput) {
-      // Set the autocomplete input signal so the maps component can access it
+
       this.autocompleteInputSignal.set(this.autocompleteInput);
 
       setTimeout(() => {
-        // Initial setup with current room data
         const currentRoom = this.room();
         if (currentRoom?.address?.trim()) {
           this.updateMapWithRoomData(currentRoom);
         }
-      }, 100); // Slightly longer timeout to ensure everything is initialized
+      }, 100);
     }
   }
 
   onMapReady(ready: boolean) {
     this.mapReady.set(ready);
 
-    // When map becomes ready, update it with current room data if available
     if (ready) {
       const currentRoom = this.room();
       if (currentRoom?.address) {
@@ -134,10 +131,8 @@ export class RoomFormComponent implements AfterViewInit {
       address: pin.address || ''
     }));
 
-    // Update manual address input to show selected address
     this.manualAddress.set(pin.address);
 
-    // Update map center and marker position
     this.center.set({ lat: pin.lat, lng: pin.lng });
     this.markerPosition.set({ lat: pin.lat, lng: pin.lng });
   }
@@ -150,12 +145,12 @@ export class RoomFormComponent implements AfterViewInit {
     const address = this.manualAddress();
 
     if (!address.trim()) {
-      // Clear marker if address is empty
       this.markerPosition.set(null);
       return;
     }
 
     console.log("address " + this.manualAddress());
+
     try {
       await this.loaderService.load();
       const geocoder = new google.maps.Geocoder();
@@ -175,13 +170,13 @@ export class RoomFormComponent implements AfterViewInit {
               address: address
             }));
 
-            // Update the map center and marker
             this.center.set({lat, lng});
             this.markerPosition.set({lat, lng});
           } else {
+
             alert('Something weird happened. Sorry');
-            // Clear marker if address not found
             this.markerPosition.set(null);
+
           }
         });
       });

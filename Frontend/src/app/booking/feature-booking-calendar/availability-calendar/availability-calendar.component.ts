@@ -1,11 +1,9 @@
-import {AfterViewInit, Component, computed, effect, Input, input, OnInit, output, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, input, output, signal} from '@angular/core';
 import {DateTime, Info, Interval} from 'luxon';
 import {NgClass} from '@angular/common';
 import {AvailableRoomModel} from '../../domain/available.room.model';
 import {CalendarCellComponent} from './calendar-cell/calendar-cell.component';
 import {MatIconModule} from '@angular/material/icon';
-import {filter} from 'rxjs';
-
 
 @Component({
   selector: 'app-availability-calendar',
@@ -26,96 +24,93 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
 
     calendarMap = input<Record<string, AvailableRoomModel[]>>();
     availableByDate = computed(() => this.calendarMap() ?? {});
-
     monthChange = output<DateTime>()
 
-  today = computed<DateTime>(() => DateTime.local())
-  activeDay = signal<DateTime>(this.today());
+    today = computed<DateTime>(() => DateTime.local())
+    activeDay = signal<DateTime>(this.today());
 
-  firstDayOfActiveMonth = signal<DateTime> (
-    this.today().startOf('month')
-  )
-  weekDays = computed<string[]>(() =>
-    Info.weekdays('short')
-  )
-
-  daysOfMonth = computed(() => {
-    return Interval.fromDateTimes(
-      this.firstDayOfActiveMonth(),
-      this.firstDayOfActiveMonth().endOf('month').endOf('week')
-    ).splitBy({day: 1}).map( (d) => {
-
-      if( d.start == null) {
-        throw new Error('Wrong Dates');
-      }
-      return d.start;
-    })
-  })
-
-  DATE_MED = DateTime.DATE_MED;
-
-  constructor() {
-
-    effect(() => {
-      const currentMonth = this.firstDayOfActiveMonth();
-      const selectedRoom = this.selectedRoom();
-
-      console.log(this.selectedRoom()?.availableSlots);
-      this.monthChange.emit(currentMonth);
-    });
-
-  }
-
-  goToPrevMonth(): void {
-    this.firstDayOfActiveMonth.set(
-      this.firstDayOfActiveMonth().minus({ month: 1})
-    )
-  }
-
-  goToNextMonth(): void {
-    this.firstDayOfActiveMonth.set(
-      this.firstDayOfActiveMonth().plus({ month: 1})
-    )
-  }
-
-  goToToday(): void {
-    this.firstDayOfActiveMonth.set(
+    firstDayOfActiveMonth = signal<DateTime> (
       this.today().startOf('month')
     )
-  }
+    weekDays = computed<string[]>(() =>
+      Info.weekdays('short')
+    )
 
-  goToDate(date: DateTime | null): void {
-    if (!date) return;
+    daysOfMonth = computed(() => {
+      return Interval.fromDateTimes(
+        this.firstDayOfActiveMonth(),
+        this.firstDayOfActiveMonth().endOf('month').endOf('week')
+      ).splitBy({day: 1}).map( (d) => {
 
-    this.firstDayOfActiveMonth.set(date.startOf('month'));
-    this.activeDay.set(date);
-  }
+        if( d.start == null) {
+          throw new Error('Wrong Dates');
+        }
+        return d.start;
+      })
+    })
 
-  ngAfterViewInit(): void {
+    DATE_MED = DateTime.DATE_MED;
 
-    const filterDate = this.filteredDate();
+    constructor() {
 
-    if(filterDate) {
-      this.activeDay.set(filterDate ?? null);
+      effect(() => {
+        const currentMonth = this.firstDayOfActiveMonth();
+        const selectedRoom = this.selectedRoom();
+
+        console.log(this.selectedRoom()?.availableSlots);
+        this.monthChange.emit(currentMonth);
+      });
+
     }
 
-    this.goToDate(this.activeDay())
-
-  }
-
-
-  getRoomsForDay(day: DateTime): AvailableRoomModel[] {
-
-    const dayIso = day.toISODate();
-    const map = this.availableByDate();
-
-
-    if( dayIso === null  || !map){
-      console.log("DAY NULL");
-      return [];
+    goToPrevMonth(): void {
+      this.firstDayOfActiveMonth.set(
+        this.firstDayOfActiveMonth().minus({ month: 1})
+      )
     }
 
-    return map[dayIso] || [];
-  }
+    goToNextMonth(): void {
+      this.firstDayOfActiveMonth.set(
+        this.firstDayOfActiveMonth().plus({ month: 1})
+      )
+    }
+
+    goToToday(): void {
+      this.firstDayOfActiveMonth.set(
+        this.today().startOf('month')
+      )
+    }
+
+    goToDate(date: DateTime | null): void {
+      if (!date) return;
+
+      this.firstDayOfActiveMonth.set(date.startOf('month'));
+      this.activeDay.set(date);
+    }
+
+    ngAfterViewInit(): void {
+
+      const filterDate = this.filteredDate();
+
+      if(filterDate) {
+        this.activeDay.set(filterDate ?? null);
+      }
+
+      this.goToDate(this.activeDay())
+
+    }
+
+    getRoomsForDay(day: DateTime): AvailableRoomModel[] {
+
+      const dayIso = day.toISODate();
+      const map = this.availableByDate();
+
+      if( dayIso === null  || !map){
+        console.log("DAY NULL");
+        return [];
+      }
+
+      return map[dayIso] || [];
+    }
 
 }

@@ -15,14 +15,17 @@
         <mat-divider></mat-divider>
 
         <div mat-subheader class="text-main my-3 ">
-
-          @for (file of bookingService.exportFiles() ; track $index) {
-            <mat-list-item class="text-main text-boo">
-              <mat-icon matListItemIcon>file_present</mat-icon>
-              <div matListItemTitle class="text-main text-boo my-3" (click)="bookingService.downloadFile(file)">
-                <small style="font-size: 15px"> {{file.substring(10)}} </small>
-              </div>
-            </mat-list-item>
+          @if( bookingService.exportFiles().length !== 0  ) {
+              @for (file of bookingService.exportFiles() ; track $index) {
+                <mat-list-item class="text-main text-boo">
+                  <mat-icon matListItemIcon>file_present</mat-icon>
+                  <div matListItemTitle class="text-main text-boo my-3" (click)="bookingService.downloadFile(file)">
+                    <small style="font-size: 15px"> {{file.substring(10)}} </small>
+                  </div>
+                </mat-list-item>
+              }
+          } @else {
+            <h2 class="text-boo"> No exports available. Create your first! </h2>
           }
         </div>
         <mat-divider></mat-divider>

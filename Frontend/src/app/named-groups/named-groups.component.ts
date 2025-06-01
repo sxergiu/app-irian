@@ -39,7 +39,6 @@ export class NamedGroupsComponent {
   }
 
   private clearFileInput(): void {
-    // Clear the file input element
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
@@ -60,12 +59,6 @@ export class NamedGroupsComponent {
         this.clearFileInput();
         this.fetchGroups();
         this.isUploading.set(false);
-      },
-      error: (error) => {
-        this.uploadResponse.set(`Please upload a valid .csv file!`);
-        this.selectedFile.set(null);
-        this.clearFileInput();
-        this.isUploading.set(false);
       }
     });
   }
@@ -85,7 +78,4 @@ export class NamedGroupsComponent {
     });
   }
 
-  clearResponse(): void {
-    this.uploadResponse.set('');
-  }
 }

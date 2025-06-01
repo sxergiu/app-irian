@@ -1,10 +1,10 @@
-import {Component, computed, inject, input, model} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RoomFilterComponent} from './room-filter/room-filter.component';
 import {AvailabilityTableComponent} from './availability-table/availability-table.component';
 import {RoomFilterModel} from '../domain/room.filter.model';
 import {featureBookingCalendarStore} from './+store/feature-booking-calendar.store';
-import {AvailableRoomModel, Timeslot} from '../domain/available.room.model';
+import {AvailableRoomModel} from '../domain/available.room.model';
 import {MatIcon} from '@angular/material/icon';
 import {AvailabilityCalendarComponent} from './availability-calendar/availability-calendar.component';
 import {DateTime} from 'luxon';

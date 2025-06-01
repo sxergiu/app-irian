@@ -55,12 +55,4 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    public String extractRole(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("role", String.class);
-    }
 }

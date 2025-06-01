@@ -61,6 +61,13 @@ public class DataSeeder {
             simpleUser.setRole(UserRole.USER);
             userJPARepository.save(simpleUser);
 
+            AppUser simpleUser1 = new AppUser();
+            simpleUser1.setName("John");
+            simpleUser1.setEmail("john@gmail.com");
+            simpleUser1.setPassword(encoder.encode("123123"));
+            simpleUser1.setRole(UserRole.USER);
+            userJPARepository.save(simpleUser1);
+
             Room room1 = new Room();
             room1.setName("Ocean View Meeting Room");
             room1.setLocation("San Francisco");
@@ -118,7 +125,6 @@ public class DataSeeder {
             room8.setCoordinates(new GeoLocation(43.6532, -79.3832));
             roomJPARepository.saveAll(List.of(room1, room2, room3, room4, room5, room6, room7, room8));
 
-
             NamedGroup group1 = new NamedGroup();
             group1.setName("Mario Karts");
             group1.setNumberOfPeople(20);
@@ -137,11 +143,10 @@ public class DataSeeder {
 
             groupJPARepository.saveAll(List.of(group1, group2, group3, group4));
 
-
             Booking booking1 = new Booking();
             booking1.setRoom(room1);
             booking1.setDate(LocalDate.of(2025, 6, 15));
-            booking1.setTime( new TimeInterval(LocalTime.of(10, 0),LocalTime.of(12, 0)) );
+            booking1.setTime( new TimeInterval(LocalTime.of(9, 0),LocalTime.of(11, 0)) );
             booking1.setUser(simpleUser);
             booking1.setNamedGroup(group1);
 
@@ -154,9 +159,9 @@ public class DataSeeder {
 
             Booking booking3 = new Booking();
             booking3.setRoom(room2);
-            booking3.setDate(LocalDate.of(2025, 6, 15));
+            booking3.setDate(LocalDate.of(2025, 6, 10));
             booking3.setTime( new TimeInterval(LocalTime.of(7, 0),LocalTime.of(8, 0)));
-            booking3.setUser(simpleUser);
+            booking3.setUser(simpleUser1);
             booking3.setNamedGroup(group3);
 
             Booking booking4 = new Booking();
@@ -168,19 +173,40 @@ public class DataSeeder {
 
             Booking booking5 = new Booking();
             booking5.setRoom(room6);
-            booking5.setDate(LocalDate.of(2021, 6, 15));
+            booking5.setDate(LocalDate.of(2021, 6, 16));
             booking5.setTime(new TimeInterval( LocalTime.of(11, 0),LocalTime.of(12, 0)));
             booking5.setUser(simpleUser);
             booking5.setNamedGroup(group4);
 
             Booking booking6 = new Booking();
             booking6.setRoom(room5);
-            booking6.setDate(LocalDate.of(2026, 6, 15));
+            booking6.setDate(LocalDate.of(2026, 5, 20));
             booking6.setTime( new TimeInterval(LocalTime.of(10, 0), LocalTime.of(16, 0)));
-            booking6.setUser(simpleUser);
+            booking6.setUser(simpleUser1);
             booking6.setNamedGroup(group1);
 
-            bookingJPARepository.saveAll(List.of(booking1, booking2, booking3, booking4, booking5, booking6));
+            Booking booking7 = new Booking();
+            booking7.setRoom(room2);
+            booking7.setDate(LocalDate.of(2026, 6, 14));
+            booking7.setTime( new TimeInterval(LocalTime.of(17, 0), LocalTime.of(18, 0)));
+            booking7.setUser(simpleUser);
+            booking7.setNamedGroup(group1);
+
+            Booking booking8 = new Booking();
+            booking8.setRoom(room5);
+            booking8.setDate(LocalDate.of(2026, 6, 23));
+            booking8.setTime( new TimeInterval(LocalTime.of(17, 0), LocalTime.of(18, 0)));
+            booking8.setUser(simpleUser1);
+            booking8.setNamedGroup(group2);
+
+            Booking booking9 = new Booking();
+            booking9.setRoom(room1);
+            booking9.setDate(LocalDate.of(2026, 6, 30));
+            booking9.setTime( new TimeInterval(LocalTime.of(7, 0), LocalTime.of(17, 0)));
+            booking9.setUser(simpleUser1);
+            booking9.setNamedGroup(group2);
+
+            bookingJPARepository.saveAll(List.of(booking1, booking2, booking3, booking4, booking5, booking6,booking7,booking8,booking9));
 
             System.out.println("Database seeded.");
     }

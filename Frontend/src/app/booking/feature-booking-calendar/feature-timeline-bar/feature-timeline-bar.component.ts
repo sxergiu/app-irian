@@ -1,7 +1,6 @@
-import {Component, effect, inject, input} from '@angular/core';
+import {Component, inject, input} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {AvailableRoomModel, Timeslot} from '../../domain/available.room.model';
-import {DateTime} from 'luxon';
 import {MatDialog} from '@angular/material/dialog';
 import {FeatureBookingDialogComponent} from '../../feature-booking-dialog/feature-booking-dialog.component';
 

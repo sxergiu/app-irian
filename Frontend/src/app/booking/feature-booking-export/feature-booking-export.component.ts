@@ -13,7 +13,6 @@ import {
     MatListItemTitle,
     MatListSubheaderCssMatStyler
 } from "@angular/material/list";
-import {BookingModel} from '../domain/booking.model';
 import {BookingResourceService} from '../booking-resource.service';
 import {MatIcon} from '@angular/material/icon';
 

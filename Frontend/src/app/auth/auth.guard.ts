@@ -6,6 +6,7 @@ import {Injectable} from '@angular/core';
 })
 
 export class AuthGuard implements CanActivate {
+
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
@@ -22,7 +23,7 @@ export class AuthGuard implements CanActivate {
     }
 
     if( expectedRoles && !expectedRoles.includes(currentRole) ) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/home']);
       return false;
     }
 
