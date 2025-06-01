@@ -1,4 +1,4 @@
-package com.app.backend.web.lib.DTO.room;
+package com.app.backend.web.lib.DTO.availability;
 
 import lombok.Data;
 import org.antlr.v4.runtime.misc.NotNull;

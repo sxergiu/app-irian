@@ -34,7 +34,6 @@ export class RoomFormComponent implements AfterViewInit {
   @ViewChild('autocompleteInput', { static: false }) autocompleteInput!: ElementRef<HTMLInputElement>;
   @ViewChild(MapsSelectLocationComponent, { static: false }) mapsComponent!: MapsSelectLocationComponent;
 
-  // Signal to pass the autocomplete input to the maps component
   autocompleteInputSignal = signal<ElementRef<HTMLInputElement> | null>(null);
 
   address: string = '';

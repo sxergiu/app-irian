@@ -11,7 +11,7 @@
           [style.top.%]="getVerticalOffset(interval)"
           [style.height.%]="getVerticalHeight(interval)"
           style="left: 0; width: 100%; cursor: pointer;"
-          (click)="selectInterval(interval)"
+          (click)="openDialog(interval)"
           [attr.title]="formatVerticalInterval(interval)">
         </div>
       </ng-container>
@@ -28,7 +28,7 @@
           [style.left.%]="getIntervalOffset(interval)"
           [style.width.%]="getIntervalWidth(interval)"
           style="top: 0; height: 100%; cursor: pointer;"
-          (click)="selectInterval(interval)"
+          (click)="openDialog(interval)"
           [attr.title]="formatInterval(interval)"
         ></div>
       </ng-container>

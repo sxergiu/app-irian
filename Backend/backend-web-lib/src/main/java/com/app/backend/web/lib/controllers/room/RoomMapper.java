@@ -1,11 +1,14 @@
 package com.app.backend.web.lib.controllers.room;
 
 import com.app.backend.domain.room.Room;
-import com.app.backend.web.lib.DTO.room.RoomAvailabilityRequest;
-import com.app.backend.web.lib.DTO.room.RoomAvailabilityResponse;
-import com.app.backend.web.lib.DTO.room.RoomRequest;
-import com.app.backend.web.lib.DTO.room.RoomResponse;
+import com.app.backend.domain.availability.RoomWithAvailability;
+import com.app.backend.web.lib.DTO.availability.RoomWithAvailabilityDTO;
+import com.app.backend.web.lib.DTO.availability.TimeIntervalDTO;
+import com.app.backend.web.lib.DTO.room.*;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class RoomMapper {
@@ -35,19 +38,28 @@ public class RoomMapper {
         return dto;
     }
 
-    public RoomAvailabilityResponse toRoomAvailabilityResponse(Room room) {
+    public RoomWithAvailabilityDTO toRoomWithAvailabilityDTO(RoomWithAvailability room) {
+        RoomWithAvailabilityDTO dto = new RoomWithAvailabilityDTO();
 
-        RoomAvailabilityResponse dto = new RoomAvailabilityResponse();
+        dto.setId(room.id());
+        dto.setName(room.name());
+        dto.setLocation(room.location());
+        dto.setCapacity(room.capacity());
+        dto.setAmenities(room.amenities());
 
-        dto.setId(room.getId());
-        dto.setName(room.getName());
-        dto.setLocation(room.getLocation());
-        dto.setCapacity(room.getCapacity());
-        dto.setAmenities(room.getAmenities());
+        if (room.availableSlots() != null) {
+            List<TimeIntervalDTO> slots = room.availableSlots().stream()
+                    .map(slot -> new TimeIntervalDTO(
+                            slot.getStartTime(),
+                            slot.getEndTime()
+                    ))
+                    .collect(Collectors.toList());
 
-
-        dto.setAvailableSlots(room.getAvailableSlots());
+            dto.setAvailableSlots(slots);
+        }
 
         return dto;
     }
+
+
 }

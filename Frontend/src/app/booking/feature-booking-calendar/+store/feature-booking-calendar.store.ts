@@ -32,6 +32,7 @@ export const featureBookingCalendarStore = signalStore(
     rooms: computed(() => state.availableRooms()),
     selectedRoom: computed(() => state.selectedRoom()),
     monthlyAvailabilityMap: computed(() => state.monthlyAvailability()),
+    dateFilterAsString: computed(() => state.filters()?.date),
 
     roomsWithProcessedSlots: computed<AvailableRoomModel[]>((): AvailableRoomModel[] => {
       const processed = state.availableRooms().map(room => {
@@ -46,8 +47,6 @@ export const featureBookingCalendarStore = signalStore(
             endTime: toNumTime(slot.endTime)
           }))
         };
-
-        console.log("INTERVALS " + newRoom.availableSlots + newRoom.bookedSlots);
 
         return newRoom;
       });

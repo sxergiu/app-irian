@@ -4,6 +4,7 @@ import {RoomModel} from '../room/domain/room.model';
 import {BookingModel} from './domain/booking.model';
 import {BookingDetailsModel} from './domain/booking.details.model';
 import {map, Observable} from 'rxjs';
+import {CreateBookingModel} from './domain/create.booking.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,18 @@ export class BookingResourceService {
         endTime: this.formatTime(b.endTime)
       }))
     );
+  }
+
+  createBooking(booking: CreateBookingModel) {
+    this.http.post<BookingDetailsModel>(`${this.apiUrl}`, {
+      roomId: booking.roomId,
+      namedGroupId: booking.namedGroupId,
+      date: booking.date,
+      startTime: booking.time.startTime,
+      endTime: booking.time.endTime
+    }).subscribe( _ => {
+      this.fetchBookings()
+    });
   }
 
 

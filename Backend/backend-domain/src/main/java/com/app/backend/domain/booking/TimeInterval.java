@@ -1,5 +1,7 @@
 package com.app.backend.domain.booking;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.time.LocalTime;
@@ -8,32 +10,21 @@ import java.util.Objects;
 @Embeddable
 public class TimeInterval {
 
-    private LocalTime startTime;
-    private LocalTime endTime;
+    @Column(name = "start_time", nullable = false)
+    @JsonFormat(pattern = "HH:mm")
+    private final LocalTime startTime;
+
+    @Column(name = "end_time", nullable = false)
+    @JsonFormat(pattern = "HH:mm")
+    private final LocalTime endTime;
+
+    protected TimeInterval() {
+        this.startTime = null;
+        this.endTime = null;
+    }
 
     public TimeInterval(LocalTime startTime, LocalTime endTime) {
-
-        if (startTime == null || endTime == null) {
-            throw new IllegalArgumentException("Start and end time must not be null");
-        }
-
-        if (!startTime.isBefore(endTime)) {
-            throw new IllegalArgumentException("Start time must be before end time");
-        }
-
         this.startTime = startTime;
-        this.endTime = endTime;
-    }
-
-    public TimeInterval() {
-
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 
@@ -41,8 +32,16 @@ public class TimeInterval {
         return startTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public LocalTime setStartTime(LocalTime startTime) {
+        return startTime;
+    }
+
+    public LocalTime setEndTime(LocalTime endTime) {
+        return endTime;
     }
 
     @Override

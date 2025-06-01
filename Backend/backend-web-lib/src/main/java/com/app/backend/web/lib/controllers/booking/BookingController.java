@@ -1,6 +1,7 @@
 package com.app.backend.web.lib.controllers.booking;
 
 import com.app.backend.domain.booking.Booking;
+import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.user.AppUser;
 import com.app.backend.service.api.IBookingService;
 import com.app.backend.web.lib.DTO.booking.BookingDetailsResponse;
@@ -23,27 +24,31 @@ public class BookingController {
     private final IBookingService bookingService;
     private final BookingMapper bookingMapper;
 
-    @PostMapping
-    public ResponseEntity<?> createBooking(
-            @RequestBody BookingRequest dto,
-            @AuthenticationPrincipal AppUser user) {
+        @PostMapping
+        public ResponseEntity<?> createBooking(
+                @RequestBody BookingRequest dto,
+                @AuthenticationPrincipal AppUser user) {
 
-        System.out.println("Req by user: " + user);
+            System.out.println("Req by user: " + user);
 
-        try {
-            Booking booking = bookingService.createBooking(
-                    dto.getRoomId(),
-                    dto.getNamedGroupId(),
-                    dto.getDate(),
-                    dto.getTime(),
-                    user);
+            TimeInterval interval = new TimeInterval(dto.getStartTime(), dto.getEndTime());
 
-            return ResponseEntity.ok(bookingMapper.toDto(booking));
+            try {
+                Booking booking = bookingService.createBooking(
+                        dto.getRoomId(),
+                        dto.getNamedGroupId(),
+                        dto.getDate(),
+                        interval,
+                        user);
+
+                System.out.println("Booking created: " + booking.toString() );
+
+                return ResponseEntity.ok(bookingMapper.toDto(booking));
+            }
+            catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
         }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<BookingResponse> updateBooking(
@@ -52,12 +57,19 @@ public class BookingController {
             @AuthenticationPrincipal AppUser user) {
 
         System.out.println("Req by user: " + user);
+
+        System.out.println("Received BookingRequest: " + dto);
+        System.out.println("StartTime: " + dto.getStartTime());
+        System.out.println("EndTime: " + dto.getEndTime());
+
+        TimeInterval interval = new TimeInterval(dto.getStartTime(), dto.getEndTime());
+
         Booking booking = bookingService.updateBooking(
                 id,
                 dto.getRoomId(),
                 dto.getNamedGroupId(),
                 dto.getDate(),
-                dto.getTime(),
+                interval,
                 user);
 
         return ResponseEntity.ok(bookingMapper.toDto(booking));

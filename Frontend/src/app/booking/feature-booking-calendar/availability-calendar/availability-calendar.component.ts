@@ -4,6 +4,7 @@ import {NgClass} from '@angular/common';
 import {AvailableRoomModel} from '../../domain/available.room.model';
 import {CalendarCellComponent} from './calendar-cell/calendar-cell.component';
 import {MatIconModule} from '@angular/material/icon';
+import {filter} from 'rxjs';
 
 
 @Component({
@@ -26,10 +27,11 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
     calendarMap = input<Record<string, AvailableRoomModel[]>>();
     availableByDate = computed(() => this.calendarMap() ?? {});
 
-    activeDay = signal<DateTime | null>(null);
     monthChange = output<DateTime>()
 
   today = computed<DateTime>(() => DateTime.local())
+  activeDay = signal<DateTime>(this.today());
+
   firstDayOfActiveMonth = signal<DateTime> (
     this.today().startOf('month')
   )
@@ -91,7 +93,12 @@ export class AvailabilityCalendarComponent implements AfterViewInit{
 
   ngAfterViewInit(): void {
 
-    this.activeDay.set(this.filteredDate() ?? null);
+    const filterDate = this.filteredDate();
+
+    if(filterDate) {
+      this.activeDay.set(filterDate ?? null);
+    }
+
     this.goToDate(this.activeDay())
 
   }

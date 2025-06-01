@@ -17,9 +17,12 @@ export class CalendarCellComponent {
 
   rooms = input.required<AvailableRoomModel[]>();
   room = input.required<AvailableRoomModel | null>();
+
   day = input.required<DateTime>();
+  dayAsString = signal<string>("")
 
   get selectedRoomForDay(): AvailableRoomModel | null {
+
     const selected = this.room();
     if (!selected) return null;
 
@@ -28,8 +31,10 @@ export class CalendarCellComponent {
 
   constructor() {
     effect(() => {
-      console.log('Selected room:', this.room());
-      //console.log('Rooms for day:', this.rooms());
+
+      const dateString = this.day().toString().substr(0,10);
+      this.dayAsString.set(dateString);
+
     });
   }
 

@@ -12,6 +12,7 @@
 
           <ng-container *ngIf="selectedRoomForDay as r">
             <app-feature-timeline-bar
+              [date]="this.dayAsString()"
               [isVertical]="true"
               [room]="r">
             </app-feature-timeline-bar>

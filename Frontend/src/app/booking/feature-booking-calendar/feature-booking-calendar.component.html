@@ -30,7 +30,9 @@
 
 
     @if( !checked ) {
+
         <app-availability-table
+          [selectedDate]="store.dateFilterAsString()"
           [rooms]="store.roomsWithProcessedSlots()"
           (slotSelected)="onSlotSelected($event)"
         />

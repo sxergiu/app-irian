@@ -1,7 +1,9 @@
-import {Component, input} from '@angular/core';
+import {Component, effect, inject, input} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {AvailableRoomModel, Timeslot} from '../../domain/available.room.model';
 import {DateTime} from 'luxon';
+import {MatDialog} from '@angular/material/dialog';
+import {FeatureBookingDialogComponent} from '../../feature-booking-dialog/feature-booking-dialog.component';
 
 @Component({
   selector: 'app-feature-timeline-bar',
@@ -11,20 +13,38 @@ import {DateTime} from 'luxon';
   templateUrl: './feature-timeline-bar.component.html',
   styleUrl: './feature-timeline-bar.component.scss'
 })
+
 export class FeatureTimelineBarComponent {
 
   room = input.required<AvailableRoomModel>()
+  date = input.required<string>()
   isVertical = input.required<boolean>()
 
-  selectInterval(interval: any) {
-    console.log('Selected interval: ' + interval);
+  readonly dialog = inject(MatDialog);
+
+  openDialog(interval: Timeslot) {
+    const dialogRef = this.dialog.open(FeatureBookingDialogComponent, {
+      data: {
+        interval,
+        room: this.room(),
+        date: this.date()
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  constructor() {
+    effect(() => {
+      console.log("BAR RECIEVE DATE" + this.date())
+    });
   }
 
   getIntervalOffset(interval: Timeslot): number {
     const totalMinutes = 14 * 60;
-    console.log('Horizontal offset - startTime:', interval.startTime, 'type:', typeof interval.startTime);
     const result = ((interval.startTime - 7 * 60) / totalMinutes) * 100;
-    console.log('Horizontal result:', result);
     return result;
   }
 

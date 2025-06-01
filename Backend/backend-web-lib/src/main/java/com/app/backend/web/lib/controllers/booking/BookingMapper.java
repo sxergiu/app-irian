@@ -1,9 +1,11 @@
 package com.app.backend.web.lib.controllers.booking;
 
 import com.app.backend.domain.booking.Booking;
+import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.group.NamedGroup;
 import com.app.backend.domain.room.Room;
 import com.app.backend.domain.user.AppUser;
+import com.app.backend.web.lib.DTO.availability.TimeIntervalDTO;
 import com.app.backend.web.lib.DTO.booking.BookingDetailsResponse;
 import com.app.backend.web.lib.DTO.booking.BookingResponse;
 import com.app.backend.web.lib.DTO.group.NamedGroupResponse;
@@ -64,7 +66,7 @@ public class BookingMapper {
                 booking.getId(), booking.getDate(), booking.getTime().getStartTime(), booking.getTime().getEndTime(),
                 groupDto, userDto, roomDto
         );
-    }
 
+    }
 }
 
