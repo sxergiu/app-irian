@@ -84,10 +84,16 @@ This is a full-stack Conference Room Booking application that allows employees t
 - `ng serve`
 - ( or run_frontend from package.json)
 
+### Docker
+- for some reason frontend image only displays ngInx default page
+- backend doesn't recognise app class without lombok
+- with lombok weird error where looks for app in domain
+
 ### Utils
 - Backend uses JWT_SECRET as local environment variable for tokens
 - MinIO uses default credentials (minioadmin found in application.poperties) and must be running at localhost:9000
 - GoogleMaps uses a secret apiKey, not so secret mapId for map display and googleplacesapi for selecting address
-
+- 
+---
 
 
