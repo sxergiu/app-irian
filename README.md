@@ -25,8 +25,7 @@ This is a full-stack Conference Room Booking application that allows employees t
 - JWT authentication for securing endpoints.
 - Supports 2 different roles:
   - **USER**: Can view and book rooms. (default)
-  - **ADMIN**: Can manage rooms and view all bookings. (currently hardcoded)
-     password = admin
+  - **ADMIN**: Can manage rooms and view all bookings. (currently hardcoded password = admin)
     
 ---
 
