@@ -1,0 +1,16 @@
+.king-boo-img {
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 20px rgb(131, 175, 231));
+}
+
+.king-boo-img:hover {
+  transform: scale(1.05);
+}
+
+.card {
+  backdrop-filter: blur(10px);
+}
+
+.welcome-card {
+  min-width: 500px;
+}

@@ -1,0 +1,28 @@
+
+<div class="container-fluid vh-100 d-flex align-items-center bg-light">
+  <div class="row w-100 mx-0 justify-content-center">
+    <div class="col-12 d-flex justify-content-center align-items-center position-relative">
+
+      <div class="king-boo-container position-relative">
+        <img src="https://mario.wiki.gallery/images/4/47/Mario_Party_Star_Rush_King_Boo.png"
+             class="img-fluid king-boo-img"
+             style="max-width: 400px; z-index: 2; position: relative;"
+             alt="King Boo">
+      </div>
+
+      <div class="card bg-opacity-75 border-0 shadow-lg welcome-card"
+           style="background-color: lightblue; height: 200px; z-index: 1; margin-left: -100px;">
+        <div class="card-body p-4 d-flex align-items-center justify-content-end">
+          <div class="text-content" style="margin-left: 80px;">
+            <h1 class="text-dark">
+              King Boo welcomes you,
+              <br>
+              <strong class="text-dark">{{ this.authService.currentUser()?.email }}!</strong>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

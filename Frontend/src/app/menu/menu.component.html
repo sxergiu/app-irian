@@ -1,10 +1,11 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid space-between">
 
-    <a class="navbar-brand ms-2" href="/">
+    <a class="navbar-brand ms-2 nav-link nav-item" [routerLink]="['/home']" (click)="home()" >
+      <span class="text-main fw-bold" style="color:lightskyblue; font-size: 19px;"> Boo King </span>
       <img src="https://mario.wiki.gallery/images/4/47/Mario_Party_Star_Rush_King_Boo.png?download" style="width:30px" alt="kingbooimg">
-      Boo King
     </a>
+
     <div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
               aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +38,12 @@
           </li>
 
           <li class="nav-item">
-            <button class="btn btn-main ms-5" (click)="logout()"> Log Out</button>
+            <button class="btn ms-5 my-logout" (click)="logout()">
+                <mat-icon class="d-flex justify-content-center material-symbols-outlined"
+                          (click)="logout()">
+                  logout
+                </mat-icon>
+            </button>
           </li>
 
         </ul>

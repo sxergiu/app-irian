@@ -22,6 +22,7 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from '@angular/material/expansion';
+import {FeatureBookingExportComponent} from '../feature-booking-export/feature-booking-export.component';
 
 @Component({
   selector: 'app-booking-list',
@@ -34,15 +35,9 @@ import {
     MatPaginatorModule,
     MatSortModule,
     IsBookingPastPipe,
-    NgForOf,
     MatDividerModule,
-    MatListItem,
     MatListModule,
-    MatExpansionPanelDescription,
-    MatExpansionPanelTitle,
-    MatExpansionPanelHeader,
-    MatAccordion,
-    MatExpansionPanel
+    FeatureBookingExportComponent
   ],
   templateUrl: 'feature-booking-table.component.html',
   styleUrls: ['feature-booking-table.component.scss']
@@ -61,7 +56,6 @@ export class FeatureBookingTableComponent implements AfterViewInit{
   bookings = this.bookingService.getBookings();
 
   isAdmin = this.auth.isAdmin();
-  showFiller = false;
 
   dataSource = new MatTableDataSource<BookingModel>();
 
@@ -80,8 +74,6 @@ export class FeatureBookingTableComponent implements AfterViewInit{
     effect(() => {
       this.dataSource.data = this.bookings();
     });
-
-    this.bookingService.fetchExports();
   }
 
   ngAfterViewInit(): void {
@@ -103,10 +95,6 @@ export class FeatureBookingTableComponent implements AfterViewInit{
   viewDetails(booking: BookingModel) {
     console.log('View booking', booking);
     this.router.navigate(['bookings', booking.id]);
-  }
-
-  deleteBooking($event: BookingModel) {
-    this.bookingService.deleteBooking($event);
   }
 
   openDialog(booking: BookingModel) {
@@ -135,9 +123,8 @@ export class FeatureBookingTableComponent implements AfterViewInit{
     return bookingDate < today;
   }
 
-  downloadBookings() {
-    this.bookingService.fetchExports();
+  deleteBooking($event: BookingModel) {
+    this.bookingService.deleteBooking($event);
   }
-
 
 }

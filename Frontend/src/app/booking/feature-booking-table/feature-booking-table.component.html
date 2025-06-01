@@ -51,7 +51,6 @@
           <mat-icon>visibility</mat-icon>
         </button>
 
-
         <ng-container *ngIf="!(booking.date | isBookingPast)">
           <button mat-icon-button color="primary" class="btn-main m-2"
                   (click)="openDialog(booking)" aria-label="Edit Booking">
@@ -74,44 +73,8 @@
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons> </mat-paginator>
 
-  <div class="container my-5">
-
-    <mat-accordion>
-      <mat-expansion-panel hideToggle>
-        <mat-expansion-panel-header>
-
-          <mat-panel-title> <mat-icon class="text-boo" matListItemIcon>share</mat-icon> </mat-panel-title>
-          <mat-panel-description class="text-main d-flex justify-content-center"> Download your booking exports here </mat-panel-description>
-
-        </mat-expansion-panel-header>
-
-        <mat-list>
-
-          <mat-divider></mat-divider>
-
-          <div mat-subheader class="text-main my-3 ">
-
-              @for (file of bookingService.exportFiles() ; track $index) {
-                <mat-list-item class="text-main text-boo">
-                  <mat-icon matListItemIcon>file_present</mat-icon>
-                  <div matListItemTitle class="text-main text-boo my-3" (click)="bookingService.downloadFile(file)">
-                    <small style="font-size: 15px"> {{file.substring(10)}} </small>
-                  </div>
-                </mat-list-item>
-              }
-          </div>
-          <mat-divider></mat-divider>
-
-        </mat-list>
-
-        <div class="d-flex justify-content-end mt-3">
-          <button class="btn-main btn flex-md-fill" (click)="bookingService.exportBookings()" style="width: 250px">
-            Export Current Bookings
-          </button>
-        </div>
-
-      </mat-expansion-panel>
-
-    </mat-accordion>
+  <app-feature-booking-export
+    >
+  </app-feature-booking-export>
 
 </div>
