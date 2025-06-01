@@ -52,9 +52,8 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Redirect if already logged in
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/home']);
     }
   }
 
@@ -89,7 +88,6 @@ export class RegisterComponent implements OnInit {
 
         console.log('Registered user:', response);
 
-        // Since backend returns only name and role, check for those
         if (response && response.name && response.role) {
           this.success = 'Registration successful! Please sign in.';
           setTimeout(() => {
@@ -117,7 +115,6 @@ export class RegisterComponent implements OnInit {
       }
     });
   }
-
 
   togglePasswordVisibility(): void {
     this.hidePassword = !this.hidePassword;

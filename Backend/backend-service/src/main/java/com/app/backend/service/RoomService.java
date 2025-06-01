@@ -124,7 +124,7 @@ public class RoomService implements IRoomService {
         for (TimeInterval slot : slots) {
             if (!toSubtract.getStartTime().isBefore(slot.getEndTime()) ||
                     !toSubtract.getEndTime().isAfter(slot.getStartTime())) {
-                updated.add(slot); // no overlap (before or after, even if touching)
+                updated.add(slot);
             }
             else {
                 if (toSubtract.getStartTime().isAfter(slot.getStartTime())) {

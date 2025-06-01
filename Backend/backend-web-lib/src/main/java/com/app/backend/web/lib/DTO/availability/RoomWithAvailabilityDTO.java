@@ -1,6 +1,5 @@
 package com.app.backend.web.lib.DTO.availability;
 
-
 import java.util.List;
 import java.util.Set;
 

@@ -9,7 +9,7 @@ public class BookingResponse {
 
     private Long roomId;
     private String roomName;
-    private String roomLocation;  // e.g. address or city
+    private String roomLocation;
 
     private Long namedGroupId;
     private String namedGroupName;

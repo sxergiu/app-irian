@@ -61,18 +61,18 @@
   padding: 10px;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Changed from center to flex-start */
+  justify-content: flex-start;
   border-bottom: 1px solid rgb(190, 190, 190);
   border-right: 1px solid rgb(190, 190, 190);
   cursor: pointer;
-  overflow: hidden; /* Prevent content from overflowing */
-  position: relative; /* Establish containing block for absolute positioned children */
-  min-height: 0; /* Allow flex item to shrink below content size */
-  box-sizing: border-box; /* Include padding and border in element's total width and height */
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+  box-sizing: border-box;
 }
 
 .calendar-grid-cell > * {
-  margin: 0 auto; /* Center the direct children manually */
+  margin: 0 auto;
 }
 .calendar-grid-cell:hover {
   background: lightslategray;
@@ -93,39 +93,25 @@
 }
 
 .my-custom-button {
-  /* To make the outline invisible (on focus) */
-  outline: none;       /* For standard browsers */
-  box-shadow: none;    /* For some browser-specific outlines like Webkit's */
-  border: none;        /* If there's a default border you want to remove */
-
-  /* Make the background completely invisible/transparent */
+  outline: none;
+  box-shadow: none;
+  border: none;
   background-color: transparent;
-
-  /* Change the color of the icon (and any text inside if there was any) */
-  color: white; /* Example: A blue color for the icon */
-
-  /* Optional: Add padding around the icon to make it a clickable area */
-  padding: 8px; /* Adjust as needed */
-
-  /* Optional: Make it look like a clickable element */
+  color: white;
+  padding: 8px;
   cursor: pointer;
-  display: inline-flex; /* To ensure the icon is centered */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* Remove border-radius if you don't want any visual hint of a button shape */
+
 }
 
-/* Optional: Style on hover to give visual feedback */
 .my-custom-button:hover {
-  /* You can make the icon slightly darker, or add a subtle background */
-  color: lightblue; /* Darker blue on hover */
-  /* background-color: rgba(0, 0, 0, 0.05); /* Very subtle light grey background on hover */
+  color: lightblue;
 }
 
-/* If the mat-icon itself needs specific styling for some reason, though `color` usually suffices */
 .my-custom-button mat-icon {
-  /* You can target the icon specifically if needed, but `color` on the parent is usually inherited */
-  font-size: 24px; /* Example: Adjust icon size if needed */
+  font-size: 24px;
 }
 
 .calendar-grid-cell:not(.calendar-grid-cell-selected) * {

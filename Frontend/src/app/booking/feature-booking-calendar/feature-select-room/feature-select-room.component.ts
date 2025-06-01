@@ -1,14 +1,8 @@
-import {Component, effect, input, output} from '@angular/core';
+import {Component, input, output} from '@angular/core';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 import {AvailableRoomModel} from '../../domain/available.room.model';
-
-
-interface Food {
-  value: string;
-  viewValue: string;
-}
 
 @Component({
   selector: 'app-feature-select-room',

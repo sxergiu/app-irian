@@ -1,5 +1,4 @@
 import {Component, inject} from '@angular/core';
-import {BindingComponent} from '../binding/binding.component';
 import {AuthService} from '../auth/auth.service';
 
 @Component({
@@ -12,7 +11,4 @@ import {AuthService} from '../auth/auth.service';
 export class MainPageComponent {
 
   authService = inject(AuthService);
-
-
-  protected readonly localStorage = localStorage;
 }

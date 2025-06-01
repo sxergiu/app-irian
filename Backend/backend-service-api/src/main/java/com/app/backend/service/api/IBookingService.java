@@ -5,7 +5,6 @@ import com.app.backend.domain.booking.TimeInterval;
 import com.app.backend.domain.user.AppUser;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface IBookingService {

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {AvailableRoomModel, Timeslot} from '../../domain/available.room.model';
+import {AvailableRoomModel} from '../../domain/available.room.model';
 import {MatPaginator} from '@angular/material/paginator';
 import {FeatureTimelineBarComponent} from '../feature-timeline-bar/feature-timeline-bar.component';
 

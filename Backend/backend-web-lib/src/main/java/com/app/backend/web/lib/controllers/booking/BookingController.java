@@ -7,7 +7,6 @@ import com.app.backend.service.api.IBookingService;
 import com.app.backend.web.lib.DTO.booking.BookingDetailsResponse;
 import com.app.backend.web.lib.DTO.booking.BookingRequest;
 import com.app.backend.web.lib.DTO.booking.BookingResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

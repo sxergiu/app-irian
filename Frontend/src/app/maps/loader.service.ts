@@ -9,18 +9,16 @@ export class LoaderService {
   private loadPromise: Promise<void> | null = null;
 
   load(): Promise<void> {
-    // Already loaded
+
     if (this.apiLoaded || (window as any).google?.maps?.places) {
       this.apiLoaded = true;
       return Promise.resolve();
     }
 
-    // Already loading
     if (this.loadPromise) {
       return this.loadPromise;
     }
 
-    // Begin loading
     this.loadPromise = new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&libraries=places&v=weekly`;

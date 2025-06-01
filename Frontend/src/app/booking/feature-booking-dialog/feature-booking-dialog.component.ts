@@ -5,11 +5,11 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import {AvailableRoomModel, Timeslot} from '../domain/available.room.model';
-import {MatButton, MatButtonModule} from '@angular/material/button';
-import {MatError, MatFormField, MatHint, MatInput, MatInputModule, MatLabel} from '@angular/material/input';
-import {FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule, MatLabel} from '@angular/material/input';
+import {FormsModule, NgForm} from '@angular/forms';
 import {CreateBookingModel} from '../domain/create.booking.model';
-import {MatSelect, MatOption, MatSelectModule} from '@angular/material/select';
+import {MatSelectModule} from '@angular/material/select';
 import { MatTimepickerModule} from '@angular/material/timepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {BookingValidatorDirective} from '../booking-validator.directive';
@@ -20,7 +20,7 @@ import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocom
 import {BookingResourceService} from '../booking-resource.service';
 import {BookingModel} from '../domain/booking.model';
 
-// Type for flexible time representation
+
 type TimeValue = number | number[];
 
 @Component({
@@ -51,6 +51,7 @@ export class FeatureBookingDialogComponent {
   booking = model.required<CreateBookingModel>();
   bookingChanged = output<CreateBookingModel>();
   namedGroups = signal<GroupModel[]>([]);
+
 
   constructor(
     public dialogRef: MatDialogRef<FeatureBookingDialogComponent>,
@@ -122,12 +123,19 @@ export class FeatureBookingDialogComponent {
     }
   }
 
-  updateDate(newDate: string): void {
-    this.booking.update(current => ({
-      ...current,
-      date: newDate
-    }));
-  }
+  // updateDate(newDate: string): void {
+  //   this.booking.update(current => ({
+  //     ...current,
+  //     date: newDate
+  //   }));
+  // }
+
+  // updateRoomId(roomId: number): void {
+  //   this.booking.update(current => ({
+  //     ...current,
+  //     roomId: roomId
+  //   }));
+  // }
 
   updateStartTime(newStartTime: string): void {
     this.booking.update(current => ({
@@ -156,11 +164,24 @@ export class FeatureBookingDialogComponent {
     }));
   }
 
-  updateRoomId(roomId: number): void {
-    this.booking.update(current => ({
-      ...current,
-      roomId: roomId
-    }));
+  displayGroupName = (groupId: number): string => {
+    const group = this.namedGroups().find(g => g.id === groupId);
+    return group ? `${group.name} - ${group.numberOfPeople} people` : '';
+  };
+
+  selectGroupName = (groupId: number | undefined): string => {
+    if( !!groupId ) return 'Select';
+    const group = this.namedGroups().find(g => g.id === groupId);
+    return group ? `${group.name} - ${group.numberOfPeople} people` : '';
+  };
+
+  fetchGroups(): void {
+
+    this.groupService.getGroups().subscribe({
+      next: (data) => {
+        this.namedGroups.set(data);
+      }
+    });
   }
 
   /**
@@ -248,28 +269,4 @@ export class FeatureBookingDialogComponent {
     return this.minutesToTimeString(startMinutes + 30);
   }
 
-  fetchGroups(): void {
-
-    this.groupService.getGroups().subscribe({
-      next: (data) => {
-        this.namedGroups.set(data);
-      }
-    });
-  }
-
-  displayGroupName = (groupId: number): string => {
-    const group = this.namedGroups().find(g => g.id === groupId);
-    return group ? `${group.name} - ${group.numberOfPeople} people` : '';
-  };
-
-  selectGroupName = (groupId: number | undefined): string => {
-    if( !!groupId ) return 'Select';
-    const group = this.namedGroups().find(g => g.id === groupId);
-    return group ? `${group.name} - ${group.numberOfPeople} people` : '';
-  };
-
-  timeToMinutes(time: string): number {
-    const [hours, minutes] = time.split(':').map(Number);
-    return hours * 60 + minutes;
-  }
 }

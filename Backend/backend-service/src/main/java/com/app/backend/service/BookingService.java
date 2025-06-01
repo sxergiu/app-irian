@@ -9,12 +9,10 @@ import com.app.backend.domain.room.Room;
 import com.app.backend.domain.room.RoomJPARepository;
 import com.app.backend.domain.user.AppUser;
 import com.app.backend.service.api.IBookingService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,7 +60,6 @@ public class BookingService implements IBookingService {
                 roomId, date, time.getStartTime(), time.getEndTime(), id
         );
 
-
         if (!overlaps.isEmpty()) {
             throw new IllegalStateException("New time slot overlaps with existing bookings.");
         }
@@ -80,6 +77,7 @@ public class BookingService implements IBookingService {
 
     @Override
     public void deleteBooking(Long id, AppUser user) {
+
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
@@ -92,6 +90,7 @@ public class BookingService implements IBookingService {
 
     @Override
     public Booking getBooking(Long id, AppUser user) {
+
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
@@ -110,30 +109,36 @@ public class BookingService implements IBookingService {
     }
 
     private NamedGroup fetchValidatedNamedGroup(Long namedGroupId, Room room) {
+
         NamedGroup group = namedGroupRepository.findById(namedGroupId)
                 .orElseThrow(() -> new RuntimeException("Named group not found"));
         if (group.getNumberOfPeople() > room.getCapacity()) {
             throw new RuntimeException("Room cannot accommodate group size");
         }
         return group;
+
     }
 
     private Room fetchValidatedRoom(Long roomId, LocalDate date, LocalTime start, LocalTime end) {
+
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
         if (bookingRepository.existsOverlapping(room.getId(), date, start, end)) {
             throw new RuntimeException("Booking overlaps with existing one");
         }
         return room;
+
     }
 
     private Room putBooking(Long roomId, LocalDate date, LocalTime start, LocalTime end, Long bookingId) {
+
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
         if (!bookingRepository.findOverlappingBookingsExcludingId(room.getId(), date, start, end, bookingId).isEmpty()) {
             throw new RuntimeException("Booking overlaps with existing one");
         }
         return room;
+
     }
 
 

@@ -1,8 +1,6 @@
 package com.app.backend.web.lib.DTO.room;
 
 import com.app.backend.domain.room.GeoLocation;
-import lombok.*;
-
 import java.util.Set;
 
 public class RoomResponse {

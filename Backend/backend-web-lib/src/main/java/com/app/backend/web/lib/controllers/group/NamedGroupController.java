@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/group")
-
 public class NamedGroupController {
 
     @Autowired

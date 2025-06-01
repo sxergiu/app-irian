@@ -5,7 +5,6 @@ import com.app.backend.domain.booking.TimeInterval;
 import java.util.List;
 import java.util.Set;
 
-
 public class RoomAvailabilityResponse {
 
     private Long id;

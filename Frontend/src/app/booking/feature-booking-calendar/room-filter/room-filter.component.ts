@@ -1,14 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  EventEmitter,
-  inject, Input, input, model,
-  output,
-  Output,
-  signal
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, input, model, output, signal} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
@@ -27,7 +17,6 @@ import {RoomFilterModel} from '../../domain/room.filter.model';
 import {DateTime} from 'luxon';
 import {FeatureSelectRoomComponent} from '../feature-select-room/feature-select-room.component';
 import {AvailableRoomModel} from '../../domain/available.room.model';
-
 
 @Component({
   selector: 'app-room-filter',
@@ -69,7 +58,6 @@ export class RoomFilterComponent {
 
         this.filterChange.emit(currentFilter);
 
-
         const currentDate = currentFilter.date;
 
         if (this.isDate(currentDate)) {
@@ -86,9 +74,7 @@ export class RoomFilterComponent {
             console.log("FILTER EMITS" +dateTime.toString())
           }
         }
-
       });
-
     }
 
     isDate(value: unknown): value is Date {
@@ -113,7 +99,6 @@ export class RoomFilterComponent {
     }));
   }
 
-
   toggleAmenity(amenity: string): void {
     const currentSelected = this.selectedAmenities();
     const index = currentSelected.indexOf(amenity);
@@ -137,7 +122,6 @@ export class RoomFilterComponent {
   onRoomSelected($event: AvailableRoomModel) {
     this.selectedRoom.emit($event);
   }
-
 
 }
 

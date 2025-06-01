@@ -3,7 +3,6 @@ package com.app.backend.service.api;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 
-import java.beans.ExceptionListener;
 import java.io.InputStream;
 import java.util.List;
 

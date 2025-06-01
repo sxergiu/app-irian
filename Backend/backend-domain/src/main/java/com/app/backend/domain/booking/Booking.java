@@ -6,7 +6,6 @@ import com.app.backend.domain.user.AppUser;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
@@ -42,7 +41,6 @@ public class Booking {
     public Booking() {
 
     }
-
 
     public Long getId() {
         return id;

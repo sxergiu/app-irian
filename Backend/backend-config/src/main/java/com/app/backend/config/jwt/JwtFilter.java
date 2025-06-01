@@ -31,7 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private UserJPARepository appUserRepository;     // <— import your JPA repo
+    private UserJPARepository appUserRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -48,20 +48,18 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         String email = jwtUtil.extractUsername(token);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // 1) validate token against your UserDetails
+
             UserDetails uds = userDetailsService.loadUserByUsername(email);
             if (jwtUtil.validateToken(token, uds)) {
-                // 2) load your AppUser entity
+
                 AppUser appUser = appUserRepository
                         .findByEmail(email)
                         .orElseThrow(() -> new RuntimeException("User not found"));
 
-                // 3) build authorities from the AppUser.role
                 List<GrantedAuthority> auths = List.of(
                         new SimpleGrantedAuthority("ROLE_" + appUser.getRole().name())
                 );
 
-                // 4) set the AppUser as the principal
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(appUser, null, auths);
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

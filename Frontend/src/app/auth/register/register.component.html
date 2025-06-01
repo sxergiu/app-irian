@@ -9,7 +9,7 @@
           </div>
 
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <!-- Name Field -->
+
             <div class="mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label class="form-label label">Full Name</mat-label>
@@ -24,7 +24,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Email Field -->
             <div class="mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label class="form-label label">Email</mat-label>
@@ -39,7 +38,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Password Field -->
             <div class="mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label class="form-label label">Password</mat-label>
@@ -56,7 +54,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Confirm Password Field -->
             <div class="mb-3">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label class="form-label label">Confirm Password</mat-label>
@@ -73,23 +70,19 @@
               </mat-form-field>
             </div>
 
-            <!-- Success Message -->
             <div *ngIf="success" class="alert alert-success" role="alert">
               {{ success }}
             </div>
 
-            <!-- Error Message -->
             <div *ngIf="error" class="alert alert-danger" role="alert">
               {{ error }}
             </div>
 
-            <!-- Submit Button -->
             <button mat-raised-button color="primary" type="submit" class="label w-100 mb-3" [disabled]="loading || registerForm.invalid">
               <mat-spinner *ngIf="loading" diameter="20" class="me-2 float-lg-start"></mat-spinner>
               {{ loading ? 'Creating Account...' : 'Create Account' }}
             </button>
 
-            <!-- Login Link -->
             <div class="text-center">
               <span class="text-muted">Already have an account? </span>
               <a routerLink="/login" class="text-light-emphasis text-dark-emphasis">Sign in here</a>
