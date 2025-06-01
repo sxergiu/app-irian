@@ -49,4 +49,5 @@ public interface BookingJPARepository extends JpaRepository<Booking, Long> {
             @Param("bookingId") Long bookingId
     );
 
+    List<Booking> findByUserEmail(String email);
 }

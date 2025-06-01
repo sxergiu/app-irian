@@ -12,5 +12,4 @@ public interface IAuthService extends UserDetailsService {
     UserDetails loadUserByUsername(String email);
     AppUser registerUser(String email, String password, String name, String Role);
     Map<String,UserRole> generateToken(String email);
-
 }
