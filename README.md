@@ -12,7 +12,7 @@ This is a full-stack Conference Room Booking application that allows employees t
 
 ## Features
 
-### Simple, user friendly UI :)
+### Simple, user-friendly UI :)
 
 ---
 ![App Preview](utils/admin.png)
@@ -74,19 +74,20 @@ This is a full-stack Conference Room Booking application that allows employees t
 ---
 
 ### ./Backend
-`mvn clean install`
-`./mvnw spring-boot:run`
-by default h2 settings and dbseeder
+- `mvn clean install`
+- `./mvnw spring-boot:run`
+- by default h2 settings and dbseeder
 
 ### ./Frontend
-`cd frontend`
-`npm install`
-`ng serve`( or run_frontend from package.json)
+- `cd frontend`
+- `npm install`
+- `ng serve`
+- ( or run_frontend from package.json)
 
 ### Utils
-Backend uses JWT_SECRET as local environment variable for tokens
-MinIO uses default credentials (minioadmin found in application.poperties) and must be running at localhost:9000
-GoogleMaps uses a secret apiKey, not so secret mapId for map display and googleplacesapi for selecting address
+- Backend uses JWT_SECRET as local environment variable for tokens
+- MinIO uses default credentials (minioadmin found in application.poperties) and must be running at localhost:9000
+- GoogleMaps uses a secret apiKey, not so secret mapId for map display and googleplacesapi for selecting address
 
 
 
