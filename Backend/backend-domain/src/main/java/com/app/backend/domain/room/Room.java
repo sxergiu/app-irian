@@ -1,12 +1,8 @@
 package com.app.backend.domain.room;
 
-import com.app.backend.domain.booking.TimeInterval;
+;
 import jakarta.persistence.*;
-
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity

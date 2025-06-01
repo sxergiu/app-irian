@@ -48,7 +48,7 @@ public class AuthService implements IAuthService {
         user.setPassword(encoder.encode(password));
         user.setName(name);
         user.setRole(UserRole.USER);
-        //user.setRole(UserRole.valueOf(role)); // Or default to USER
+        //user.setRole(UserRole.valueOf(role)); // default user
 
         userRepository.save(user);
         return user;

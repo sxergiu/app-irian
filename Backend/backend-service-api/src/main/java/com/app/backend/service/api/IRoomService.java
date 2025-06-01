@@ -17,7 +17,6 @@ public interface IRoomService {
     Room getRoom(Long id);
     Set<Room> getAllRooms();
     void deleteRoom(Long id);
-    Optional<Room> findById(Long id);
     List<RoomWithAvailability> findAvailableRooms(RoomAvailabilityQuery roomFilter);
     Set<String> findAllAvailableAmenities();
     Map<LocalDate, List<RoomWithAvailability>> getRoomAvailabilityRange(LocalDate startDate, LocalDate endDate, Integer minCapacity, Set<String> requiredAmenities);

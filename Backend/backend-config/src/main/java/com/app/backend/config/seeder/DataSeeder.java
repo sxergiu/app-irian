@@ -12,7 +12,6 @@ import com.app.backend.domain.room.RoomJPARepository;
 import com.app.backend.domain.user.AppUser;
 import com.app.backend.domain.user.UserJPARepository;
 import com.app.backend.domain.user.UserRole;
-import jakarta.annotation.PostConstruct;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
