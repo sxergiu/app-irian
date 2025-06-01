@@ -76,14 +76,16 @@ This is a full-stack Conference Room Booking application that allows employees t
 ---
 
 ### ./Backend
+`
 mvn clean install
 ./mvnw spring-boot:run
+`
 by default h2 settings and dbseeder
 
 ### ./Frontend
-cd frontend
+`cd frontend
 npm install
-ng serve ( or run_frontend from package.json)
+ng serve `( or run_frontend from package.json)
 
 ### Utils
 Backend uses JWT_SECRET as local environment variable for tokens
