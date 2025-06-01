@@ -1,5 +1,6 @@
 
 export interface CreateBookingModel {
+  id: number,
   roomId?: number,
   namedGroupId?: number | undefined,
   date?: string,

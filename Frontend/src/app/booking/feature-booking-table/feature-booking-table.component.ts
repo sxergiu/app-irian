@@ -10,6 +10,9 @@ import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {Router} from '@angular/router';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {IsBookingPastPipe} from '../is-booking-past.pipe';
+import {Timeslot} from '../domain/available.room.model';
+import {FeatureBookingDialogComponent} from '../feature-booking-dialog/feature-booking-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-booking-list',
@@ -35,16 +38,13 @@ export class FeatureBookingTableComponent implements AfterViewInit{
   bookingService = inject(BookingResourceService);
   auth = inject(AuthService);
   router = inject(Router);
+  readonly dialog = inject(MatDialog);
 
   bookings = this.bookingService.getBookings();
 
   isAdmin = this.auth.isAdmin();
 
-  isBookingPast(booking: BookingModel): boolean {
-    const today = new Date().toISOString().split('T')[0];
-    const bookingDate = new Date(booking.date).toISOString().split('T')[0];
-    return bookingDate < today;
-  }
+  dataSource = new MatTableDataSource<BookingModel>();
 
   readonly displayedColumns: string[] = [
     'id',
@@ -56,8 +56,6 @@ export class FeatureBookingTableComponent implements AfterViewInit{
     ...(this.isAdmin ? ['userName'] : []),
     'actions'
   ];
-
-  dataSource = new MatTableDataSource<BookingModel>();
 
   constructor() {
     effect(() => {
@@ -79,7 +77,6 @@ export class FeatureBookingTableComponent implements AfterViewInit{
        isPast: this.isBookingPast(b)
      })));
 
-
   }
 
   viewDetails(booking: BookingModel) {
@@ -89,6 +86,32 @@ export class FeatureBookingTableComponent implements AfterViewInit{
 
   deleteBooking($event: BookingModel) {
     this.bookingService.deleteBooking($event);
+  }
+
+  openDialog(booking: BookingModel) {
+
+    const dialogRef = this.dialog.open(FeatureBookingDialogComponent, {
+      data: {
+        interval: {
+          startTime: booking.startTime,
+          endTime: booking.endTime
+        } as unknown as Timeslot,
+        room: booking.roomId,
+        date: booking.date,
+        isEdit: true,
+        booking: booking
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  isBookingPast(booking: BookingModel): boolean {
+    const today = new Date().toISOString().split('T')[0];
+    const bookingDate = new Date(booking.date).toISOString().split('T')[0];
+    return bookingDate < today;
   }
 
 }

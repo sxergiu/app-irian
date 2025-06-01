@@ -1,6 +1,5 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {RoomModel} from '../room/domain/room.model';
 import {BookingModel} from './domain/booking.model';
 import {BookingDetailsModel} from './domain/booking.details.model';
 import {map, Observable} from 'rxjs';
@@ -50,16 +49,30 @@ export class BookingResourceService {
     );
   }
 
-  createBooking(booking: CreateBookingModel) {
-    this.http.post<BookingDetailsModel>(`${this.apiUrl}`, {
-      roomId: booking.roomId,
-      namedGroupId: booking.namedGroupId,
-      date: booking.date,
-      startTime: booking.time.startTime,
-      endTime: booking.time.endTime
-    }).subscribe( _ => {
-      this.fetchBookings()
-    });
+  createOrUpdateBooking(booking: CreateBookingModel, isEdit: boolean) {
+
+    if( !isEdit ) {
+      this.http.post<BookingDetailsModel>(`${this.apiUrl}`, {
+        roomId: booking.roomId,
+        namedGroupId: booking.namedGroupId,
+        date: booking.date,
+        startTime: booking.time.startTime,
+        endTime: booking.time.endTime
+      }).subscribe(_ => {
+        this.fetchBookings()
+      });
+    }
+    else {
+      this.http.put<BookingDetailsModel>(`${this.apiUrl}/${booking.id}`, {
+        roomId: booking.roomId,
+        namedGroupId: booking.namedGroupId,
+        date: booking.date,
+        startTime: booking.time.startTime,
+        endTime: booking.time.endTime
+      }).subscribe(_ => {
+        this.fetchBookings()
+      })
+    }
   }
 
 

@@ -57,7 +57,7 @@
 
         <ng-container *ngIf="!(booking.date | isBookingPast)">
         <button mat-icon-button color="primary" class="btn-main m-2"
-                   aria-label="Edit Booking">
+                   (click)="openDialog(booking)" aria-label="Edit Booking">
             <mat-icon>edit_note</mat-icon>
           </button>
         </ng-container>

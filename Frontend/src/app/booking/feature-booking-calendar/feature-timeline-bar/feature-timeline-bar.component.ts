@@ -27,18 +27,13 @@ export class FeatureTimelineBarComponent {
       data: {
         interval,
         room: this.room(),
-        date: this.date()
+        date: this.date(),
+        isEdit: false
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-    });
-  }
-
-  constructor() {
-    effect(() => {
-      console.log("BAR RECIEVE DATE" + this.date())
     });
   }
 
