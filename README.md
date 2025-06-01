@@ -16,13 +16,17 @@ This is a full-stack Conference Room Booking application that allows employees t
 
 ### Simple, user friendly UI :)
 
+---
+![App Preview](utils/admin.png)
+---
+
 ### Authentication & Authorization
 - User registration and login using email and password.
 - JWT authentication for securing endpoints.
 - Supports 2 different roles:
   - **USER**: Can view and book rooms. (default)
   - **ADMIN**: Can manage rooms and view all bookings. (currently hardcoded)
-    email: admin@gmail.com, password: admin
+     password = admin
     
 ---
 
@@ -37,6 +41,8 @@ This is a full-stack Conference Room Booking application that allows employees t
 - Import **Named Groups of People** via CSV (Format: `Name,Number`).
 
 ---
+![Groups](utils/group.png)
+---
 
 ### Booking Display with GoogleMapsApi
 - Users can **create/update/delete** bookings
@@ -47,6 +53,8 @@ This is a full-stack Conference Room Booking application that allows employees t
   - Users see **their own** bookings.
   - Admins see **all** bookings.
 
+---
+![book](utils/booking.png)
 ---
 
 ### Availability View
@@ -64,6 +72,8 @@ This is a full-stack Conference Room Booking application that allows employees t
 - Export remains available via pre-signed URLs.
 - Can download exported booking at any time.
 
+---
+[table](utils/table.png)
 ---
 
 ### ./Backend
