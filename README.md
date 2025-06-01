@@ -1,6 +1,4 @@
 # Boo King
-# Conference Room Booking Application
-
 This is a full-stack Conference Room Booking application that allows employees to reserve meeting rooms, view availability, and manage their own bookings.
 
 ## Tech Stack
