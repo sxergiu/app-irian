@@ -1,16 +1,16 @@
 
 
-<div class="container mt-4" *ngIf="booking() as booking" style="width: 1000px">
+<div class="container mt-4 text-dark" *ngIf="booking() as booking" style="width: 1000px">
   <h2 class="py-3 text-white">Booking Details</h2>
 
   <mat-card class="p-5 m-5">
 
         <mat-card-title class="text-main" >
-          <strong class="card-title"> {{ booking.room.name }} </strong>,  {{ booking.room.location }}
+          <strong class="card-title text-dark"> {{ booking.room.name }} </strong>,  {{ booking.room.location }}
         </mat-card-title>
 
         <mat-card-subtitle class="text-main">
-          <p class="mb-3 card-subtitle">
+          <p class="mb-3 card-subtitle text-dark">
             <strong> Date: </strong> {{ booking.date }},
             <strong> Time: </strong> {{ booking.startTime }} - {{ booking.endTime }}
           </p>

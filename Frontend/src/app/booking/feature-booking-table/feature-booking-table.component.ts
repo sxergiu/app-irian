@@ -1,14 +1,18 @@
-import {AfterViewInit, Component, effect, inject, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, inject, ViewChild} from '@angular/core';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {AuthService} from '../../auth/auth.service';
 import {BookingModel} from '../domain/booking.model';
-import {NgIf} from '@angular/common';
+import {JsonPipe, NgIf} from '@angular/common';
 import {BookingResourceService} from '../booking-resource.service';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {Router} from '@angular/router';
 import {MatSort, MatSortModule} from '@angular/material/sort';
+import {IsBookingPastPipe} from '../is-booking-past.pipe';
+import {Timeslot} from '../domain/available.room.model';
+import {FeatureBookingDialogComponent} from '../feature-booking-dialog/feature-booking-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-booking-list',
@@ -19,7 +23,8 @@ import {MatSort, MatSortModule} from '@angular/material/sort';
     NgIf,
     MatIconModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    IsBookingPastPipe,
   ],
   templateUrl: 'feature-booking-table.component.html',
   styleUrls: ['feature-booking-table.component.scss']
@@ -33,10 +38,13 @@ export class FeatureBookingTableComponent implements AfterViewInit{
   bookingService = inject(BookingResourceService);
   auth = inject(AuthService);
   router = inject(Router);
+  readonly dialog = inject(MatDialog);
 
   bookings = this.bookingService.getBookings();
 
   isAdmin = this.auth.isAdmin();
+
+  dataSource = new MatTableDataSource<BookingModel>();
 
   readonly displayedColumns: string[] = [
     'id',
@@ -48,8 +56,6 @@ export class FeatureBookingTableComponent implements AfterViewInit{
     ...(this.isAdmin ? ['userName'] : []),
     'actions'
   ];
-
-  dataSource = new MatTableDataSource<BookingModel>();
 
   constructor() {
     effect(() => {
@@ -66,6 +72,11 @@ export class FeatureBookingTableComponent implements AfterViewInit{
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
 
+     this.bookings.set(this.bookings().map(b => ({
+       ...b,
+       isPast: this.isBookingPast(b)
+     })));
+
   }
 
   viewDetails(booking: BookingModel) {
@@ -75,6 +86,32 @@ export class FeatureBookingTableComponent implements AfterViewInit{
 
   deleteBooking($event: BookingModel) {
     this.bookingService.deleteBooking($event);
+  }
+
+  openDialog(booking: BookingModel) {
+
+    const dialogRef = this.dialog.open(FeatureBookingDialogComponent, {
+      data: {
+        interval: {
+          startTime: booking.startTime,
+          endTime: booking.endTime
+        } as unknown as Timeslot,
+        room: booking.roomId,
+        date: booking.date,
+        isEdit: true,
+        booking: booking
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  isBookingPast(booking: BookingModel): boolean {
+    const today = new Date().toISOString().split('T')[0];
+    const bookingDate = new Date(booking.date).toISOString().split('T')[0];
+    return bookingDate < today;
   }
 
 }

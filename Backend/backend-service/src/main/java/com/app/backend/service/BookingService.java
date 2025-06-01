@@ -61,7 +61,7 @@ public class BookingService implements IBookingService {
             throw new IllegalStateException("New time slot overlaps with existing bookings.");
         }
 
-        Room room = fetchValidatedRoom(roomId, date, time.getStartTime(), time.getEndTime());
+        Room room = putBooking(roomId, date, time.getStartTime(), time.getEndTime(),id);
         NamedGroup group = fetchValidatedNamedGroup(namedGroupId, room);
 
         booking.setRoom(room);
@@ -116,6 +116,15 @@ public class BookingService implements IBookingService {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
         if (bookingRepository.existsOverlapping(room.getId(), date, start, end)) {
+            throw new RuntimeException("Booking overlaps with existing one");
+        }
+        return room;
+    }
+
+    private Room putBooking(Long roomId, LocalDate date, LocalTime start, LocalTime end, Long bookingId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+        if (!bookingRepository.findOverlappingBookingsExcludingId(room.getId(), date, start, end, bookingId).isEmpty()) {
             throw new RuntimeException("Booking overlaps with existing one");
         }
         return room;
