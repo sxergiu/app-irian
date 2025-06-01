@@ -18,13 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+
 public class BookingService implements IBookingService {
 
     private final BookingJPARepository bookingRepository;
     private final RoomJPARepository roomRepository;
     private final GroupJPARepository namedGroupRepository;
-    private final RoomService roomService;
+
+    public BookingService(BookingJPARepository bookingRepository, RoomJPARepository roomRepository,
+                          GroupJPARepository namedGroupRepository) {
+        this.bookingRepository = bookingRepository;
+        this.roomRepository = roomRepository;
+        this.namedGroupRepository = namedGroupRepository;
+    }
 
     @Override
     public Booking createBooking(Long roomId, Long namedGroupId, LocalDate date, TimeInterval time, AppUser user) {
