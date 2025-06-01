@@ -1,0 +1,69 @@
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: boodbking-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: boodbking
+      POSTGRES_USER: sx
+      POSTGRES_PASSWORD: charlie
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - boodbking-network
+
+  minio:
+    image: minio/minio
+    container_name: boodbking-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - boodbking-network
+
+  backend:
+    build: ./backend
+    container_name: boodbking-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/boodbking
+      SPRING_DATASOURCE_USERNAME: sx
+      SPRING_DATASOURCE_PASSWORD: charlie
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    depends_on:
+      - postgres
+      - minio
+    ports:
+      - "8080:8080"
+    networks:
+      - boodbking-network
+
+  frontend:
+    build: ./frontend
+    container_name: boodbking-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - boodbking-network
+
+volumes:
+  pgdata:
+  minio-data:
+
+networks:
+ boodbking-network:
+    driver: bridge
