@@ -73,7 +73,7 @@ This is a full-stack Conference Room Booking application that allows employees t
 - Can download exported booking at any time.
 
 ---
-[table](utils/table.png)
+![table](utils/table.png)
 ---
 
 ### ./Backend
