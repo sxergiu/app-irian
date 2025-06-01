@@ -1,8 +1,8 @@
 import {inject, Injectable, signal} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {BookingModel} from './domain/booking.model';
 import {BookingDetailsModel} from './domain/booking.details.model';
-import {map, Observable} from 'rxjs';
+import {map, Observable, tap} from 'rxjs';
 import {CreateBookingModel} from './domain/create.booking.model';
 
 @Injectable({
@@ -13,9 +13,11 @@ export class BookingResourceService {
   private apiUrl = 'http://localhost:8080/api/booking';
   http = inject(HttpClient);
   private bookings = signal<BookingModel[]>([])
+  exportFiles = signal<string[]>([]);
 
   constructor() {
     this.fetchBookings();
+    this.fetchExports();
   }
 
   private fetchBookings() {
@@ -75,6 +77,31 @@ export class BookingResourceService {
     }
   }
 
+  fetchExports(): void {
+    this.http.get<string[]>(`${this.apiUrl}/export/list`).subscribe({
+      next: (files) => this.exportFiles.set(files),
+      error: (err) => console.error('Failed to fetch exports', err)
+    });
+  }
+
+  downloadFile(fileName: string): void {
+    const params = new HttpParams().set('fileName', fileName);
+    this.http.get(`${this.apiUrl}/export/url`, { params, responseType: 'text' }).subscribe({
+      next: (presignedUrl) => window.open(presignedUrl, '_blank'),
+      error: (err) => console.error('Failed to get presigned URL', err)
+    });
+  }
+
+  exportBookings(): void {
+    this.http.post<string>(`${this.apiUrl}/export`, {}).subscribe({
+      next: (fileName) => {
+        console.log('Export created:', fileName);
+        this.downloadFile(fileName);
+        this.fetchExports();
+      },
+      error: (err) => console.error('Failed to export bookings', err)
+    });
+  }
 
   private formatDate(raw: string): string {
     const [year, month, day] = raw;

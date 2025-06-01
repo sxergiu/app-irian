@@ -1,11 +1,13 @@
 import {Component, inject} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../auth/auth.service';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-menu',
   imports: [
-    RouterLink
+    RouterLink,
+    MatIcon
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
@@ -19,6 +21,10 @@ export class MenuComponent {
     if( !this.authService.isAuthenticated() ) {
       this.router.navigate(['/login']);
     }
+  }
+
+  home(): void {
+    this.router.navigate(['/home']);
   }
 
   logout(): void {

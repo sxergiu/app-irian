@@ -8,6 +8,7 @@ import {BindingComponent} from './binding/binding.component';
 import {FeatureBookingTableComponent} from './booking/feature-booking-table/feature-booking-table.component';
 import {FeatureBookingDetailsComponent} from './booking/feature-booking-details/feature-booking-details.component';
 import {FeatureBookingCalendarComponent} from './booking/feature-booking-calendar/feature-booking-calendar.component';
+import {MainPageComponent} from './main-page/main-page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: '',
     component: BindingComponent,
     children: [
+      { path: 'home', component: MainPageComponent, canActivate: [AuthGuard],  data: { roles: ['USER', 'ADMIN'] } },
       { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard],  data: { roles: ['USER', 'ADMIN'] } },
       { path: 'groups', component: NamedGroupsComponent, canActivate: [AuthGuard],  data: { roles: ['ADMIN'] } },
       { path: 'bookings', component: FeatureBookingTableComponent, canActivate: [AuthGuard], data: {roles: ['ADMIN', 'USER'] } },

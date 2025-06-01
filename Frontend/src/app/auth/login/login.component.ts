@@ -48,9 +48,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Redirect if already logged in
+
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/home']);
     }
   }
 
@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         if (token) {
           localStorage.setItem('token', token);
-          this.router.navigate(['/dashboard']).then(
+          this.router.navigate(['/home']).then(
             success => {
               if (success) {
                 console.log('Navigation succeeded!');

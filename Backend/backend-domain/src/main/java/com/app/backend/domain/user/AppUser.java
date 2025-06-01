@@ -73,4 +73,6 @@ public class AppUser {
     public boolean isAdmin() {
         return role.equals(UserRole.ADMIN);
     }
+
+
 }

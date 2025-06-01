@@ -51,18 +51,16 @@
           <mat-icon>visibility</mat-icon>
         </button>
 
-        <button mat-icon-button color="warn" class="btn-red m-2" (click)="deleteBooking(booking)" aria-label="Delete booking">
-          <mat-icon>delete</mat-icon>
-        </button>
-
         <ng-container *ngIf="!(booking.date | isBookingPast)">
-        <button mat-icon-button color="primary" class="btn-main m-2"
-                   (click)="openDialog(booking)" aria-label="Edit Booking">
+          <button mat-icon-button color="primary" class="btn-main m-2"
+                  (click)="openDialog(booking)" aria-label="Edit Booking">
             <mat-icon>edit_note</mat-icon>
           </button>
         </ng-container>
 
-
+        <button mat-icon-button color="warn" class="btn-red m-2" (click)="deleteBooking(booking)" aria-label="Delete booking">
+          <mat-icon>delete</mat-icon>
+        </button>
 
       </td>
 
@@ -74,5 +72,9 @@
   </table>
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons> </mat-paginator>
+
+  <app-feature-booking-export
+    >
+  </app-feature-booking-export>
 
 </div>
