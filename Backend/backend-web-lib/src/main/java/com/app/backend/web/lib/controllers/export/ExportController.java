@@ -1,60 +1,54 @@
 package com.app.backend.web.lib.controllers.export;
 
-import com.app.backend.domain.user.AppUser;
-import com.app.backend.service.api.IExportService;
-
-import org.springframework.http.MediaType;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
+import com.app.backend.service.api.IMinioService;
+import io.minio.PutObjectArgs;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/booking")
+@RequestMapping("api/booking/export")
 public class ExportController {
 
-    private final IExportService bookingExportService;
+    private final IMinioService minioService;
 
-    public ExportController(IExportService bookingExportService) {
-        this.bookingExportService = bookingExportService;
+    public ExportController(IMinioService minioService) {
+        this.minioService = minioService;
     }
 
-    @GetMapping("/export")
-    public ResponseEntity<Resource> downloadExport(@AuthenticationPrincipal AppUser user) throws IOException {
+    @GetMapping("/download")
+    public ResponseEntity<InputStreamResource> download(@RequestParam String file) throws Exception {
+        return minioService.downloadFile(file);
+    }
 
-        Path filePath;
+    @GetMapping("/url")
+    public String getPresignedDownloadUrl(@RequestParam String fileName) throws Exception {
+        return minioService.getPresignedUrl(fileName);
+    }
 
-        if (user.isAdmin()) {
+    @GetMapping("/list")
+    public List<String> listFiles() throws Exception {
+        return minioService.listFiles();
+    }
 
-            filePath = bookingExportService.getExportFileForAllUsers();
 
-            if (filePath == null) {
-                filePath = bookingExportService.generateExportForAllUsers();
-            }
+    @PostMapping
+    public ResponseEntity<String> exportBookings() throws Exception {
 
-        } else {
+        String csvContent = minioService.generateCsvFromBookings();
 
-            filePath = bookingExportService.getExportFileForUser(user.getEmail());
+        String fileName = "bookings-export-" + System.currentTimeMillis() + ".csv";
 
-            if (filePath == null) {
-                filePath = bookingExportService.generateExportForUser(user.getEmail());
-            }
+        try (InputStream stream = new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8))) {
+            minioService.uploadFile("exports", fileName, stream, csvContent.length(), "text/csv");
         }
 
-        Resource resource = new UrlResource(filePath.toUri());
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName().toString() + "\"")
-                .contentType(MediaType.parseMediaType("text/csv"))
-                .body(resource);
+        return ResponseEntity.ok(fileName);
     }
-
 
 }

@@ -1,9 +1,9 @@
-import {AfterViewInit, Component, computed, effect, inject, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, inject, signal, ViewChild} from '@angular/core';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {AuthService} from '../../auth/auth.service';
 import {BookingModel} from '../domain/booking.model';
-import {JsonPipe, NgIf} from '@angular/common';
+import {JsonPipe, NgForOf, NgIf} from '@angular/common';
 import {BookingResourceService} from '../booking-resource.service';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
@@ -13,6 +13,15 @@ import {IsBookingPastPipe} from '../is-booking-past.pipe';
 import {Timeslot} from '../domain/available.room.model';
 import {FeatureBookingDialogComponent} from '../feature-booking-dialog/feature-booking-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+
+import {MatDivider, MatDividerModule} from '@angular/material/divider';
+import {MatList, MatListItem, MatListModule, MatListSubheaderCssMatStyler} from '@angular/material/list';
+import {
+  MatAccordion, MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle
+} from '@angular/material/expansion';
 
 @Component({
   selector: 'app-booking-list',
@@ -25,6 +34,15 @@ import {MatDialog} from '@angular/material/dialog';
     MatPaginatorModule,
     MatSortModule,
     IsBookingPastPipe,
+    NgForOf,
+    MatDividerModule,
+    MatListItem,
+    MatListModule,
+    MatExpansionPanelDescription,
+    MatExpansionPanelTitle,
+    MatExpansionPanelHeader,
+    MatAccordion,
+    MatExpansionPanel
   ],
   templateUrl: 'feature-booking-table.component.html',
   styleUrls: ['feature-booking-table.component.scss']
@@ -43,6 +61,7 @@ export class FeatureBookingTableComponent implements AfterViewInit{
   bookings = this.bookingService.getBookings();
 
   isAdmin = this.auth.isAdmin();
+  showFiller = false;
 
   dataSource = new MatTableDataSource<BookingModel>();
 
@@ -61,6 +80,8 @@ export class FeatureBookingTableComponent implements AfterViewInit{
     effect(() => {
       this.dataSource.data = this.bookings();
     });
+
+    this.bookingService.fetchExports();
   }
 
   ngAfterViewInit(): void {
@@ -115,6 +136,8 @@ export class FeatureBookingTableComponent implements AfterViewInit{
   }
 
   downloadBookings() {
-      this.bookingService.downloadBookings();
+    this.bookingService.fetchExports();
   }
+
+
 }
