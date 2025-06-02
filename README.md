@@ -93,7 +93,12 @@ This is a full-stack Conference Room Booking application that allows employees t
 - Backend uses JWT_SECRET as local environment variable for tokens
 - MinIO uses default credentials (minioadmin found in application.poperties) and must be running at localhost:9000
 - GoogleMaps uses a secret apiKey, not so secret mapId for map display and googleplacesapi for selecting address
-- 
+- create Frontend/environments/environment.ts containing
+  `export const environment = {
+  production: false,
+  googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY_HERE'
+};
+`
 ---
 
 
