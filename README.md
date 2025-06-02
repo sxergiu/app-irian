@@ -68,6 +68,8 @@ This is a full-stack Conference Room Booking application that allows employees t
 - Users can export **their bookings** as CSV.
 - Export remains available via pre-signed URLs.
 - Can download exported booking at any time.
+- ***PROBLEM** minio service currently exports all bookings
+- must be changed to only export bookings by UserId
 
 ---
 ![table](utils/table.png)
@@ -91,10 +93,11 @@ This is a full-stack Conference Room Booking application that allows employees t
 
 ### Utils
 - Backend uses JWT_SECRET as local environment variable for tokens
-- MinIO uses default credentials (minioadmin found in application.poperties) and must be running at localhost:9000
+- MinIO uses default credentials (minioadmin found in application.poperties) and must be running at localhost:9000, ensure a bucket with name ***exports*** exists
 - GoogleMaps uses a secret apiKey, not so secret mapId for map display and googleplacesapi for selecting address
 - create Frontend/environments/environment.ts containing
 <pre> js export const environment = { production: false,googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY_HERE'}; </pre>
+
 ---
 
 
