@@ -69,7 +69,7 @@ This is a full-stack Conference Room Booking application that allows employees t
 - Export remains available via pre-signed URLs.
 - Can download exported booking at any time.
 - ***PROBLEM** minio service currently exports all bookings
-- must be changed to only export bookings by UserId
+ must be changed to only export bookings by UserId
 
 ---
 ![table](utils/table.png)
